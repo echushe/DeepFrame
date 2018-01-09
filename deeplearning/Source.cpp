@@ -10,7 +10,7 @@ int main(int argc, const char * argv[])
     std::string dataset_dir = "D:/develop/my_neurons/mnist/";
     lint batch_size = 64;
     lint threads = 8;
-    lint epoch_size = 200;
+    lint epoch_size = 20;
 
     if (argc == 4)
     {
