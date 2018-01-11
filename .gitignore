@@ -1,0 +1,10 @@
+
+.vs/
+Debug/
+Release/
+deeplearning/Debug/
+deeplearning/Release/
+deeplearning/x64/
+neurons/Debug/
+neurons/Release/
+neurons/x64/
