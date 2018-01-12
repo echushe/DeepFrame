@@ -38,6 +38,7 @@ namespace neurons
         friend class Conv_2d;
         friend class Pooling_2d;
         friend class MaxPooling_2d;
+        friend class EM_1d;
     private:
         // Shape of this matrix
         Shape m_shape;
@@ -175,6 +176,15 @@ namespace neurons
 
         // Get coordinate of the largest element
         Coordinate argmax() const;
+
+        // Get value of the largest element
+        double max() const;
+
+        // Get coordinate of the lowest element
+        Coordinate argmin() const;
+
+        // Get value of the lowest element
+        double min() const;
 
         // Get mean of all the elements
         double mean() const;

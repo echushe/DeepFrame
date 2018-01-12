@@ -297,3 +297,13 @@ lint neurons::now_in_milliseconds()
 {
     return std::chrono::duration_cast <std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
+
+double neurons::gaussian_function(double mu, double sigma, double x)
+{
+    double x_minus_mu_sq = (x - mu) * (x - mu);
+
+    double left = 1.0 / (sqrt(2 * M_PI) * sigma);
+    double right = exp(x_minus_mu_sq * (-1) / (2 * sigma * sigma));
+
+    return left * right;
+}

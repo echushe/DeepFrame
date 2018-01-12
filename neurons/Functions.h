@@ -3,6 +3,8 @@
 
 namespace neurons
 {
+    # define M_PI          3.141592653589793238462643383279502884L /* pi */
+
     class Activation
     {
     public:
@@ -131,4 +133,6 @@ namespace neurons
     lint now_in_seconds();
 
     lint now_in_milliseconds();
+
+    double gaussian_function(double mu, double sigma, double x);
 }

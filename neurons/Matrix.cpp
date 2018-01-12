@@ -333,7 +333,7 @@ neurons::Matrix & neurons::Matrix::normalize(double min, double max)
     lint size = m_shape.m_size;
     double range = max - min;
 
-    double l_max = std::numeric_limits<double>::min();
+    double l_max = std::numeric_limits<double>::max() * (-1);
     double l_min = std::numeric_limits<double>::max();
 
     for (lint i = 0; i < size; ++i)
@@ -509,7 +509,7 @@ neurons::Matrix & neurons::Matrix::scale_one_dimension(lint dim, const Vector & 
 
 neurons::Coordinate neurons::Matrix::argmax() const
 {
-    double max = std::numeric_limits<double>::min();
+    double max = std::numeric_limits<double>::max() * (-1);
     lint argmax_index = 0;
     lint size = this->m_shape.m_size;
     for (lint i = 0; i < size; ++i)
@@ -530,6 +530,61 @@ neurons::Coordinate neurons::Matrix::argmax() const
     }
 
     return coord;
+}
+
+double neurons::Matrix::max() const
+{
+    double max = std::numeric_limits<double>::max() * (-1);
+    lint size = this->m_shape.m_size;
+    for (lint i = 0; i < size; ++i)
+    {
+        if (this->m_data[i] > max)
+        {
+            max = this->m_data[i];
+        }
+    }
+
+    return max;
+}
+
+neurons::Coordinate neurons::Matrix::argmin() const
+{
+    double min = std::numeric_limits<double>::max() * (-1);
+    lint argmin_index = 0;
+    lint size = this->m_shape.m_size;
+    for (lint i = 0; i < size; ++i)
+    {
+        if (this->m_data[i] < min)
+        {
+            min = this->m_data[i];
+            argmin_index = i;
+        }
+    }
+
+    Coordinate coord{ this->m_shape };
+    lint marker = argmin_index;
+    for (lint i = this->m_shape.m_dim - 1; i >= 0; --i)
+    {
+        coord.m_data[i] = marker % this->m_shape.m_data[i];
+        marker /= this->m_shape.m_data[i];
+    }
+
+    return coord;
+}
+
+double neurons::Matrix::min() const
+{
+    double min = std::numeric_limits<double>::max();
+    lint size = this->m_shape.m_size;
+    for (lint i = 0; i < size; ++i)
+    {
+        if (this->m_data[i] < min)
+        {
+            min = this->m_data[i];
+        }
+    }
+
+    return min;
 }
 
 double neurons::Matrix::mean() const

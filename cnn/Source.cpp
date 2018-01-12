@@ -1,5 +1,5 @@
-#include "Simple_nn.h"
-#include "Multi_layer_nn.h"
+#include "Conv_nn.h"
+#include "Conv_pooling_nn.h"
 
 #pragma optimize("", off)
 
@@ -17,7 +17,7 @@ int main(int argc, const char * argv[])
         epoch_size = std::stoi(argv[3]);
     }
 
-    Multi_layer_nn nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200,
+    Conv_pooling_nn nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200,
         dataset_dir + "train-images-idx3-ubyte",
         dataset_dir + "train-labels-idx1-ubyte",
         dataset_dir + "t10k-images-idx3-ubyte",

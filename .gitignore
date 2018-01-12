@@ -2,9 +2,13 @@
 .vs/
 Debug/
 Release/
+x64/
 deeplearning/Debug/
 deeplearning/Release/
 deeplearning/x64/
 neurons/Debug/
 neurons/Release/
 neurons/x64/
+cnn/Debug/
+cnn/Release/
+cnn/x64/
