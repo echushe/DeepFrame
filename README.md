@@ -3,7 +3,7 @@
 ## This solution includes two projects:
 - **neurons** as a static library including some basic neuron concepts.
 - **deeplearning** as an executable program that can be trained.
-- One layer simple NN and multi layer fully connected NN are implemented in this repository
+- One-layer simple NN and multi-layer fully connected NN are implemented in this repository
 - Dataset of this program is *MNIST*, you may have to update Mnist.cpp to add supports of other dataset types.
 #
 ## I am now arranging makefile files for compilations on Linux, so the linux version may come soon.
