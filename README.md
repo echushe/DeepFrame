@@ -1,9 +1,16 @@
 # Deep_Learning_via_C_plus_plus
-## You can download this repository as a visual studio 2017 solution
-## This solution includes two projects:
-- **neurons** as a static library including some basic neuron concepts.
-- **deeplearning** as an executable program that can be trained.
-- One-layer simple NN and multi-layer fully connected NN are implemented in this repository
-- Dataset of this program is *MNIST*, you may have to update Mnist.cpp to add supports of other dataset types.
-#
-## I am now arranging makefile files for compilations on Linux, so the linux version may come soon.
+> This repository includes homemade C++ source code of deep learing
+## You can download this repository as a Visual Studio 2017 solution
+## This solution includes four projects:
+- **neurons** is a static library including some basic neuron concepts.
+> Following algorithms and functions are included in this module
+> - *vector and matrix calculations*
+> - *activation functions*
+> - *cost or error functions*
+> - *convolutional functions*
+> - *pooling functions*
+> - *forward and backward propagation algorithms*
+- **deeplearning** is a multi-layer fully connected neural network program that can be trained.
+- **cnn** is a homemade multi-layer convolutional neural network program that can be trained.
+- **test** includes some basic test cases of neural calculations.
+- Dataset of this program is **MNIST**, you may have to update *Mnist.cpp* to add supports of other dataset types if you would like.
