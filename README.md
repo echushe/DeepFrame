@@ -10,6 +10,7 @@
 > - *convolutional functions*
 > - *pooling functions*
 > - *forward and backward propagation algorithms*
+> - *One dimensional GMM EM algorithm*
 - **deeplearning** is a multi-layer fully connected neural network program that can be trained.
 - **cnn** is a homemade multi-layer convolutional neural network program that can be trained.
 - **test** includes some basic test cases of neural calculations.
