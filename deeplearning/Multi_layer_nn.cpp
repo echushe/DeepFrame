@@ -8,12 +8,9 @@ Multi_layer_nn::Multi_layer_nn(
     lint steps,
     lint epoch_size,
     lint secs_allowed,
-    const std::string & train_file,
-    const std::string & train_label,
-    const std::string & test_file,
-    const std::string & test_label)
+    const dataset::Dataset &d_set)
     : 
-    Mnist_nn(l_rate, batch_size, threads, steps, epoch_size, secs_allowed, train_file, train_label, test_file, test_label)
+    NN(l_rate, batch_size, threads, steps, epoch_size, secs_allowed, d_set)
 {
     // Initialize all layers and
     // reshape all inputs and labels so that they are suitable for matrix multiplications

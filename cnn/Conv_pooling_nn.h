@@ -6,10 +6,13 @@ Programmed by Chunnan Sheng
 *********************************************************************/
 
 #pragma once
-#include "Conv_nn.h"
+#include "NN.h"
+#include "Convolution.h"
+#include "FCNN_layer.h"
+#include "CNN_layer.h"
 #include "Pooling.h"
 
-class Conv_pooling_nn : public Mnist_nn
+class Conv_pooling_nn : public NN
 {
 private:
 
@@ -25,15 +28,12 @@ public:
         lint steps,
         lint epoch_size,
         lint secs_allowed,
-        const std::string & train_file,
-        const std::string & train_label,
-        const std::string & test_file,
-        const std::string & test_label);
+        const dataset::Dataset &d_set);
 
-    Conv_pooling_nn(const Conv_nn & other) = delete;
-    Conv_pooling_nn(Conv_nn && other) = delete;
-    Conv_pooling_nn & operator = (const Conv_nn & other) = delete;
-    Conv_pooling_nn & operator = (Conv_nn && other) = delete;
+    Conv_pooling_nn(const Conv_pooling_nn & other) = delete;
+    Conv_pooling_nn(Conv_pooling_nn && other) = delete;
+    Conv_pooling_nn & operator = (const Conv_pooling_nn & other) = delete;
+    Conv_pooling_nn & operator = (Conv_pooling_nn && other) = delete;
 
 public:
 

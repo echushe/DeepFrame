@@ -2,9 +2,10 @@
 #include "Matrix.h"
 #include "Functions.h"
 #include "NN_layer.h"
+#include "Dataset.h"
 #include <iostream>
 
-class Mnist_nn
+class NN
 {
 protected:
     // The learning rate
@@ -33,24 +34,21 @@ protected:
     std::vector<std::shared_ptr<neurons::NN_layer>> m_layers;
 
 public:
-    Mnist_nn(
+    NN(
         double l_rate,
         lint batch_size,
         lint threads,
         lint steps,
         lint epoch_size,
         lint secs_allowed,
-        const std::string & train_file,
-        const std::string & train_label,
-        const std::string & test_file,
-        const std::string & test_label);
+        const dataset::Dataset &d_set);
 
-    ~Mnist_nn();
+    ~NN();
 
-    Mnist_nn(const Mnist_nn & other) = delete;
-    Mnist_nn(Mnist_nn && other) = delete;
-    Mnist_nn & operator = (const Mnist_nn & other) = delete;
-    Mnist_nn & operator = (Mnist_nn && other) = delete;
+    NN(const NN & other) = delete;
+    NN(NN && other) = delete;
+    NN & operator = (const NN & other) = delete;
+    NN & operator = (NN && other) = delete;
 
 public:
 
@@ -105,6 +103,6 @@ private:
         lint thread_id) = 0;
 };
 
-std::ostream & operator << (std::ostream & os, const Mnist_nn & nn);
+std::ostream & operator << (std::ostream & os, const NN & nn);
 
 

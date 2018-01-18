@@ -1,11 +1,11 @@
 #pragma once
 #include "Vector.h"
 #include "Matrix.h"
-#include "Mnist.h"
 #include "Functions.h"
 #include "Convolution.h"
 #include "Pooling.h"
 #include "MixtureModel.h"
+#include "Dataset.h"
 #include <iostream>
 #include <vector>
 #include <list>
@@ -656,14 +656,23 @@ void test_matrix_fuse()
     std::cout << "fuse 4\n" << f_4 << '\n';
 }
 
-
+#pragma optimize("", off)
 void test_of_basic_neuron_operations()
 {
     std::cout << "=================== test_of_basic_neuron_operations ==================" << "\n";
     std::vector<neurons::Matrix> images;
     std::vector<neurons::Matrix> labels;
-    mnist::read_mnist_image_file(images, "D:/develop/my_neurons/mnist/t10k-images-idx3-ubyte", 1);
-    mnist::read_mnist_label_file(labels, "D:/develop/my_neurons/mnist/t10k-labels-idx1-ubyte", 1);
+
+    std::string dataset_dir = "D:/develop/my_neurons/mnist/";
+
+    dataset::Mnist mnist{
+        dataset_dir + "train-images-idx3-ubyte",
+        dataset_dir + "train-labels-idx1-ubyte",
+        dataset_dir + "t10k-images-idx3-ubyte",
+        dataset_dir + "t10k-labels-idx1-ubyte"
+    };
+
+    mnist.get_test_set(images, labels, 10);
 
     lint rows = images[0].shape()[0];
     lint cols = images[0].shape()[1];
@@ -736,7 +745,7 @@ void test_of_basic_neuron_operations()
         */
     }
 }
-
+#pragma optimize("", on)
 
 void test_conv_1d()
 {
@@ -998,7 +1007,6 @@ void test_EM_1d_mix()
 
 void test_of_basic_operations()
 {
-    /*
     vector_cases();
 
     test_matrix_constructor();
@@ -1021,7 +1029,6 @@ void test_of_basic_operations()
 
     test_pooling_2d();
     test_pooling_2d_special();
-    */
 
     test_EM_1d_single();
     

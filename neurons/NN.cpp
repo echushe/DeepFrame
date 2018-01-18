@@ -1,18 +1,14 @@
-#include "Mnist_nn.h"
-#include "Mnist.h"
+#include "NN.h"
 #include <thread>
 
-Mnist_nn::Mnist_nn(
+NN::NN(
     double l_rate,
     lint batch_size,
     lint threads,
     lint steps,
     lint epoch_size,
     lint secs_allowed,
-    const std::string & train_file,
-    const std::string & train_label,
-    const std::string & test_file,
-    const std::string & test_label)
+    const dataset::Dataset &d_set)
     :
     m_l_rate{ l_rate },
     m_batch_size{ batch_size },
@@ -22,12 +18,10 @@ Mnist_nn::Mnist_nn(
     m_secs_allowed{ secs_allowed }
 {
     // Load the training set
-    mnist::read_mnist_image_file(this->m_train_set, train_file);
-    mnist::read_mnist_label_file(this->m_train_labels, train_label);
+    d_set.get_training_set(this->m_train_set, this->m_train_labels);
 
     // Load the test set
-    mnist::read_mnist_image_file(this->m_test_set, test_file);
-    mnist::read_mnist_label_file(this->m_test_labels, test_label);
+    d_set.get_test_set(this->m_test_set, this->m_test_labels);
 
     if (!(
         this->m_train_set.size() > 0 &&
@@ -45,10 +39,10 @@ Mnist_nn::Mnist_nn(
 }
 
 
-Mnist_nn::~Mnist_nn()
+NN::~NN()
 {}
 
-void Mnist_nn::print_train_set(std::ostream & os) const
+void NN::print_train_set(std::ostream & os) const
 {
     os << "There are " << this->m_train_set.size() << " items in the training set\n";
     if (this->m_train_set.size() > 0)
@@ -58,7 +52,7 @@ void Mnist_nn::print_train_set(std::ostream & os) const
     }
 }
 
-void Mnist_nn::print_train_label(std::ostream & os) const
+void NN::print_train_label(std::ostream & os) const
 {
     os << "There are " << this->m_train_labels.size() << " items in the training label\n";
     if (this->m_train_labels.size() > 0)
@@ -68,7 +62,7 @@ void Mnist_nn::print_train_label(std::ostream & os) const
     }
 }
 
-void Mnist_nn::print_test_set(std::ostream & os) const
+void NN::print_test_set(std::ostream & os) const
 {
     os << "There are " << this->m_test_set.size() << " items in the test set\n";
     if (this->m_test_set.size() > 0)
@@ -78,7 +72,7 @@ void Mnist_nn::print_test_set(std::ostream & os) const
     }
 }
 
-void Mnist_nn::print_test_label(std::ostream & os) const
+void NN::print_test_label(std::ostream & os) const
 {
     os << "There are " << this->m_train_labels.size() << " items in the test labels\n";
     if (this->m_test_labels.size() > 0)
@@ -88,7 +82,7 @@ void Mnist_nn::print_test_label(std::ostream & os) const
     }
 }
 
-void Mnist_nn::train()
+void NN::train()
 {
     std::vector<std::vector<neurons::Matrix>> inputs;
     std::vector<std::vector<neurons::Matrix>> targets;
@@ -130,7 +124,7 @@ void Mnist_nn::train()
     }
 }
 
-void Mnist_nn::test()
+void NN::test()
 {
     std::vector<std::vector<neurons::Matrix>> inputs;
     std::vector<std::vector<neurons::Matrix>> targets;
@@ -151,7 +145,7 @@ void Mnist_nn::test()
     std::cout << "========The avg accuracy: " << accuracy_sum / this->m_epoch_size << "\n\n";
 }
 
-void Mnist_nn::get_batch(
+void NN::get_batch(
     std::vector<std::vector<neurons::Matrix>> & data_batch,
     std::vector<std::vector<neurons::Matrix>> & label_batch,
     const std::vector<neurons::Matrix> & data,
@@ -197,7 +191,7 @@ void Mnist_nn::get_batch(
 }
 
 
-double Mnist_nn::train_step(
+double NN::train_step(
     const std::vector<std::vector<neurons::Matrix>> & inputs,
     const std::vector<std::vector<neurons::Matrix>> & targets,
     std::vector<std::vector<neurons::Matrix>> & preds)
@@ -231,7 +225,7 @@ double Mnist_nn::train_step(
 }
 
 
-double Mnist_nn::test_step(
+double NN::test_step(
     const std::vector<std::vector<neurons::Matrix>> & inputs,
     const std::vector<std::vector<neurons::Matrix>> & targets,
     std::vector<std::vector<neurons::Matrix>> & preds)
@@ -264,7 +258,7 @@ double Mnist_nn::test_step(
     return loss / this->m_batch_size;
 }
 
-double Mnist_nn::get_accuracy(const neurons::Matrix & pred, const neurons::Matrix & target)
+double NN::get_accuracy(const neurons::Matrix & pred, const neurons::Matrix & target)
 {
     double acc = 0;
     neurons::Coordinate pred_argmax = pred.argmax();
@@ -281,7 +275,7 @@ double Mnist_nn::get_accuracy(const neurons::Matrix & pred, const neurons::Matri
     return acc;
 }
 
-double Mnist_nn::get_accuracy(
+double NN::get_accuracy(
     const std::vector<std::vector<neurons::Matrix>> & preds,
     const std::vector<std::vector<neurons::Matrix>> & targets)
 {
@@ -298,7 +292,7 @@ double Mnist_nn::get_accuracy(
     return sum / this->m_batch_size;
 }
 
-std::ostream & operator<<(std::ostream & os, const Mnist_nn & nn)
+std::ostream & operator<<(std::ostream & os, const NN & nn)
 {
     nn.print_layers(os);
     nn.print_train_set(os);

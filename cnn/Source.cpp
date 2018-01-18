@@ -17,11 +17,13 @@ int main(int argc, const char * argv[])
         epoch_size = std::stoi(argv[3]);
     }
 
-    Conv_pooling_nn nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200,
+    dataset::Mnist mnist{
         dataset_dir + "train-images-idx3-ubyte",
         dataset_dir + "train-labels-idx1-ubyte",
         dataset_dir + "t10k-images-idx3-ubyte",
         dataset_dir + "t10k-labels-idx1-ubyte" };
+
+    Conv_pooling_nn nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200, mnist};
 
     // std::cout << nn;
     nn.train();

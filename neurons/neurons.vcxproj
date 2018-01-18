@@ -117,13 +117,13 @@
     <ClInclude Include="MixtureModel.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Functions.h" />
-    <ClInclude Include="Mnist_nn.h" />
+    <ClInclude Include="NN.h" />
     <ClInclude Include="FCNN_layer.h" />
     <ClInclude Include="NN_layer.h" />
     <ClInclude Include="Pooling.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="mnist.h" />
+    <ClInclude Include="Dataset.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
@@ -133,8 +133,8 @@
     <ClCompile Include="MixtureModel.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="Mnist.cpp" />
-    <ClCompile Include="Mnist_nn.cpp" />
+    <ClCompile Include="Dataset.cpp" />
+    <ClCompile Include="NN.cpp" />
     <ClCompile Include="FCNN_layer.cpp" />
     <ClCompile Include="NN_layer.cpp" />
     <ClCompile Include="Pooling.cpp" />

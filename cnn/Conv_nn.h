@@ -5,14 +5,14 @@ Programmed by Chunnan Sheng
 *********************************************************************/
 
 #pragma once
-#include "Mnist_nn.h"
+#include "NN.h"
 #include "Convolution.h"
 #include "FCNN_layer.h"
 #include "CNN_layer.h"
 #include <iostream>
 
 
-class Conv_nn : public Mnist_nn
+class Conv_nn : public NN
 {
 private:
 
@@ -27,10 +27,7 @@ public:
         lint steps,
         lint epoch_size,
         lint secs_allowed,
-        const std::string & train_file,
-        const std::string & train_label,
-        const std::string & test_file,
-        const std::string & test_label);
+        const dataset::Dataset &d_set);
 
     // Copies and moves are prohibited
 

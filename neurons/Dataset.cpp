@@ -1,4 +1,4 @@
-#include "Mnist.h"
+#include "Dataset.h"
 
 /*!
 * \brief Extract the MNIST header from the given buffer
@@ -6,7 +6,7 @@
 * \param position The current reading positoin
 * \return The value of the mnist header
 */
-inline int64_t mnist::read_header(const std::unique_ptr<char[]>& buffer, size_t position)
+int64_t dataset::Mnist::read_header(const std::unique_ptr<char[]>& buffer, size_t position) const
 {
     auto header = reinterpret_cast<uint32_t*>(buffer.get());
 
@@ -21,7 +21,7 @@ inline int64_t mnist::read_header(const std::unique_ptr<char[]>& buffer, size_t 
 * \param path The path to the image file
 * \return The buffer of byte on success, a nullptr-unique_ptr otherwise
 */
-inline std::unique_ptr<char[]> mnist::read_mnist_file(const std::string & path, uint32_t key)
+inline std::unique_ptr<char[]> dataset::Mnist::read_mnist_file(const std::string & path, uint32_t key) const
 {
     std::ifstream file;
     file.open(path, std::ios::in | std::ios::binary | std::ios::ate);
@@ -51,7 +51,7 @@ inline std::unique_ptr<char[]> mnist::read_mnist_file(const std::string & path, 
         return {};
     }
 
-    auto count = read_header(buffer, 1);
+    auto count = this->read_header(buffer, 1);
 
     if (magic == 0x803)
     {
@@ -76,15 +76,15 @@ inline std::unique_ptr<char[]> mnist::read_mnist_file(const std::string & path, 
 }
 
 
-void mnist::read_mnist_image_file(std::vector<neurons::Matrix> & images, const std::string& path, lint limit)
+void dataset::Mnist::read_mnist_image_file(std::vector<neurons::Matrix> & images, const std::string& path, lint limit) const
 {
-    auto buffer = read_mnist_file(path, 0x803);
+    auto buffer = this->read_mnist_file(path, 0x803);
 
     if (buffer)
     {
-        auto count = read_header(buffer, 1);
-        auto rows = read_header(buffer, 2);
-        auto columns = read_header(buffer, 3);
+        auto count = this->read_header(buffer, 1);
+        auto rows = this->read_header(buffer, 2);
+        auto columns = this->read_header(buffer, 3);
 
         if (limit > 0 && count > limit)
         {
@@ -115,13 +115,14 @@ void mnist::read_mnist_image_file(std::vector<neurons::Matrix> & images, const s
     }
 }
 
-void mnist::read_mnist_label_file(std::vector<neurons::Matrix> & labels, const std::string& path, lint limit)
+
+void dataset::Mnist::read_mnist_label_file(std::vector<neurons::Matrix> & labels, const std::string& path, lint limit) const
 {
     auto buffer = read_mnist_file(path, 0x801);
 
     if (buffer)
     {
-        auto count = read_header(buffer, 1);
+        auto count = this->read_header(buffer, 1);
 
         //Skip the header
         //Cast to unsigned char is necessary cause signedness of char is
@@ -164,3 +165,34 @@ void mnist::read_mnist_label_file(std::vector<neurons::Matrix> & labels, const s
         }
     }
 }
+
+
+dataset::Mnist::Mnist(
+    const std::string & train_file,
+    const std::string & train_label,
+    const std::string & test_file,
+    const std::string & test_label)
+    : 
+    m_train_file{ train_file },
+    m_train_label{ train_label },
+    m_test_file{ test_file },
+    m_test_label{ test_label }
+{}
+
+
+void dataset::Mnist::get_training_set(
+    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+{
+    this->read_mnist_image_file(inputs, this->m_train_file, limit);
+    this->read_mnist_label_file(labels, this->m_train_label, limit);
+}
+
+
+void dataset::Mnist::get_test_set(
+    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+{
+    this->read_mnist_image_file(inputs, this->m_test_file, limit);
+    this->read_mnist_label_file(labels, this->m_test_label, limit);
+}
+
+
