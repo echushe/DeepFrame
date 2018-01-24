@@ -20,9 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{FEE95919-7424-4152-8A3E-F3F7C073A571}</ProjectGuid>
-    <RootNamespace>test</RootNamespace>
+    <ProjectGuid>{8A710193-6D01-432D-98A5-BAC0AED84A3E}</ProjectGuid>
+    <RootNamespace>deeplearning</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>dnn</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -115,15 +116,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Multi_Layer_NN.h" />
+    <ClInclude Include="Simple_NN.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Multi_Layer_NN.cpp" />
+    <ClCompile Include="Simple_NN.cpp" />
+    <ClCompile Include="Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\neurons\neurons.vcxproj">
       <Project>{6a653ce8-0a8a-430c-b2a9-bf476864ed94}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="test_cases.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

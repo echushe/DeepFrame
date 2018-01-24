@@ -16,7 +16,7 @@ neurons::CNN_layer::CNN_layer(
     neurons::Activation *act_func,
     neurons::ErrorFunction *err_func)
     :
-    NN_layer(neurons::Shape{ filter_rows, filter_cols, chls, filters }, neurons::Shape{ 1, filters }, threads, act_func, err_func ),
+    Traditional_NN_layer(neurons::Shape{ filter_rows, filter_cols, chls, filters }, neurons::Shape{ 1, filters }, threads, act_func, err_func ),
     m_conv2d{ neurons::Shape{ 1, rows, cols, chls }, neurons::Shape{ filter_rows, filter_cols, chls, filters }, stride, stride, padding, padding }
 {
     for (lint i = 0; i < threads; ++i)
@@ -27,23 +27,25 @@ neurons::CNN_layer::CNN_layer(
 
 
 neurons::CNN_layer::CNN_layer(const CNN_layer & other)
-    : NN_layer(other), m_conv2d{ other.m_conv2d }
+    : 
+    Traditional_NN_layer(other),
+    m_conv2d{ other.m_conv2d }
 {
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::make_shared<CNN_layer_op>(
-            *(dynamic_cast<CNN_layer_op*>(other.m_ops[i].get()))
-            ));
+        this->m_ops[i] = std::make_shared<CNN_layer_op>(
+            *(dynamic_cast<CNN_layer_op*>(other.m_ops[i].get())));
     }
 }
 
 
 neurons::CNN_layer::CNN_layer(CNN_layer && other)
-    : NN_layer(other), m_conv2d{ std::move(other.m_conv2d) }
+    : Traditional_NN_layer(other),
+    m_conv2d{ std::move(other.m_conv2d) }
 {
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::move(other.m_ops[i]));
+        this->m_ops[i] = std::move(other.m_ops[i]);
     }
 }
 
@@ -53,12 +55,10 @@ neurons::CNN_layer & neurons::CNN_layer::operator = (const CNN_layer & other)
     NN_layer::operator = (other);
     this->m_conv2d = other.m_conv2d;
 
-    this->m_ops.clear();
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::make_shared<CNN_layer_op>(
-            *(dynamic_cast<CNN_layer_op*>(other.m_ops[i].get()))
-            ));
+        this->m_ops[i] = std::make_shared<CNN_layer_op>(
+            *(dynamic_cast<CNN_layer_op*>(other.m_ops[i].get())));
     }
 
     return *this;
@@ -70,10 +70,9 @@ neurons::CNN_layer & neurons::CNN_layer::operator = (CNN_layer && other)
     NN_layer::operator=(other);
     this->m_conv2d = std::move(other.m_conv2d);
 
-    this->m_ops.clear();
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::move(other.m_ops[i]));
+        this->m_ops[i] = std::move(other.m_ops[i]);
     }
 
     return *this;
@@ -96,19 +95,19 @@ neurons::CNN_layer_op::CNN_layer_op(
     const std::unique_ptr<Activation>& act_func,
     const std::unique_ptr<ErrorFunction>& err_func)
     :
-    NN_layer_op(w, b, act_func, err_func),
+    Traditional_NN_layer_op(w, b, act_func, err_func),
     m_conv2d{ conv2d }
 {}
 
 neurons::CNN_layer_op::CNN_layer_op(const CNN_layer_op & other)
     :
-    NN_layer_op(other),
+    Traditional_NN_layer_op(other),
     m_conv2d{ other.m_conv2d }
 {}
 
 neurons::CNN_layer_op::CNN_layer_op(CNN_layer_op && other)
     :
-    NN_layer_op(other),
+    Traditional_NN_layer_op(other),
     m_conv2d{ std::move(other.m_conv2d) }
 {}
 
@@ -128,7 +127,7 @@ neurons::CNN_layer_op & neurons::CNN_layer_op::operator = (CNN_layer_op && other
     return *this;
 }
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::forward_propagate(const std::vector<Matrix>& inputs)
+std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(const std::vector<Matrix>& inputs)
 {
     if (nullptr == this->m_act_func)
     {
@@ -159,7 +158,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::forward_propagate(const std:
     return outputs;
 }
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::forward_propagate(
+std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(
     const std::vector<Matrix>& inputs, const std::vector<Matrix>& targets)
 {
     if (nullptr == this->m_err_func)
@@ -174,8 +173,6 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::forward_propagate(
     this->m_act_diffs.resize(samples);
     this->m_conv_to_x_diffs.resize(samples);
     this->m_conv_to_w_diffs.resize(samples);
-
-    this->m_loss = 0;
 
     for (size_t i = 0; i < samples; ++i)
     {
@@ -193,7 +190,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::forward_propagate(
 }
 
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::backward_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
+std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_backward_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
 {
     size_t samples = E_to_y_diffs.size();
     std::vector<Matrix> E_to_x_diffs{ samples };
@@ -225,7 +222,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::backward_propagate(double l_
 }
 
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::backward_propagate(double l_rate)
+std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_backward_propagate(double l_rate)
 {
     size_t samples = this->m_conv_to_x_diffs.size();
     std::vector<Matrix> E_to_x_diffs{ samples };

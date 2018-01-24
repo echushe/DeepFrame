@@ -2,11 +2,7 @@
 
 Programmed by Chunnan Sheng
 
-This class is definition of a multi-layer NN of online learning
-
-To Xu Ning:
-    You can copy this code to Batch_multi_layer_nn and add
-    batch learning algorithms to it.
+A simple NN without any hidden layers
 
 *********************************************************************/
 
@@ -15,13 +11,12 @@ To Xu Ning:
 #include "FCNN_layer.h"
 #include <iostream>
 
-
-class Multi_layer_nn : public NN
+class Simple_NN : public NN
 {
 private:
 
 public:
-    Multi_layer_nn(
+    Simple_NN(
         double l_rate,
         lint batch_size,
         lint threads,
@@ -30,12 +25,10 @@ public:
         lint secs_allowed,
         const dataset::Dataset &d_set);
 
-    // Copies and moves are prohibited
-
-    Multi_layer_nn(const Multi_layer_nn & other) = delete;
-    Multi_layer_nn(Multi_layer_nn && other) = delete;
-    Multi_layer_nn & operator = (const Multi_layer_nn & other) = delete;
-    Multi_layer_nn & operator = (Multi_layer_nn && other) = delete;
+    Simple_NN(const Simple_NN & other) = delete;
+    Simple_NN(Simple_NN && other) = delete;
+    Simple_NN & operator = (const Simple_NN & other) = delete;
+    Simple_NN & operator = (Simple_NN && other) = delete;
 
 public:
 
@@ -43,14 +36,16 @@ public:
 
 private:
 
-    virtual std::vector<neurons::Matrix> foward_propagate(
+    virtual std::vector<neurons::Matrix> test(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id);
 
-    virtual std::vector<neurons::Matrix> gradient_descent(
+    virtual std::vector<neurons::Matrix> optimise(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id);
+
 };
+
 

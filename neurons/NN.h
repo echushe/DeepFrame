@@ -4,9 +4,16 @@
 #include "NN_layer.h"
 #include "Dataset.h"
 #include <iostream>
+#include <random>
 
 class NN
 {
+private:
+    std::default_random_engine m_train_rand;
+    std::default_random_engine m_test_rand;
+    std::uniform_int_distribution<size_t> m_train_distribution;
+    std::uniform_int_distribution<size_t> m_test_distribution;
+
 protected:
     // The learning rate
     double m_l_rate;
@@ -73,7 +80,9 @@ private:
         std::vector<std::vector<neurons::Matrix>> & data_batch,
         std::vector<std::vector<neurons::Matrix>> & label_batch,
         const std::vector<neurons::Matrix> & data,
-        const std::vector<neurons::Matrix> & label);
+        const std::vector<neurons::Matrix> & label,
+        std::default_random_engine & rand_generator,
+        std::uniform_int_distribution<size_t> & distribution);
 
 
     double train_step(
@@ -92,12 +101,12 @@ private:
         const std::vector<std::vector<neurons::Matrix>> & preds,
         const std::vector<std::vector<neurons::Matrix>> & targets);
 
-    virtual std::vector<neurons::Matrix> foward_propagate(
+    virtual std::vector<neurons::Matrix> test(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id) = 0;
 
-    virtual std::vector<neurons::Matrix> gradient_descent(
+    virtual std::vector<neurons::Matrix> optimise(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id) = 0;

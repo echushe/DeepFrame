@@ -1,6 +1,6 @@
-#include "Simple_nn.h"
+#include "Simple_NN.h"
 
-Simple_nn::Simple_nn(
+Simple_NN::Simple_NN(
     double l_rate,
     lint batch_size,
     lint threads,
@@ -35,32 +35,32 @@ Simple_nn::Simple_nn(
     }
 }
 
-void Simple_nn::print_layers(std::ostream & os) const
+void Simple_NN::print_layers(std::ostream & os) const
 {
     os << '\n';
 }
 
 
-std::vector<neurons::Matrix> Simple_nn::foward_propagate(
+std::vector<neurons::Matrix> Simple_NN::test(
     const std::vector<neurons::Matrix>& inputs,
     const std::vector<neurons::Matrix>& targets,
     lint thread_id)
 {
     std::vector<neurons::Matrix> preds =
-        this->m_layers[0]->operation_instances()[thread_id]->forward_propagate(inputs, targets);
+        this->m_layers[0]->operation_instances()[thread_id]->batch_forward_propagate(inputs, targets);
     return preds;
 }
 
 
-std::vector<neurons::Matrix> Simple_nn::gradient_descent(
+std::vector<neurons::Matrix> Simple_NN::optimise(
     const std::vector<neurons::Matrix>& inputs,
     const std::vector<neurons::Matrix>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds = this->foward_propagate(inputs, targets, thread_id);
+    std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
 
     std::vector<neurons::Matrix> E_to_x_diffs =
-        this->m_layers[0]->operation_instances()[thread_id]->backward_propagate(this->m_l_rate);
+        this->m_layers[0]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate);
 
     return preds;
 }

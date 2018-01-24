@@ -36,6 +36,12 @@ NN::NN(
     {
         throw std::invalid_argument(std::string("The data set is wrong."));
     }
+
+    this->m_train_rand = std::default_random_engine{ 100 };
+    this->m_test_rand = std::default_random_engine{ 200 };
+    
+    this->m_train_distribution = std::uniform_int_distribution<size_t>{ 0, this->m_train_set.size() - 1 };
+    this->m_test_distribution = std::uniform_int_distribution<size_t>{ 0, this->m_test_set.size() - 1 };
 }
 
 
@@ -95,7 +101,7 @@ void NN::train()
 
     for (lint i = 1; i <= this->m_steps; ++i)
     {
-        this->get_batch(inputs, targets, this->m_train_set, this->m_train_labels);
+        this->get_batch(inputs, targets, this->m_train_set, this->m_train_labels, this->m_train_rand, this->m_train_distribution);
         loss_sum += this->train_step(inputs, targets, preds);
         accuracy_sum += this->get_accuracy(preds, targets);
 
@@ -121,6 +127,7 @@ void NN::train()
         {
             this->test();
         }
+
     }
 }
 
@@ -135,7 +142,7 @@ void NN::test()
 
     for (lint i = 0; i < this->m_epoch_size; ++i)
     {
-        this->get_batch(inputs, targets, this->m_test_set, this->m_test_labels);
+        this->get_batch(inputs, targets, this->m_test_set, this->m_test_labels, this->m_test_rand, this->m_test_distribution);
         loss_sum += this->test_step(inputs, targets, preds);
         accuracy_sum += this->get_accuracy(preds, targets);
     }
@@ -149,7 +156,9 @@ void NN::get_batch(
     std::vector<std::vector<neurons::Matrix>> & data_batch,
     std::vector<std::vector<neurons::Matrix>> & label_batch,
     const std::vector<neurons::Matrix> & data,
-    const std::vector<neurons::Matrix> & label)
+    const std::vector<neurons::Matrix> & label,
+    std::default_random_engine & rand_generator,
+    std::uniform_int_distribution<size_t> & distribution)
 {
     data_batch.clear();
     label_batch.clear();
@@ -168,7 +177,7 @@ void NN::get_batch(
     for (lint i = 1; i <= this->m_batch_size; ++i)
     {
         // randomly select a training input
-        size_t j = rand() % set_size;
+        size_t j = distribution(rand_generator);
 
         data_batch_of_each_thread.push_back(data[j]);
         label_batch_of_each_thread.push_back(label[j]);
@@ -199,18 +208,23 @@ double NN::train_step(
     preds.resize(inputs.size());
 
     size_t actual_threads = inputs.size();
-    std::vector<std::thread> train_threads{ actual_threads };
+    size_t new_threads = actual_threads - 1;
+    std::vector<std::thread> train_threads{ new_threads };
 
-    for (size_t i = 0; i < actual_threads; ++i)
+    size_t thread_id = 0;
+    // Create new threads if there are extra threads needed
+    for (; thread_id < new_threads; ++thread_id)
     {
-        train_threads[i] = std::thread(
-            [this, &inputs, &targets, i, &preds]
+        train_threads[thread_id] = std::thread(
+            [this, &inputs, &targets, thread_id, &preds]
         {
-            preds[i] = this->gradient_descent(inputs[i], targets[i], i);
+            preds[thread_id] = this->optimise(inputs[thread_id], targets[thread_id], thread_id);
         });
     }
+    // Do the training within the main thread
+    preds[thread_id] = this->optimise(inputs[thread_id], targets[thread_id], thread_id);
 
-    for (size_t i = 0; i < actual_threads; ++i)
+    for (size_t i = 0; i < new_threads; ++i)
     {
         train_threads[i].join();
     }
@@ -233,18 +247,23 @@ double NN::test_step(
     preds.resize(inputs.size());
 
     size_t actual_threads = inputs.size();
+    size_t new_threads = actual_threads - 1;
     std::vector<std::thread> test_threads{ actual_threads };
 
-    for (size_t i = 0; i < actual_threads; ++i)
+    size_t thread_id = 0;
+    // Create new threads if there are extra threads needed
+    for (; thread_id < new_threads; ++thread_id)
     {
-        test_threads[i] = std::thread(
-            [this, &inputs, &targets, i, &preds]
+        test_threads[thread_id] = std::thread(
+            [this, &inputs, &targets, thread_id, &preds]
         {
-            preds[i] = foward_propagate(inputs[i], targets[i], i);
+            preds[thread_id] = test(inputs[thread_id], targets[thread_id], thread_id);
         });
     }
+    // Do the test within the main thread
+    preds[thread_id] = test(inputs[thread_id], targets[thread_id], thread_id);
     
-    for (size_t i = 0; i < actual_threads; ++i)
+    for (size_t i = 0; i < new_threads; ++i)
     {
         test_threads[i].join();
     }

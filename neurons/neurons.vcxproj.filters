@@ -57,6 +57,12 @@
     <ClInclude Include="NN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RNN_unit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Traditional_NN_layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Matrix.cpp">
@@ -96,6 +102,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_unit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Traditional_NN_layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -121,9 +121,11 @@
     <ClInclude Include="FCNN_layer.h" />
     <ClInclude Include="NN_layer.h" />
     <ClInclude Include="Pooling.h" />
+    <ClInclude Include="RNN_unit.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Dataset.h" />
+    <ClInclude Include="Traditional_NN_layer.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +140,9 @@
     <ClCompile Include="FCNN_layer.cpp" />
     <ClCompile Include="NN_layer.cpp" />
     <ClCompile Include="Pooling.cpp" />
+    <ClCompile Include="RNN_unit.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Traditional_NN_layer.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

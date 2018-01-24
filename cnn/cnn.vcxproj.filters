@@ -15,21 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Conv_nn.h">
+    <ClInclude Include="Conv_NN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Conv_pooling_nn.h">
+    <ClInclude Include="Conv_Pooling_NN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Conv_nn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Conv_pooling_nn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Conv_NN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Conv_Pooling_NN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -10,7 +10,7 @@ neurons::FCNN_layer::FCNN_layer(
     neurons::Activation *act_func,
     neurons::ErrorFunction *err_func)
     :
-    NN_layer(neurons::Shape{ input_size, output_size }, neurons::Shape{ 1, output_size }, threads, act_func, err_func)
+    Traditional_NN_layer(neurons::Shape{ input_size, output_size }, neurons::Shape{ 1, output_size }, threads, act_func, err_func)
 {
     for (lint i = 0; i < threads; ++i)
     {
@@ -19,22 +19,21 @@ neurons::FCNN_layer::FCNN_layer(
 }
 
 neurons::FCNN_layer::FCNN_layer(const FCNN_layer & other)
-    : NN_layer(other)
+    : Traditional_NN_layer(other)
 {
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::make_shared<FCNN_layer_op>(
-            *(dynamic_cast<FCNN_layer_op*>(other.m_ops[i].get()))
-            ));
+        this->m_ops[i] = std::make_shared<FCNN_layer_op>(
+            *(dynamic_cast<FCNN_layer_op*>(other.m_ops[i].get())));
     }
 }
 
 neurons::FCNN_layer::FCNN_layer(FCNN_layer && other)
-    : NN_layer(other)
+    : Traditional_NN_layer(other)
 {
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::move(other.m_ops[i]));
+        this->m_ops[i] = std::move(other.m_ops[i]);
     }
 }
 
@@ -42,12 +41,10 @@ neurons::FCNN_layer & neurons::FCNN_layer::operator=(const FCNN_layer & other)
 {
     NN_layer::operator=(other);
 
-    this->m_ops.clear();
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::make_shared<FCNN_layer_op>(
-            *(dynamic_cast<FCNN_layer_op*>(other.m_ops[i].get()))
-            ));
+        this->m_ops[i] = std::make_shared<FCNN_layer_op>(
+            *(dynamic_cast<FCNN_layer_op*>(other.m_ops[i].get())));
     }
 
     return *this;
@@ -57,10 +54,9 @@ neurons::FCNN_layer & neurons::FCNN_layer::operator=(FCNN_layer && other)
 {
     NN_layer::operator=(other);
 
-    this->m_ops.clear();
     for (size_t i = 0; i < other.m_ops.size(); ++i)
     {
-        this->m_ops.push_back(std::move(other.m_ops[i]));
+        this->m_ops[i] = std::move(other.m_ops[i]);
     }
 
     return *this;
@@ -81,15 +77,15 @@ neurons::FCNN_layer_op::FCNN_layer_op(
     const Matrix &b,
     const std::unique_ptr<Activation> &act_func,
     const std::unique_ptr<ErrorFunction> &err_func)
-    : NN_layer_op(w, b, act_func, err_func)
+    : Traditional_NN_layer_op(w, b, act_func, err_func)
 {}
 
 neurons::FCNN_layer_op::FCNN_layer_op(const FCNN_layer_op & other)
-    : NN_layer_op(other)
+    : Traditional_NN_layer_op(other)
 {}
 
 neurons::FCNN_layer_op::FCNN_layer_op(FCNN_layer_op && other)
-    : NN_layer_op(other)
+    : Traditional_NN_layer_op(other)
 {}
 
 neurons::FCNN_layer_op & neurons::FCNN_layer_op::operator = (const FCNN_layer_op & other)
@@ -104,7 +100,7 @@ neurons::FCNN_layer_op & neurons::FCNN_layer_op::operator = (FCNN_layer_op && ot
     return *this;
 }
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::forward_propagate(const std::vector<Matrix>& inputs)
+std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(const std::vector<Matrix> & inputs)
 {
     if (nullptr == this->m_act_func)
     {
@@ -129,7 +125,7 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::forward_propagate(const std
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::forward_propagate(
+std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(
     const std::vector<Matrix>& inputs, const std::vector<Matrix>& targets)
 {
     if (nullptr == this->m_err_func)
@@ -143,8 +139,6 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::forward_propagate(
     std::vector<neurons::Matrix> outputs{ samples };
     this->m_act_diffs.resize(samples);
 
-    this->m_loss = 0;
-
     for (size_t i = 0; i < samples; ++i)
     {
         // z = x * w + b
@@ -157,7 +151,7 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::forward_propagate(
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::backward_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
+std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_backward_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
 {
     size_t samples = this->m_x.size();
     std::vector<Matrix> E_to_x_diffs{ samples };
@@ -165,11 +159,13 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::backward_propagate(double l
     this->m_w_gradient = 0;
     this->m_b_gradient = 0;
 
+    // batch learning of the chain rule (back propagation).
     for (size_t i = 0; i < samples; ++i)
     {
+        // Back propagate from y = g(z) to z
         neurons::Matrix diff_E_to_z = neurons::multiply(this->m_act_diffs[i], neurons::transpose(E_to_y_diffs[i]));
 
-        // Calculate the derivative dE/dx via the chain rule (back propagation).
+        // Calculate the derivative dE/dx
         // E is the error from the last layer.
         // x is input of the current layer.
         E_to_x_diffs[i] = this->m_w * neurons::transpose(diff_E_to_z);
@@ -177,14 +173,12 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::backward_propagate(double l
         // Calculate dE/dw and update the weights.
         // E is the error from the last layer.
         // w are weights of the current layer.
-        // dE/dx of the next layer should be used here.
-        m_w_gradient += neurons::transpose(this->m_x[i]) * diff_E_to_z;
+        this->m_w_gradient += neurons::transpose(this->m_x[i]) * diff_E_to_z;
 
         // Calculate dE/db and update the bias.
         // E is the error from the last layer.
-        // w are bias of the current layer.
-        // dE/dx of the next layer should be used here.
-        m_b_gradient += diff_E_to_z;
+        // b are bias of the current layer.
+        this->m_b_gradient += diff_E_to_z;
     }
 
     this->m_w_gradient *= l_rate;
@@ -194,7 +188,7 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::backward_propagate(double l
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::backward_propagate(double l_rate)
+std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_backward_propagate(double l_rate)
 {
     size_t samples = this->m_x.size();
     std::vector<Matrix> E_to_x_diffs{ samples };
@@ -202,9 +196,10 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::backward_propagate(double l
     this->m_w_gradient = 0;
     this->m_b_gradient = 0;
 
+    // batch learning of the chain rule (back propagation).
     for (size_t i = 0; i < samples; ++i)
     {
-        // Calculate the derivative dE/dx via the chain rule (back propagation).
+        // Calculate the derivative dE/dx
         // E is the error from the last layer.
         // x is input of the current layer.
         E_to_x_diffs[i] = this->m_w * neurons::transpose(this->m_act_diffs[i]);
@@ -212,14 +207,12 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::backward_propagate(double l
         // Calculate dE/dw and update the weights.
         // E is the error from the last layer.
         // w are weights of the current layer.
-        // dE/dx of the next layer should be used here.
-        m_w_gradient += neurons::transpose(this->m_x[i]) * this->m_act_diffs[i];
+        this->m_w_gradient += neurons::transpose(this->m_x[i]) * this->m_act_diffs[i];
 
         // Calculate dE/db and update the bias.
         // E is the error from the last layer.
-        // w are bias of the current layer.
-        // dE/dx of the next layer should be used here.
-        m_b_gradient += this->m_act_diffs[i];
+        // b are bias of the current layer.
+        this->m_b_gradient += this->m_act_diffs[i];
     }
     
     this->m_w_gradient *= l_rate;

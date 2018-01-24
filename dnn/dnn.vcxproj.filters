@@ -15,12 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test_cases.h">
+    <ClInclude Include="Multi_Layer_NN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple_NN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Multi_Layer_NN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Simple_NN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -115,12 +115,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Conv_nn.h" />
-    <ClInclude Include="Conv_pooling_nn.h" />
+    <ClInclude Include="Conv_NN.h" />
+    <ClInclude Include="Conv_Pooling_NN.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Conv_nn.cpp" />
-    <ClCompile Include="Conv_pooling_nn.cpp" />
+    <ClCompile Include="Conv_NN.cpp" />
+    <ClCompile Include="Conv_Pooling_NN.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>

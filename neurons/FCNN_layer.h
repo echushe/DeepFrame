@@ -1,13 +1,13 @@
 #pragma once
 #include "Functions.h"
-#include "NN_layer.h"
+#include "Traditional_NN_layer.h"
 
 namespace neurons
 {
     /*
     This is definition of a single layer of a fully connected neural network
     */
-    class FCNN_layer : public NN_layer
+    class FCNN_layer : public Traditional_NN_layer
     {
     public:
         FCNN_layer();
@@ -31,7 +31,7 @@ namespace neurons
         virtual Shape output_shape() const;
     };
 
-    class FCNN_layer_op : public NN_layer_op
+    class FCNN_layer_op : public Traditional_NN_layer_op
     {
     private:
         // The input data
@@ -46,6 +46,10 @@ namespace neurons
             const std::unique_ptr<Activation> &act_func,
             const std::unique_ptr<ErrorFunction> &err_func);
 
+        //----------------------------
+        // Copy and move operations
+        //----------------------------
+
         FCNN_layer_op(const FCNN_layer_op & other);
 
         FCNN_layer_op(FCNN_layer_op && other);
@@ -54,14 +58,22 @@ namespace neurons
 
         FCNN_layer_op & operator = (FCNN_layer_op && other);
 
-        virtual std::vector<Matrix> forward_propagate(const std::vector<Matrix> & inputs);
+        //--------------------------------------------
+        // Forward propagation via batch learning
+        //--------------------------------------------
 
-        virtual std::vector<Matrix> forward_propagate(
+        virtual std::vector<Matrix> batch_forward_propagate(const std::vector<Matrix> & inputs);
+
+        virtual std::vector<Matrix> batch_forward_propagate(
             const std::vector<Matrix> & inputs, const std::vector<Matrix> & targets);
 
-        virtual std::vector<Matrix> backward_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
+        //--------------------------------------------
+        // Backward propagation via batch learning
+        //--------------------------------------------
 
-        virtual std::vector<Matrix> backward_propagate(double l_rate);
+        virtual std::vector<Matrix> batch_backward_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
+
+        virtual std::vector<Matrix> batch_backward_propagate(double l_rate);
 
         virtual Shape output_shape() const;
 

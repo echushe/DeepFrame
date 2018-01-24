@@ -2,8 +2,6 @@
 
 Programmed by Chunnan Sheng
 
-A simple NN without any hidden layers
-
 *********************************************************************/
 
 #pragma once
@@ -11,12 +9,13 @@ A simple NN without any hidden layers
 #include "FCNN_layer.h"
 #include <iostream>
 
-class Simple_nn : public NN
+
+class Multi_Layer_NN : public NN
 {
 private:
 
 public:
-    Simple_nn(
+    Multi_Layer_NN(
         double l_rate,
         lint batch_size,
         lint threads,
@@ -25,10 +24,12 @@ public:
         lint secs_allowed,
         const dataset::Dataset &d_set);
 
-    Simple_nn(const Simple_nn & other) = delete;
-    Simple_nn(Simple_nn && other) = delete;
-    Simple_nn & operator = (const Simple_nn & other) = delete;
-    Simple_nn & operator = (Simple_nn && other) = delete;
+    // Copies and moves are prohibited
+
+    Multi_Layer_NN(const Multi_Layer_NN & other) = delete;
+    Multi_Layer_NN(Multi_Layer_NN && other) = delete;
+    Multi_Layer_NN & operator = (const Multi_Layer_NN & other) = delete;
+    Multi_Layer_NN & operator = (Multi_Layer_NN && other) = delete;
 
 public:
 
@@ -36,16 +37,14 @@ public:
 
 private:
 
-    virtual std::vector<neurons::Matrix> foward_propagate(
+    virtual std::vector<neurons::Matrix> test(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id);
 
-    virtual std::vector<neurons::Matrix> gradient_descent(
+    virtual std::vector<neurons::Matrix> optimise(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id);
-
 };
-
 

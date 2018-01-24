@@ -6,21 +6,16 @@ Programmed by Chunnan Sheng
 
 #pragma once
 #include "NN.h"
-#include "Convolution.h"
-#include "FCNN_layer.h"
-#include "CNN_layer.h"
+#include "Simple_RNN_layer.h"
 #include <iostream>
 
 
-class Conv_NN : public NN
+class Simple_RNN : public NN
 {
 private:
 
-    // std::vector<neurons::CNN_layer> m_conv_layers;
-    // neurons::FCNN_layer m_nn_layer;
-
 public:
-    Conv_NN(
+    Simple_RNN(
         double l_rate,
         lint batch_size,
         lint threads,
@@ -31,10 +26,10 @@ public:
 
     // Copies and moves are prohibited
 
-    Conv_NN(const Conv_NN & other) = delete;
-    Conv_NN(Conv_NN && other) = delete;
-    Conv_NN & operator = (const Conv_NN & other) = delete;
-    Conv_NN & operator = (Conv_NN && other) = delete;
+    Simple_RNN(const Simple_RNN & other) = delete;
+    Simple_RNN(Simple_RNN && other) = delete;
+    Simple_RNN & operator = (const Simple_RNN & other) = delete;
+    Simple_RNN & operator = (Simple_RNN && other) = delete;
 
 public:
 
@@ -51,7 +46,6 @@ private:
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id);
-
 };
 
 

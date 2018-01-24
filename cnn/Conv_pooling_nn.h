@@ -12,7 +12,7 @@ Programmed by Chunnan Sheng
 #include "CNN_layer.h"
 #include "Pooling.h"
 
-class Conv_pooling_nn : public NN
+class Conv_Pooling_NN : public NN
 {
 private:
 
@@ -21,7 +21,7 @@ private:
     //neurons::FCNN_layer m_nn_layer;
 
 public:
-    Conv_pooling_nn(
+    Conv_Pooling_NN(
         double l_rate,
         lint batch_size,
         lint threads,
@@ -30,10 +30,10 @@ public:
         lint secs_allowed,
         const dataset::Dataset &d_set);
 
-    Conv_pooling_nn(const Conv_pooling_nn & other) = delete;
-    Conv_pooling_nn(Conv_pooling_nn && other) = delete;
-    Conv_pooling_nn & operator = (const Conv_pooling_nn & other) = delete;
-    Conv_pooling_nn & operator = (Conv_pooling_nn && other) = delete;
+    Conv_Pooling_NN(const Conv_Pooling_NN & other) = delete;
+    Conv_Pooling_NN(Conv_Pooling_NN && other) = delete;
+    Conv_Pooling_NN & operator = (const Conv_Pooling_NN & other) = delete;
+    Conv_Pooling_NN & operator = (Conv_Pooling_NN && other) = delete;
 
 public:
 
@@ -41,12 +41,12 @@ public:
 
 private:
 
-    virtual std::vector<neurons::Matrix> foward_propagate(
+    virtual std::vector<neurons::Matrix> test(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id);
 
-    virtual std::vector<neurons::Matrix> gradient_descent(
+    virtual std::vector<neurons::Matrix> optimise(
         const std::vector<neurons::Matrix> & inputs,
         const std::vector<neurons::Matrix> & targets,
         lint thread_id);

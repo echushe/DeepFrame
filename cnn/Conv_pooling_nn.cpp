@@ -1,7 +1,7 @@
-#include "Conv_pooling_nn.h"
+#include "Conv_Pooling_NN.h"
 
 
-Conv_pooling_nn::Conv_pooling_nn(
+Conv_Pooling_NN::Conv_Pooling_NN(
     double l_rate,
     lint batch_size,
     lint threads,
@@ -77,24 +77,24 @@ Conv_pooling_nn::Conv_pooling_nn(
 }
 
 
-void Conv_pooling_nn::print_layers(std::ostream & os) const
+void Conv_Pooling_NN::print_layers(std::ostream & os) const
 {
     os << '\n';
 }
 
 
-std::vector<neurons::Matrix> Conv_pooling_nn::foward_propagate(
+std::vector<neurons::Matrix> Conv_Pooling_NN::test(
     const std::vector<neurons::Matrix>& inputs,
     const std::vector<neurons::Matrix>& targets,
     lint thread_id)
 {
     std::vector<neurons::Matrix> l_inputs = inputs;
 
-    l_inputs = this->m_layers[0]->operation_instances()[thread_id]->forward_propagate(l_inputs);
+    l_inputs = this->m_layers[0]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs);
 
     l_inputs = this->m_pooling_layers[0].operation_instances()[thread_id]->forward_propagate(l_inputs);
 
-    l_inputs = this->m_layers[1]->operation_instances()[thread_id]->forward_propagate(l_inputs);
+    l_inputs = this->m_layers[1]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs);
 
     l_inputs = this->m_pooling_layers[1].operation_instances()[thread_id]->forward_propagate(l_inputs);
 
@@ -104,21 +104,21 @@ std::vector<neurons::Matrix> Conv_pooling_nn::foward_propagate(
     }
 
     std::vector<neurons::Matrix> preds =
-        this->m_layers[2]->operation_instances()[thread_id]->forward_propagate(l_inputs, targets);
+        this->m_layers[2]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs, targets);
 
     return preds;
 }
 
 
-std::vector<neurons::Matrix> Conv_pooling_nn::gradient_descent(
+std::vector<neurons::Matrix> Conv_Pooling_NN::optimise(
     const std::vector<neurons::Matrix>& inputs,
     const std::vector<neurons::Matrix>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds = this->foward_propagate(inputs, targets, thread_id);
+    std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
 
     std::vector<neurons::Matrix> E_to_x_diffs =
-        this->m_layers[2]->operation_instances()[thread_id]->backward_propagate(this->m_l_rate);
+        this->m_layers[2]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate);
 
     for (size_t i = 0; i < E_to_x_diffs.size(); ++i)
     {
@@ -127,11 +127,11 @@ std::vector<neurons::Matrix> Conv_pooling_nn::gradient_descent(
 
     E_to_x_diffs = this->m_pooling_layers[1].operation_instances()[thread_id]->backward_propagate(E_to_x_diffs);
 
-    E_to_x_diffs = this->m_layers[1]->operation_instances()[thread_id]->backward_propagate(this->m_l_rate, E_to_x_diffs);
+    E_to_x_diffs = this->m_layers[1]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate, E_to_x_diffs);
 
     E_to_x_diffs = this->m_pooling_layers[0].operation_instances()[thread_id]->backward_propagate(E_to_x_diffs);
 
-    E_to_x_diffs = this->m_layers[0]->operation_instances()[thread_id]->backward_propagate(this->m_l_rate, E_to_x_diffs);
+    E_to_x_diffs = this->m_layers[0]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate, E_to_x_diffs);
 
     return preds;
 }

@@ -1,11 +1,11 @@
 #pragma once
 #include "Functions.h"
-#include "NN_layer.h"
+#include "Traditional_NN_layer.h"
 #include "Convolution.h"
 
 namespace neurons
 {
-    class CNN_layer : public NN_layer
+    class CNN_layer : public Traditional_NN_layer
     {
     private:
         Conv_2d m_conv2d;
@@ -37,7 +37,7 @@ namespace neurons
         Shape output_shape() const;
     };
 
-    class CNN_layer_op : public NN_layer_op
+    class CNN_layer_op : public Traditional_NN_layer_op
     {
     private:
 
@@ -66,14 +66,22 @@ namespace neurons
 
         CNN_layer_op & operator = (CNN_layer_op && other);
 
-        virtual std::vector<Matrix> forward_propagate(const std::vector<Matrix> & inputs);
+        //--------------------------------------------
+        // Forward propagation via batch learning
+        //--------------------------------------------
 
-        virtual std::vector<Matrix> forward_propagate(
+        virtual std::vector<Matrix> batch_forward_propagate(const std::vector<Matrix> & inputs);
+
+        virtual std::vector<Matrix> batch_forward_propagate(
             const std::vector<Matrix> & inputs, const std::vector<Matrix> & targets);
 
-        virtual std::vector<Matrix> backward_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
+        //--------------------------------------------
+        // Backward propagation via batch learning
+        //--------------------------------------------
 
-        virtual std::vector<Matrix> backward_propagate(double l_rate);
+        virtual std::vector<Matrix> batch_backward_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
+
+        virtual std::vector<Matrix> batch_backward_propagate(double l_rate);
 
         virtual Shape output_shape() const;
     };
