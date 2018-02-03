@@ -10,6 +10,7 @@
 > - *convolutional functions*
 > - *pooling functions*
 > - *forward and backward propagation algorithms*
+> - *basic building block of RNN (RNN_unit)*
 > - *One dimensional GMM EM algorithm*
 - **dnn** is a multi-layer fully connected neural network program that can be trained.
 - **cnn** is a homemade multi-layer convolutional neural network program that can be trained.
