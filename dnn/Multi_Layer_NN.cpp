@@ -23,13 +23,17 @@ Multi_Layer_NN::Multi_Layer_NN(
 
     this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>( 120, 100, this->m_threads, new neurons::Relu ));
 
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>( 100, output_size, this->m_threads, nullptr, new neurons::Softmax_CrossEntropy ));
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>( 100, 90, this->m_threads, new neurons::Relu ));
+
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>( 90, 80, this->m_threads, new neurons::Relu));
+
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>( 80, output_size, this->m_threads, nullptr, new neurons::Softmax_CrossEntropy ));
 
     // Reshape all the training set and labels
     for (size_t i = 0; i < this->m_train_set.size(); ++i)
     {
         this->m_train_set[i].reshape(neurons::Shape{ 1, input_size });
-        this->m_train_set[i].normalize(-1, 1);
+        this->m_train_set[i].normalize();
         this->m_train_labels[i].reshape(neurons::Shape{ 1, output_size });
     }
 
@@ -37,7 +41,7 @@ Multi_Layer_NN::Multi_Layer_NN(
     for (size_t i = 0; i < this->m_test_set.size(); ++i)
     {
         this->m_test_set[i].reshape(neurons::Shape{ 1, input_size });
-        this->m_test_set[i].normalize(-1, 1);
+        this->m_test_set[i].normalize();
         this->m_test_labels[i].reshape(neurons::Shape{ 1, output_size });
     }
 }

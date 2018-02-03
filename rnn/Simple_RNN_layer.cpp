@@ -6,6 +6,7 @@ neurons::Simple_RNN_layer::Simple_RNN_layer()
 neurons::Simple_RNN_layer::Simple_RNN_layer(
     lint input_size,
     lint output_size,
+    lint bptt_len,
     lint threads,
     neurons::Activation *act_func,
     neurons::ErrorFunction *err_func)
@@ -18,7 +19,7 @@ neurons::Simple_RNN_layer::Simple_RNN_layer(
     for (lint i = 0; i < threads; ++i)
     {
         this->m_ops[i] = std::make_shared<Simple_RNN_layer_op>(
-            input_size, output_size, this->m_act_func, this->m_err_func);
+            input_size, output_size, bptt_len, this->m_act_func, this->m_err_func);
     }
 }
 
@@ -89,6 +90,7 @@ neurons::Simple_RNN_layer_op::Simple_RNN_layer_op()
 neurons::Simple_RNN_layer_op::Simple_RNN_layer_op(
     lint input_size,
     lint output_size,
+    lint bptt_len,
     const std::unique_ptr<Activation> &act_func,
     const std::unique_ptr<ErrorFunction> &err_func)
     :
@@ -96,28 +98,42 @@ neurons::Simple_RNN_layer_op::Simple_RNN_layer_op(
     m_rnn{
     input_size,
     output_size,
+    bptt_len,
     act_func ? act_func->clone() : nullptr,
     err_func ? err_func->clone() : nullptr }
 {}
 
 neurons::Simple_RNN_layer_op::Simple_RNN_layer_op(const Simple_RNN_layer_op & other)
-    : NN_layer_op(other)
+    :
+    NN_layer_op(other),
+    m_rnn{ other.m_rnn }
 {}
 
 neurons::Simple_RNN_layer_op::Simple_RNN_layer_op(Simple_RNN_layer_op && other)
-    : NN_layer_op(other)
+    :
+    NN_layer_op(other),
+    m_rnn{ std::move(other.m_rnn) }
 {}
 
 neurons::Simple_RNN_layer_op & neurons::Simple_RNN_layer_op::operator = (const Simple_RNN_layer_op & other)
 {
     NN_layer_op::operator = (other);
+    this->m_rnn = other.m_rnn;
+
     return *this;
 }
 
 neurons::Simple_RNN_layer_op & neurons::Simple_RNN_layer_op::operator = (Simple_RNN_layer_op && other)
 {
     NN_layer_op::operator = (other);
+    this->m_rnn = std::move(other.m_rnn);
+
     return *this;
+}
+
+void neurons::Simple_RNN_layer_op::forget_all()
+{
+    this->m_rnn.forget_all();
 }
 
 neurons::Matrix neurons::Simple_RNN_layer_op::forward_propagate(const Matrix & input)
@@ -139,12 +155,12 @@ neurons::Matrix neurons::Simple_RNN_layer_op::forward_propagate(const Matrix & i
 
 neurons::Matrix neurons::Simple_RNN_layer_op::backward_propagate(double l_rate, const Matrix & E_to_y_diff)
 {
-    return this->m_rnn.backward_propagate(l_rate, E_to_y_diff);
+    return this->m_rnn.backward_propagate_through_time(l_rate, E_to_y_diff, 1)[0];
 }
 
 neurons::Matrix neurons::Simple_RNN_layer_op::backward_propagate(double l_rate)
 {
-    return this->m_rnn.backward_propagate(l_rate);
+    return this->m_rnn.backward_propagate_through_time(l_rate, 1)[0];
 }
 
 std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propagate(const std::vector<Matrix>& inputs)
@@ -184,27 +200,13 @@ std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propaga
 
 std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_backward_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
 {
-    std::vector<Matrix> E_to_x_diffs{ this->m_samples };
-
-    for (size_t i = 0; i < this->m_samples; ++i)
-    {
-        E_to_x_diffs[i] = this->m_rnn.backward_propagate(l_rate, E_to_y_diffs[i]);
-    }
-    
-    return E_to_x_diffs;
+    return  this->m_rnn.backward_propagate_through_time(l_rate, E_to_y_diffs.back());
 }
 
 
 std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_backward_propagate(double l_rate)
 {
-    std::vector<Matrix> E_to_x_diffs{ this->m_samples };
-
-    for (size_t i = 0; i < this->m_samples; ++i)
-    {
-        E_to_x_diffs[i] = this->m_rnn.backward_propagate(l_rate);
-    }
-
-    return E_to_x_diffs;
+    return  this->m_rnn.backward_propagate_through_time(l_rate);
 }
 
 neurons::Shape neurons::Simple_RNN_layer_op::output_shape() const

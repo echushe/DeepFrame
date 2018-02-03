@@ -80,14 +80,14 @@ Conv_NN::Conv_NN(
     for (size_t i = 0; i < this->m_train_set.size(); ++i)
     {
         this->m_train_set[i].left_extend_shape().right_extend_shape();
-        this->m_train_set[i].normalize(-1, 1);
+        this->m_train_set[i].normalize();
         this->m_train_labels[i].reshape(neurons::Shape{ 1, output_size });
     }
 
     for (size_t i = 0; i < this->m_test_set.size(); ++i)
     {
         this->m_test_set[i].left_extend_shape().right_extend_shape();
-        this->m_test_set[i].normalize(-1, 1);
+        this->m_test_set[i].normalize();
         this->m_test_labels[i].reshape(neurons::Shape{ 1, output_size });
     }
 }

@@ -6,7 +6,6 @@ Programmed by Chunnan Sheng
 
 #pragma once
 #include "NN.h"
-#include "Simple_RNN_layer.h"
 #include <iostream>
 
 

@@ -48,6 +48,7 @@ NN::NN(
 NN::~NN()
 {}
 
+
 void NN::print_train_set(std::ostream & os) const
 {
     os << "There are " << this->m_train_set.size() << " items in the training set\n";
@@ -57,6 +58,7 @@ void NN::print_train_set(std::ostream & os) const
         os << this->m_train_set[0] << '\n';
     }
 }
+
 
 void NN::print_train_label(std::ostream & os) const
 {
@@ -68,6 +70,7 @@ void NN::print_train_label(std::ostream & os) const
     }
 }
 
+
 void NN::print_test_set(std::ostream & os) const
 {
     os << "There are " << this->m_test_set.size() << " items in the test set\n";
@@ -78,6 +81,7 @@ void NN::print_test_set(std::ostream & os) const
     }
 }
 
+
 void NN::print_test_label(std::ostream & os) const
 {
     os << "There are " << this->m_train_labels.size() << " items in the test labels\n";
@@ -87,6 +91,7 @@ void NN::print_test_label(std::ostream & os) const
         os << this->m_test_labels[0] << '\n';
     }
 }
+
 
 void NN::train()
 {
@@ -131,6 +136,7 @@ void NN::train()
     }
 }
 
+
 void NN::test()
 {
     std::vector<std::vector<neurons::Matrix>> inputs;
@@ -151,6 +157,7 @@ void NN::test()
     std::cout << "========The avg loss: " << loss_sum / this->m_epoch_size << '\n';
     std::cout << "========The avg accuracy: " << accuracy_sum / this->m_epoch_size << "\n\n";
 }
+
 
 void NN::get_batch(
     std::vector<std::vector<neurons::Matrix>> & data_batch,

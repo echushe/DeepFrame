@@ -24,6 +24,7 @@ namespace neurons
         Simple_RNN_layer(
             lint input_size,
             lint output_size,
+            lint bptt_len,
             lint threads,
             neurons::Activation *act_func,
             neurons::ErrorFunction *err_func = nullptr);
@@ -52,6 +53,7 @@ namespace neurons
         Simple_RNN_layer_op(
             lint input_size,
             lint output_size,
+            lint bptt_len,
             const std::unique_ptr<Activation> &act_func,
             const std::unique_ptr<ErrorFunction> &err_func);
 
@@ -66,6 +68,8 @@ namespace neurons
         Simple_RNN_layer_op & operator = (const Simple_RNN_layer_op & other);
 
         Simple_RNN_layer_op & operator = (Simple_RNN_layer_op && other);
+
+        virtual void forget_all();
 
         //--------------------------------------------
         // Forward propagation

@@ -1,5 +1,7 @@
 #include "Simple_NN.h"
 #include "Multi_Layer_NN.h"
+#include "Mnist.h"
+#include "Review.h"
 
 #pragma optimize("", off)
 

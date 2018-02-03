@@ -7,6 +7,8 @@
 #include "MixtureModel.h"
 #include "Dataset.h"
 #include "RNN_unit.h"
+#include "Mnist.h"
+#include "Review.h"
 #include <iostream>
 #include <vector>
 #include <list>
@@ -1010,8 +1012,26 @@ void test_rnn_unit()
     // neurons::RNN_unit rnn_unit;
 }
 
+void test_review_dataset()
+{
+    std::cout << "Hello world!\n";
+    dataset::Review review{ "D:/develop/my_neurons/rnn_data_set/glove.6B.50d.txt",
+        "D:/develop/my_neurons/rnn_data_set/reviews", 0.2, 40 };
+
+    std::vector<neurons::Matrix> inputs;
+    std::vector<neurons::Matrix> labels;
+    review.get_training_set(inputs, labels, 5);
+
+    for (size_t i = 0; i < inputs.size(); ++i)
+    {
+        std::cout << inputs[i] << '\n';
+        std::cout << labels[i] << '\n';
+    }
+}
+
 void test_of_basic_operations()
 {
+    /*
     vector_cases();
 
     test_matrix_constructor();
@@ -1040,6 +1060,9 @@ void test_of_basic_operations()
     test_EM_1d_mix();
 
     test_rnn_unit();
+    */
+
+    test_review_dataset();
 }
 
 

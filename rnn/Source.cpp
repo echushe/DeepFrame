@@ -1,4 +1,6 @@
 #include "Simple_RNN.h"
+#include "Mnist.h"
+#include "Review.h"
 
 #pragma optimize("", off)
 
@@ -22,7 +24,10 @@ int main(int argc, const char * argv[])
         dataset_dir + "t10k-images-idx3-ubyte",
         dataset_dir + "t10k-labels-idx1-ubyte" };
 
-    Simple_RNN nn{ 0.001, batch_size, threads, 10, epoch_size, 7200, mnist };
+    dataset::Review review{ "D:/develop/my_neurons/rnn_data_set/glove.6B.50d.txt",
+        "D:/develop/my_neurons/rnn_data_set/reviews", 0.2, 40 };
+
+    Simple_RNN nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200, review };
 
     // std::cout << nn;
     nn.train();

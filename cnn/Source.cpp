@@ -1,5 +1,6 @@
 #include "Conv_NN.h"
 #include "Conv_Pooling_NN.h"
+#include "Mnist.h"
 
 #pragma optimize("", off)
 

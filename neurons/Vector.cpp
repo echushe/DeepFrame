@@ -14,8 +14,7 @@
 
 neurons::Vector::Vector(lint dim)
     : Vector(dim, 0.0)
-{
-}
+{}
 
 neurons::Vector::Vector(lint dim, double m)
     : m_dim(dim), m_norm(nullptr), m_data(nullptr)
