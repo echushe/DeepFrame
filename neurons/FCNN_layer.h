@@ -1,3 +1,8 @@
+/********************************************************************
+
+Programmed by Chunnan Sheng
+
+*********************************************************************/
 #pragma once
 #include "Functions.h"
 #include "Traditional_NN_layer.h"
@@ -5,19 +10,27 @@
 namespace neurons
 {
     /*
-    This is definition of a single layer of a fully connected neural network
+    This is definition of a single layer of a fully connected neural network.
+    FCNN stands for "Fully Connected Neural Networks"
     */
     class FCNN_layer : public Traditional_NN_layer
     {
     public:
+        // Default constructor does almost nothing here.
+        // However, default constructor is essential for containers like std::vector, std::list, std::map, etc.
+        // Behaviors of operations on a FCNN_layer that is created by default constructor would be undefined.
+        // You should assign a valid FCNN_layer instance to the object created by default constructor before
+        // using it.
         FCNN_layer();
 
+        // This is the Constructor to create a functional FCNN layer
         FCNN_layer(
-            lint input_size,
-            lint output_size,
-            lint threads,
-            neurons::Activation *act_func,
-            neurons::ErrorFunction *err_func = nullptr);
+            lint input_size,     // Size of input
+            lint output_size,    // Size of output
+            lint threads,        // Number of threads while training this layer
+            neurons::Activation *act_func,    // Activation function of this layer
+            neurons::ErrorFunction *err_func = nullptr   // Cost function or error function of this layer
+        );
 
 
         FCNN_layer(const FCNN_layer & other);

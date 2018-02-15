@@ -192,13 +192,23 @@ namespace neurons
         // Get variance of all the elements of this matrix
         double variance() const;
 
+        // Collapse a certain dimension of a matrix into a vector of matrices
+        // For example, a matrix of shape [4, 6, 5, 7], if we collapse it with argument dim = 1,
+        // it will be turned into 6 matrices of shape [4, 5, 7]
         std::vector<Matrix> collapse(lint dim) const;
 
+        // Collapse a certain dimension of a matrix, and merge all matrices into one matrix
+        // For example, a matrix of shape [4, 6, 5, 7], if we fuse it with argument dim = 1,
+        // it will be turned into a sum of 6 matrices of shape [4, 5, 7]
         Matrix fuse(lint dim) const;
 
+        // Collapse a certain dimension of a matrix, and get a mean of all the matrices
+        // For example, a matrix of shape [4, 6, 5, 7], if we get its reduce_mean with argument dim = 1,
+        // it will be turned into a mean of 6 matrices of shape [4, 5, 7]
         Matrix reduce_mean(lint dim) const;
 
     public:
+        // Get shape of the matrix
         Shape shape() const;
 
         friend bool operator == (const Matrix &left, const Matrix &right);

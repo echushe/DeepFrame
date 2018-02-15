@@ -14,7 +14,10 @@
 > - *basic building block of RNN (RNN_unit)*
 > - *One dimensional GMM EM algorithm*
 - **dataset** is a module with a general dataset interface for neural network training.
-> - Until now *dataset* supports **MNIST** for feedforward neural networks and **Media Review** for recurrent neural networks (RNN)
+> Supports of following dataset are included in this module
+> - *MNIST* for feedforward neural networks
+> - *CIFAR_10* for feedforward neural networks
+> - *Media Review* for recurrent neural networks (RNN)
 - **dnn** is a multi-layer fully connected neural network program that can be trained.
 - **cnn** is a homemade multi-layer convolutional neural network program that can be trained.
 - **rnn** has recently implemented a simple RNN module. LSTM is still under construction.

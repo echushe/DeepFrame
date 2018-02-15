@@ -12,6 +12,10 @@ neurons::FCNN_layer::FCNN_layer(
     :
     Traditional_NN_layer(neurons::Shape{ input_size, output_size }, neurons::Shape{ 1, output_size }, threads, act_func, err_func)
 {
+    double var = static_cast<double>(10) / this->m_w.shape()[0];
+    this->m_w.gaussian_random(0, var);
+    this->m_b.gaussian_random(0, var);
+
     for (lint i = 0; i < threads; ++i)
     {
         this->m_ops[i] = std::make_shared<FCNN_layer_op>( this->m_w, this->m_b, this->m_act_func, this->m_err_func );

@@ -115,10 +115,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CIFAR_10.h" />
     <ClInclude Include="Mnist.h" />
     <ClInclude Include="Review.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CIFAR_10.cpp" />
     <ClCompile Include="Mnist.cpp" />
     <ClCompile Include="Review.cpp" />
     <ClCompile Include="Review_dir.cpp" />

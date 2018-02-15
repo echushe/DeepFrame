@@ -19,6 +19,10 @@ neurons::CNN_layer::CNN_layer(
     Traditional_NN_layer(neurons::Shape{ filter_rows, filter_cols, chls, filters }, neurons::Shape{ 1, filters }, threads, act_func, err_func ),
     m_conv2d{ neurons::Shape{ 1, rows, cols, chls }, neurons::Shape{ filter_rows, filter_cols, chls, filters }, stride, stride, padding, padding }
 {
+    double var = static_cast<double>(100) / this->m_w.shape().size();
+    this->m_w.gaussian_random(0, var);
+    this->m_b.gaussian_random(0, var);
+
     for (lint i = 0; i < threads; ++i)
     {
         this->m_ops[i] = std::make_shared<CNN_layer_op>(this->m_conv2d, this->m_w, this->m_b, this->m_act_func, this->m_err_func);

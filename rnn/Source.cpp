@@ -6,7 +6,7 @@
 
 int main(int argc, const char * argv[])
 {
-    std::string dataset_dir = "D:/develop/my_neurons/mnist/";
+    std::string dataset_dir = "D:/develop/my_neurons/dataset/mnist/";
     lint batch_size = 1;
     lint threads = 1;
     lint epoch_size = 2000;
@@ -24,8 +24,8 @@ int main(int argc, const char * argv[])
         dataset_dir + "t10k-images-idx3-ubyte",
         dataset_dir + "t10k-labels-idx1-ubyte" };
 
-    dataset::Review review{ "D:/develop/my_neurons/rnn_data_set/glove.6B.50d.txt",
-        "D:/develop/my_neurons/rnn_data_set/reviews", 0.2, 40 };
+    dataset::Review review{ "D:/develop/my_neurons/dataset/rnn_data_set/glove.6B.50d.txt",
+        "D:/develop/my_neurons/dataset/rnn_data_set/reviews", 0.2, 40 };
 
     Simple_RNN nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200, review };
 

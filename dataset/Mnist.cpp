@@ -102,8 +102,8 @@ void dataset::Mnist::read_mnist_image_file(std::vector<neurons::Matrix> & images
 
         for (lint i = 0; i < count; ++i)
         {
-            neurons::Matrix new_image{ neurons::Shape{ rows, columns } };
-            neurons::Coordinate pos{ 0, 0 };
+            neurons::Matrix new_image{ neurons::Shape{ rows, columns, 1 } };
+            neurons::Coordinate pos{ 0, 0, 0 };
             for (lint j = 0; j < rows; ++j)
             {
                 for (lint k = 0; k < columns; ++k)

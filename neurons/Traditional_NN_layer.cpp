@@ -15,10 +15,7 @@ neurons::Traditional_NN_layer::Traditional_NN_layer(
     m_b{ b_sh },
     m_act_func{ act_func },
     m_err_func{ err_func }
-{
-    this->m_w.gaussian_random(0, 0.1);
-    this->m_b.gaussian_random(0, 0.1);
-}
+{}
 
 neurons::Traditional_NN_layer::Traditional_NN_layer(const Traditional_NN_layer & other)
     : 

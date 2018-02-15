@@ -15,14 +15,13 @@ Conv_NN::Conv_NN(
     // reshape all inputs and labels so that they are suitable for matrix multiplication
     // lint input_size = this->m_train_set[0].shape().size();
     lint output_size = this->m_train_labels[0].shape().size();
-    lint chls = 1;
 
     this->m_layers.push_back(
         std::make_shared<neurons::CNN_layer>(
         this->m_train_set[0].shape()[0],
         this->m_train_set[0].shape()[1],
-        chls,
-        3, // filters 
+        this->m_train_set[0].shape()[2],
+        6, // filters 
         6, // filter rows
         6, // filter cols
         2, // stride
@@ -35,7 +34,7 @@ Conv_NN::Conv_NN(
         this->m_layers[0]->output_shape()[1],
         this->m_layers[0]->output_shape()[2],
         this->m_layers[0]->output_shape()[3],
-        6, // filters
+        10, // filters
         5, // filter rows
         5, // filter cols
         1, // stride
@@ -48,7 +47,7 @@ Conv_NN::Conv_NN(
         this->m_layers[1]->output_shape()[1],
         this->m_layers[1]->output_shape()[2],
         this->m_layers[1]->output_shape()[3],
-        15, // filters
+        20, // filters
         5, // filter rows
         5, // filter cols
         1, // stride
@@ -61,7 +60,7 @@ Conv_NN::Conv_NN(
         this->m_layers[2]->output_shape()[1],
         this->m_layers[2]->output_shape()[2],
         this->m_layers[2]->output_shape()[3],
-        30, // filters
+        40, // filters
         3, // filter rows
         3, // filter cols
         1, // stride
@@ -79,14 +78,14 @@ Conv_NN::Conv_NN(
 
     for (size_t i = 0; i < this->m_train_set.size(); ++i)
     {
-        this->m_train_set[i].left_extend_shape().right_extend_shape();
+        this->m_train_set[i].left_extend_shape();
         this->m_train_set[i].normalize();
         this->m_train_labels[i].reshape(neurons::Shape{ 1, output_size });
     }
 
     for (size_t i = 0; i < this->m_test_set.size(); ++i)
     {
-        this->m_test_set[i].left_extend_shape().right_extend_shape();
+        this->m_test_set[i].left_extend_shape();
         this->m_test_set[i].normalize();
         this->m_test_labels[i].reshape(neurons::Shape{ 1, output_size });
     }

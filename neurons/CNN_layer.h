@@ -1,3 +1,8 @@
+/********************************************************************
+
+Programmed by Chunnan Sheng
+
+*********************************************************************/
 #pragma once
 #include "Functions.h"
 #include "Traditional_NN_layer.h"
@@ -5,26 +10,37 @@
 
 namespace neurons
 {
+    /*
+    This is class definition of a convolutional neural network layer
+    */
     class CNN_layer : public Traditional_NN_layer
     {
     private:
+        // A module of 2-dimensional convolution algorithm
         Conv_2d m_conv2d;
 
     public:
+        // Default constructor does almost nothing here.
+        // However, default constructor is essential for containers like std::vector, std::list, std::map, etc.
+        // Behaviors of operations on a CNN_layer that is created by default constructor would be undefined.
+        // You should assign a valid CNN_layer instance to the object created by default constructor before
+        // using it.
         CNN_layer();
 
+        // This is the Constructor to create a functional CNN layer
         CNN_layer(
-            lint rows,
-            lint cols,
-            lint chls,
-            lint filters,
-            lint filter_rows,
-            lint filter_cols,
-            lint stride,
-            lint padding,
-            lint threads,
-            neurons::Activation *act_func,
-            neurons::ErrorFunction *err_func = nullptr);
+            lint rows,  // Number of rows for one input sample
+            lint cols,  // Number of columns for one input sample
+            lint chls,  // Number of channels (depth) for one input sample
+            lint filters,  // Number of filters (kernels)
+            lint filter_rows,  // Number of rows for one kernel
+            lint filter_cols,  // Number of columns for one kernel
+            lint stride,  // Stride size (>= 1) 
+            lint padding,  // Zero padding size (>= 0)
+            lint threads,  // Number of threads while training of the network layer
+            neurons::Activation *act_func,  // Activation function of this layer
+            neurons::ErrorFunction *err_func = nullptr // Cost function or error function of this layer
+        );
 
         CNN_layer(const CNN_layer & other);
 

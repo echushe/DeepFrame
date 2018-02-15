@@ -21,11 +21,11 @@ Conv_Pooling_NN::Conv_Pooling_NN(
         std::make_shared<neurons::CNN_layer>(
         this->m_train_set[0].shape()[0],
         this->m_train_set[0].shape()[1],
-        chls,
-        2, // filters 
-        5, // filter rows
-        5, // filter cols
-        1, // stride
+        this->m_train_set[0].shape()[2],
+        6, // filters 
+        6, // filter rows
+        6, // filter cols
+        2, // stride
         2, // padding
         this->m_threads,
         new neurons::Tanh ));
@@ -42,9 +42,9 @@ Conv_Pooling_NN::Conv_Pooling_NN(
         this->m_pooling_layers[0].output_shape()[1],
         this->m_pooling_layers[0].output_shape()[2],
         this->m_pooling_layers[0].output_shape()[3],
-        20, // filters
-        5, // filter rows
-        5, // filter cols
+        30, // filters
+        3, // filter rows
+        3, // filter cols
         1, // stride
         0, // padding
         this->m_threads,
