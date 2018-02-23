@@ -155,7 +155,7 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_backward_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
+std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_back_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
 {
     size_t samples = this->m_x.size();
     std::vector<Matrix> E_to_x_diffs{ samples };
@@ -192,7 +192,7 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_backward_propagate(do
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_backward_propagate(double l_rate)
+std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_back_propagate(double l_rate)
 {
     size_t samples = this->m_x.size();
     std::vector<Matrix> E_to_x_diffs{ samples };

@@ -55,7 +55,8 @@ void dataset::CIFAR_10::cifar_binary_to_dataset(
     uint8_t * image_pos = u_binary;
     for (lint i = 0; i < len; ++i)
     {
-        neurons::Matrix image{ neurons::Shape{this->m_image_rows, this->m_image_cols, this->m_image_chls} };
+        neurons::Matrix image{ neurons::Shape{ this->m_image_rows, this->m_image_cols, this->m_image_chls } };
+
         neurons::Matrix label{ neurons::Shape{this->m_label_size}, 0 };
         neurons::Coordinate pixel_pos{ 0, 0, 0 };
 
@@ -70,6 +71,7 @@ void dataset::CIFAR_10::cifar_binary_to_dataset(
                 {
                     pixel_pos[0] = i; pixel_pos[1] = j; pixel_pos[2] = k;
                     image[pixel_pos] = *image_pos;
+
                     ++image_pos;
                 }
             }

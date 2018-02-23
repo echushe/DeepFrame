@@ -46,7 +46,7 @@ Conv_Pooling_NN::Conv_Pooling_NN(
         3, // filter rows
         3, // filter cols
         1, // stride
-        0, // padding
+        1, // padding
         this->m_threads,
         new neurons::Tanh ));
 
@@ -90,13 +90,24 @@ std::vector<neurons::Matrix> Conv_Pooling_NN::test(
 {
     std::vector<neurons::Matrix> l_inputs = inputs;
 
+    // std::cout << "============================= forward propagation =============================\n";
+    // std::cout << l_inputs[0];
+
     l_inputs = this->m_layers[0]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs);
+
+    // std::cout << l_inputs[0];
 
     l_inputs = this->m_pooling_layers[0].operation_instances()[thread_id]->forward_propagate(l_inputs);
 
+    // std::cout << l_inputs[0];
+
     l_inputs = this->m_layers[1]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs);
 
+    // std::cout << l_inputs[0];
+
     l_inputs = this->m_pooling_layers[1].operation_instances()[thread_id]->forward_propagate(l_inputs);
+
+    // std::cout << l_inputs[0];
 
     for (size_t i = 0; i < l_inputs.size(); ++i)
     {
@@ -117,21 +128,31 @@ std::vector<neurons::Matrix> Conv_Pooling_NN::optimise(
 {
     std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
 
+    // std::cout << "============================= back propagation =============================\n";
+
     std::vector<neurons::Matrix> E_to_x_diffs =
-        this->m_layers[2]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate);
+        this->m_layers[2]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate);
 
     for (size_t i = 0; i < E_to_x_diffs.size(); ++i)
     {
         E_to_x_diffs[i].reshape(this->m_pooling_layers[1].output_shape());
     }
 
-    E_to_x_diffs = this->m_pooling_layers[1].operation_instances()[thread_id]->backward_propagate(E_to_x_diffs);
+    // std::cout << E_to_x_diffs[0];
 
-    E_to_x_diffs = this->m_layers[1]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate, E_to_x_diffs);
+    E_to_x_diffs = this->m_pooling_layers[1].operation_instances()[thread_id]->back_propagate(E_to_x_diffs);
 
-    E_to_x_diffs = this->m_pooling_layers[0].operation_instances()[thread_id]->backward_propagate(E_to_x_diffs);
+    // std::cout << E_to_x_diffs[0];
 
-    E_to_x_diffs = this->m_layers[0]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate, E_to_x_diffs);
+    E_to_x_diffs = this->m_layers[1]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate, E_to_x_diffs);
+
+    // std::cout << E_to_x_diffs[0];
+
+    E_to_x_diffs = this->m_pooling_layers[0].operation_instances()[thread_id]->back_propagate(E_to_x_diffs);
+
+    // std::cout << E_to_x_diffs[0];
+
+    E_to_x_diffs = this->m_layers[0]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate, E_to_x_diffs);
 
     return preds;
 }

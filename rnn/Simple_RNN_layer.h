@@ -83,9 +83,9 @@ namespace neurons
         // Backward propagation
         //--------------------------------------------
 
-        virtual Matrix backward_propagate(double l_rate, const Matrix & E_to_y_diff);
+        virtual Matrix back_propagate(double l_rate, const Matrix & E_to_y_diff);
 
-        virtual Matrix backward_propagate(double l_rate);
+        virtual Matrix back_propagate(double l_rate);
 
         //--------------------------------------------
         // Forward propagation via batch learning
@@ -100,9 +100,9 @@ namespace neurons
         // Backward propagation via batch learning
         //--------------------------------------------
 
-        virtual std::vector<Matrix> batch_backward_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
+        virtual std::vector<Matrix> batch_back_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
 
-        virtual std::vector<Matrix> batch_backward_propagate(double l_rate);
+        virtual std::vector<Matrix> batch_back_propagate(double l_rate);
 
         virtual Shape output_shape() const;
 

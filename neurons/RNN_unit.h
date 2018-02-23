@@ -71,9 +71,9 @@ namespace neurons
 
         Matrix forward_propagate(double & loss, const Matrix & input, const Matrix & targets);
 
-        std::vector<Matrix> backward_propagate_through_time(double l_rate, const Matrix & E_to_y_diff, lint len = 0);
+        std::vector<Matrix> back_propagate_through_time(double l_rate, const Matrix & E_to_y_diff, lint len = 0);
 
-        std::vector<Matrix> backward_propagate_through_time(double l_rate, lint len = 0);
+        std::vector<Matrix> back_propagate_through_time(double l_rate, lint len = 0);
 
         void forget_all();
     

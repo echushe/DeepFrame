@@ -81,7 +81,7 @@ namespace neurons
 
         std::vector<Matrix> forward_propagate(const std::vector<Matrix> &inputs);
 
-        virtual std::vector<Matrix> backward_propagate(const std::vector<Matrix> & E_to_y_diffs);
+        virtual std::vector<Matrix> back_propagate(const std::vector<Matrix> & E_to_y_diffs);
 
         Shape output_shape() const;
     };

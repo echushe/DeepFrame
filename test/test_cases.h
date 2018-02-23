@@ -666,7 +666,7 @@ void test_of_basic_neuron_operations()
     std::vector<neurons::Matrix> images;
     std::vector<neurons::Matrix> labels;
 
-    std::string dataset_dir = "D:/develop/my_neurons/mnist/";
+    std::string dataset_dir = "D:/develop/my_neurons/dataset/mnist/";
 
     dataset::Mnist mnist{
         dataset_dir + "train-images-idx3-ubyte",
@@ -1015,8 +1015,8 @@ void test_rnn_unit()
 void test_review_dataset()
 {
     std::cout << "Hello world!\n";
-    dataset::Review review{ "D:/develop/my_neurons/rnn_data_set/glove.6B.50d.txt",
-        "D:/develop/my_neurons/rnn_data_set/reviews", 0.2, 40 };
+    dataset::Review review{ "D:/develop/my_neurons/dataset/rnn_data_set/glove.6B.50d.txt",
+        "D:/develop/my_neurons/dataset/rnn_data_set/reviews", 0.2, 40 };
 
     std::vector<neurons::Matrix> inputs;
     std::vector<neurons::Matrix> labels;
@@ -1031,7 +1031,6 @@ void test_review_dataset()
 
 void test_of_basic_operations()
 {
-    /*
     vector_cases();
 
     test_matrix_constructor();
@@ -1060,7 +1059,6 @@ void test_of_basic_operations()
     test_EM_1d_mix();
 
     test_rnn_unit();
-    */
 
     test_review_dataset();
 }

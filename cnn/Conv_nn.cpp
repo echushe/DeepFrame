@@ -25,7 +25,7 @@ Conv_NN::Conv_NN(
         6, // filter rows
         6, // filter cols
         2, // stride
-        2, // padding
+        0, // padding
         this->m_threads,
         new neurons::Tanh) );
 
@@ -127,7 +127,7 @@ std::vector<neurons::Matrix> Conv_NN::optimise(
     std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
 
     std::vector<neurons::Matrix> E_to_x_diffs =
-        this->m_layers[this->m_layers.size() - 1]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate);
+        this->m_layers[this->m_layers.size() - 1]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate);
 
     for (size_t i = 0; i < E_to_x_diffs.size(); ++i)
     {
@@ -136,7 +136,7 @@ std::vector<neurons::Matrix> Conv_NN::optimise(
 
     for (lint i = this->m_layers.size() - 2; i >= 0; --i)
     {
-        E_to_x_diffs = this->m_layers[i]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate, E_to_x_diffs);
+        E_to_x_diffs = this->m_layers[i]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate, E_to_x_diffs);
     }
 
     return preds;

@@ -9,25 +9,46 @@ int main(int argc, const char * argv[])
 {
     std::string dataset_dir = "D:/develop/my_neurons/dataset/";
     lint batch_size = 64;
-    lint threads = 8;
+    lint threads = 4;
     lint epoch_size = 20;
+    std::string dataset_type = "mnist";
 
-    if (argc == 4)
+    if (argc == 5)
     {
         batch_size = std::stoi(argv[1]);
         threads = std::stoi(argv[2]);
         epoch_size = std::stoi(argv[3]);
+        dataset_type = argv[4];
     }
 
-    dataset::Mnist mnist{
-        dataset_dir + "mnist/train-images-idx3-ubyte",
-        dataset_dir + "mnist/train-labels-idx1-ubyte",
-        dataset_dir + "mnist/t10k-images-idx3-ubyte",
-        dataset_dir + "mnist/t10k-labels-idx1-ubyte" };
+    std::shared_ptr<dataset::Dataset> data_set;
 
-    dataset::CIFAR_10 cifar_10{ dataset_dir + "cifar-10/" };
+    if ("mnist" == dataset_type)
+    {
+        data_set = std::make_shared<dataset::Mnist>(
+            dataset_dir + "mnist/train-images-idx3-ubyte",
+            dataset_dir + "mnist/train-labels-idx1-ubyte",
+            dataset_dir + "mnist/t10k-images-idx3-ubyte",
+            dataset_dir + "mnist/t10k-labels-idx1-ubyte");
+    }
+    else if ("fashion-mnist" == dataset_type)
+    {
+        data_set = std::make_shared<dataset::Mnist>(
+            dataset_dir + "fashion-mnist/train-images-idx3-ubyte",
+            dataset_dir + "fashion-mnist/train-labels-idx1-ubyte",
+            dataset_dir + "fashion-mnist/t10k-images-idx3-ubyte",
+            dataset_dir + "fashion-mnist/t10k-labels-idx1-ubyte");
+    }
+    else if ("cifar-10" == dataset_type)
+    {
+        data_set = std::make_shared<dataset::CIFAR_10>(dataset_dir + "cifar-10/");
+    }
+    else
+    {
+        return 1;
+    }
 
-    Conv_Pooling_NN nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200, cifar_10 };
+    Conv_NN nn{ 0.001, batch_size, threads, 10000000, epoch_size, 72000, *data_set };
 
     // std::cout << nn;
     nn.train();

@@ -105,10 +105,10 @@ std::vector<neurons::Matrix> Simple_RNN::optimise(
 
         // Backward propagate
         std::vector<neurons::Matrix> E_to_x_diffs;
-        neurons::Matrix E_to_x_diff = this->m_layers[1]->operation_instances()[thread_id]->backward_propagate(this->m_l_rate);
+        neurons::Matrix E_to_x_diff = this->m_layers[1]->operation_instances()[thread_id]->back_propagate(this->m_l_rate);
         E_to_x_diffs.push_back(E_to_x_diff);
 
-        this->m_layers[0]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate, E_to_x_diffs);
+        this->m_layers[0]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate, E_to_x_diffs);
 
         preds.push_back(pred);
     }

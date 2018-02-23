@@ -60,7 +60,7 @@ std::vector<neurons::Matrix> Simple_NN::optimise(
     std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
 
     std::vector<neurons::Matrix> E_to_x_diffs =
-        this->m_layers[0]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate);
+        this->m_layers[0]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate);
 
     return preds;
 }

@@ -185,17 +185,17 @@ neurons::Matrix neurons::Traditional_NN_layer_op::forward_propagate(const Matrix
     return this->batch_forward_propagate(inputs, targets)[0];
 }
 
-neurons::Matrix neurons::Traditional_NN_layer_op::backward_propagate(double l_rate, const Matrix & E_to_y_diff)
+neurons::Matrix neurons::Traditional_NN_layer_op::back_propagate(double l_rate, const Matrix & E_to_y_diff)
 {
     std::vector<Matrix> E_to_y_diffs;
     E_to_y_diffs.push_back(E_to_y_diff);
 
-    return this->batch_backward_propagate(l_rate, E_to_y_diffs)[0];
+    return this->batch_back_propagate(l_rate, E_to_y_diffs)[0];
 }
 
-neurons::Matrix neurons::Traditional_NN_layer_op::backward_propagate(double l_rate)
+neurons::Matrix neurons::Traditional_NN_layer_op::back_propagate(double l_rate)
 {
-    return this->batch_backward_propagate(l_rate)[0];
+    return this->batch_back_propagate(l_rate)[0];
 }
 
 neurons::Matrix& neurons::Traditional_NN_layer_op::get_weight_gradient() const

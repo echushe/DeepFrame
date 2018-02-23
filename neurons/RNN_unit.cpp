@@ -178,7 +178,7 @@ neurons::Matrix neurons::RNN_unit::forward_propagate(double &loss, const Matrix 
 }
 
 
-std::vector<neurons::Matrix> neurons::RNN_unit::backward_propagate_through_time(
+std::vector<neurons::Matrix> neurons::RNN_unit::back_propagate_through_time(
     double l_rate, const Matrix &E_to_y_diff, lint len)
 {
     if (0 == len)
@@ -256,11 +256,11 @@ std::vector<neurons::Matrix> neurons::RNN_unit::backward_propagate_through_time(
 }
 
 
-std::vector<neurons::Matrix> neurons::RNN_unit::backward_propagate_through_time(double l_rate, lint len)
+std::vector<neurons::Matrix> neurons::RNN_unit::back_propagate_through_time(double l_rate, lint len)
 {
     Matrix E_to_y_diff{ this->m_b.shape(), 1 };  
 
-    return this->backward_propagate_through_time(l_rate, E_to_y_diff, len);
+    return this->back_propagate_through_time(l_rate, E_to_y_diff, len);
 }
 
 void neurons::RNN_unit::forget_all()

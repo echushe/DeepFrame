@@ -153,14 +153,14 @@ neurons::Matrix neurons::Simple_RNN_layer_op::forward_propagate(const Matrix & i
     return pred;
 }
 
-neurons::Matrix neurons::Simple_RNN_layer_op::backward_propagate(double l_rate, const Matrix & E_to_y_diff)
+neurons::Matrix neurons::Simple_RNN_layer_op::back_propagate(double l_rate, const Matrix & E_to_y_diff)
 {
-    return this->m_rnn.backward_propagate_through_time(l_rate, E_to_y_diff, 1)[0];
+    return this->m_rnn.back_propagate_through_time(l_rate, E_to_y_diff, 1)[0];
 }
 
-neurons::Matrix neurons::Simple_RNN_layer_op::backward_propagate(double l_rate)
+neurons::Matrix neurons::Simple_RNN_layer_op::back_propagate(double l_rate)
 {
-    return this->m_rnn.backward_propagate_through_time(l_rate, 1)[0];
+    return this->m_rnn.back_propagate_through_time(l_rate, 1)[0];
 }
 
 std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propagate(const std::vector<Matrix>& inputs)
@@ -198,15 +198,15 @@ std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propaga
 }
 
 
-std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_backward_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
+std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_back_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
 {
-    return  this->m_rnn.backward_propagate_through_time(l_rate, E_to_y_diffs.back());
+    return  this->m_rnn.back_propagate_through_time(l_rate, E_to_y_diffs.back());
 }
 
 
-std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_backward_propagate(double l_rate)
+std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_back_propagate(double l_rate)
 {
-    return  this->m_rnn.backward_propagate_through_time(l_rate);
+    return  this->m_rnn.back_propagate_through_time(l_rate);
 }
 
 neurons::Shape neurons::Simple_RNN_layer_op::output_shape() const

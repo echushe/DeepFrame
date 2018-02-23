@@ -270,6 +270,30 @@ neurons::Matrix & neurons::Matrix::operator -= (const Matrix & other)
 }
 
 
+neurons::Matrix & neurons::Matrix::operator += (double scalar)
+{
+    lint size = m_shape.m_size;
+    for (lint i = 0; i < size; ++i)
+    {
+        m_data[i] += scalar;
+    }
+
+    return *this;
+}
+
+
+neurons::Matrix & neurons::Matrix::operator -= (double scalar)
+{
+    lint size = m_shape.m_size;
+    for (lint i = 0; i < size; ++i)
+    {
+        m_data[i] -= scalar;
+    }
+
+    return *this;
+}
+
+
 neurons::Matrix & neurons::Matrix::operator *= (double scalar)
 {
     lint size = m_shape.m_size;

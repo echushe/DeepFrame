@@ -86,9 +86,9 @@ namespace neurons
         // Backward propagation
         //--------------------------------------------
 
-        virtual Matrix backward_propagate(double l_rate, const Matrix & E_to_y_diff);
+        virtual Matrix back_propagate(double l_rate, const Matrix & E_to_y_diff);
 
-        virtual Matrix backward_propagate(double l_rate);
+        virtual Matrix back_propagate(double l_rate);
 
         Matrix& get_weight_gradient() const;
 

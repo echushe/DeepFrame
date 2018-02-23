@@ -19,23 +19,17 @@ Multi_Layer_NN::Multi_Layer_NN(
     lint output_size = this->m_train_labels[0].shape().size();
 
     // Add layers to the network
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(input_size, 100, this->m_threads, new neurons::Relu));
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(input_size, 100, this->m_threads, new neurons::Tanh));
 
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Tanh));
 
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Tanh));
 
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Tanh));
 
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Tanh));
 
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
-
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
-
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
-
-    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Relu));
+    this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, 100, this->m_threads, new neurons::Tanh));
 
     this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(100, output_size, this->m_threads, nullptr, new neurons::Softmax_CrossEntropy));
 
@@ -83,11 +77,11 @@ std::vector<neurons::Matrix> Multi_Layer_NN::optimise(
     std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
 
     std::vector<neurons::Matrix> E_to_x_diffs =
-        this->m_layers[this->m_layers.size() - 1]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate);
+        this->m_layers[this->m_layers.size() - 1]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate);
 
     for (lint i = this->m_layers.size() - 2; i >= 0; --i)
     {
-        E_to_x_diffs = this->m_layers[i]->operation_instances()[thread_id]->batch_backward_propagate(this->m_l_rate, E_to_x_diffs);
+        E_to_x_diffs = this->m_layers[i]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate, E_to_x_diffs);
     }
 
     return preds;
