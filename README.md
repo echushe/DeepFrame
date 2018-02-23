@@ -9,7 +9,8 @@
 > - *cost or error functions*
 > - *convolutional functions*
 > - *pooling functions*
-> - *forward and backward propagation*
+> - *forward propagation*
+> - *back propagation*
 > - *Back Propagation Through Time*
 > - *basic building block of RNN (RNN_unit)*
 > - *One dimensional GMM EM algorithm*
