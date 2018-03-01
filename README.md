@@ -4,16 +4,18 @@
 ## This solution includes four projects:
 - **neurons** is a static library including some basic neuron concepts.
 > Following algorithms and functions are included in this module
-> - *vector and matrix calculations*
-> - *activation functions*
-> - *cost or error functions*
-> - *convolutional functions*
+> - *Vector and Matrix Calculations*
+> - *Activation Functions*
+> - *Cost, Error or Loss Functions*
+> - *Convolutional Functions*
 > - *pooling functions*
-> - *forward propagation*
-> - *back propagation*
+> - *Forward Propagation*
+> - *Back Propagation*
 > - *Back Propagation Through Time*
-> - *basic building block of RNN (RNN_unit)*
-> - *One dimensional GMM EM algorithm*
+> - *Batch Learning*
+> - *Multi-threading*
+> - *Basic Building Block of RNN (RNN_unit)*
+> - *One Dimensional GMM EM Algorithm*
 - **dataset** is a module with a general dataset interface for neural network training.
 > Supports of following dataset are included in this module
 > - **MNIST** for feedforward neural networks
