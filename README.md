@@ -1,5 +1,5 @@
 # Deep_Learning_via_C_plus_plus
-> This repository includes homemade C++ source code of deep learing
+> This repository includes homemade C++ source code of deep learning
 ## You can download this repository as a Visual Studio 2017 solution
 ## This solution includes four projects:
 - **neurons** is a static library including some basic neuron concepts.
@@ -8,7 +8,7 @@
 > - *Activation Functions*
 > - *Cost, Error or Loss Functions*
 > - *Convolutional Functions*
-> - *pooling functions*
+> - *Pooling Functions*
 > - *Forward Propagation*
 > - *Back Propagation*
 > - *Back Propagation Through Time*
