@@ -53,18 +53,15 @@ std::unique_ptr<neurons::Activation> neurons::Tanh::clone()
 
 void neurons::Tanh::operator () (Matrix & output, Matrix & diff, const Matrix & in)
 {
-    Matrix l_output{ in.m_shape };
-    Matrix l_diff{ in.m_shape };
+    output = Matrix{ in.m_shape };
+    diff = Matrix{ in.m_shape };
     lint size = in.m_shape.size();
     for (lint i = 0; i < size; ++i)
     {
         double y = tanh(in.m_data[i]);
-        l_output.m_data[i] = y;
-        l_diff.m_data[i] = (1 + y) * (1 - y);
+        output.m_data[i] = y;
+        diff.m_data[i] = (1 + y) * (1 - y);
     }
-
-    output = std::move(l_output);
-    diff = std::move(l_diff);
 }
 
 
@@ -73,10 +70,11 @@ std::unique_ptr<neurons::Activation> neurons::Relu::clone()
     return std::make_unique<neurons::Relu>();
 }
 
+
 void neurons::Relu::operator () (Matrix & output, Matrix & diff, const Matrix & in)
 {
-    Matrix l_output{ in.m_shape };
-    Matrix l_diff{ in.m_shape };
+    output = Matrix{ in.m_shape };
+    diff = Matrix{ in.m_shape };
     lint size = in.m_shape.size();
     for (lint i = 0; i < size; ++i)
     {
@@ -84,18 +82,15 @@ void neurons::Relu::operator () (Matrix & output, Matrix & diff, const Matrix & 
 
         if (x >= 0)
         {
-            l_output.m_data[i] = x;
-            l_diff.m_data[i] = 1;
+            output.m_data[i] = x;
+            diff.m_data[i] = 1;
         }
         else
         {
-            l_output.m_data[i] = 0;
-            l_diff.m_data[i] = 0;
+            output.m_data[i] = 0;
+            diff.m_data[i] = 0;
         }
     }
-
-    output = std::move(l_output);
-    diff = std::move(l_diff);
 }
 
 
@@ -104,33 +99,40 @@ std::unique_ptr<neurons::Activation> neurons::Softmax::clone()
     return std::make_unique<neurons::Softmax>();
 }
 
+
 void neurons::Softmax::operator () (Matrix & output, Matrix & diff, const Matrix & in)
 {
-    Matrix l_output{ in.m_shape };
-    Matrix l_diff{ in.m_shape };
+    output = Matrix{ in.m_shape };
+    diff = Matrix{ in.m_shape };
     lint size = in.m_shape.size();
 
     double sum = 0;
     for (lint i = 0; i < size; ++i)
     {
-        l_output.m_data[i] = exp(in.m_data[i]);
-        sum += l_output.m_data[i];
+        output.m_data[i] = exp(in.m_data[i]);
+        sum += output.m_data[i];
     }
 
     for (lint i = 0; i < size; ++i)
     {
-        l_output.m_data[i] /= sum;
-        l_diff.m_data[i] = l_output.m_data[i] * (1 - l_output.m_data[i]);
+        output.m_data[i] /= sum;
+        diff.m_data[i] = output.m_data[i] * (1 - output.m_data[i]);
     }
-
-    output = std::move(l_output);
-    diff = std::move(l_diff);
 }
+
+
+neurons::HalfSquareError::HalfSquareError(const std::unique_ptr<Activation> & act_func)
+    : m_act_func{ act_func->clone() }
+{}
+
+neurons::HalfSquareError::HalfSquareError(Activation * act_func)
+    : m_act_func{ act_func }
+{}
 
 
 std::unique_ptr<neurons::ErrorFunction> neurons::HalfSquareError::clone()
 {
-    return std::make_unique<neurons::HalfSquareError>();
+    return std::make_unique<neurons::HalfSquareError>(this->m_act_func->clone());
 }
 
 double neurons::HalfSquareError::operator()(Matrix & diff, const Matrix & target, const Matrix & input)
@@ -139,6 +141,9 @@ double neurons::HalfSquareError::operator()(Matrix & diff, const Matrix & target
     {
         throw std::invalid_argument(std::string("ErrorFunction: target and pred should be of the same size."));
     }
+    // Execute the activation function
+    // The activation function may be sigmoid, tanh, relu, etc
+    this->m_act_func->operator()(this->m_act, diff, input);
 
     Matrix l_diff{ target.m_shape };
     lint size = target.m_shape.size();
@@ -146,14 +151,14 @@ double neurons::HalfSquareError::operator()(Matrix & diff, const Matrix & target
     double sum = 0;
     for (lint i = 0; i < size; ++i)
     {
-        double sub = input.m_data[i] - target.m_data[i];
+        double sub = this->m_act.m_data[i] - target.m_data[i];
         sum += sub * sub;
         
         l_diff.m_data[i] = sub;
     }
 
     sum /= 2;
-    diff = std::move(l_diff);
+    diff = neurons::multiply(diff, l_diff);
 
     return sum;
 }
@@ -161,9 +166,14 @@ double neurons::HalfSquareError::operator()(Matrix & diff, const Matrix & target
 double neurons::HalfSquareError::operator()(Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input)
 {
     double loss = this->operator()(diff, target, input);
-    pred = input;
+    pred = this->get_activation();
 
     return loss;
+}
+
+neurons::Matrix & neurons::HalfSquareError::get_activation() const
+{
+    return this->m_act;
 }
 
 
@@ -179,7 +189,7 @@ double neurons::Sigmoid_CrossEntropy::operator()(Matrix & diff, const Matrix & t
         throw std::invalid_argument(std::string("ErrorFunction: target and pred should be of the same size."));
     }
 
-    Matrix l_diff{ target.m_shape };
+    diff = Matrix{ target.m_shape };
 
 
     if (this->m_sigmoid.m_shape.size() != target.m_shape.size())
@@ -201,11 +211,10 @@ double neurons::Sigmoid_CrossEntropy::operator()(Matrix & diff, const Matrix & t
         
         this->m_sigmoid.m_data[i] = y;
         sum += target.m_data[i] * log(y);
-        l_diff.m_data[i] = y - target.m_data[i];
+        diff.m_data[i] = y - target.m_data[i];
     }
 
     sum *= -1;
-    diff = std::move(l_diff);
 
     return sum;
 }
@@ -238,7 +247,7 @@ double neurons::Softmax_CrossEntropy::operator()(Matrix & diff, const Matrix & t
         throw std::invalid_argument(std::string("ErrorFunction: target and pred should be of the same size."));
     }
 
-    Matrix l_diff{ target.m_shape };
+    diff = Matrix{ target.m_shape };
 
     if (this->m_softmax.m_shape.size() != target.m_shape.size())
     {
@@ -263,11 +272,10 @@ double neurons::Softmax_CrossEntropy::operator()(Matrix & diff, const Matrix & t
     {
         this->m_softmax.m_data[i] /= softmax_sum;
         centropy_sum += target.m_data[i] * log(this->m_softmax.m_data[i]);
-        l_diff.m_data[i] = this->m_softmax.m_data[i] - target.m_data[i];
+        diff.m_data[i] = this->m_softmax.m_data[i] - target.m_data[i];
     }
 
     centropy_sum *= -1;
-    diff = std::move(l_diff);
 
     return centropy_sum;
 }

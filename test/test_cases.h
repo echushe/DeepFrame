@@ -685,7 +685,7 @@ void test_of_basic_neuron_operations()
     neurons::Tanh tanh;
     neurons::Relu relu;
     neurons::Softmax softmax;
-    neurons::HalfSquareError hse;
+    neurons::HalfSquareError hse{ std::make_unique<neurons::Tanh>() };
     neurons::Sigmoid_CrossEntropy sig_cross;
     neurons::Softmax_CrossEntropy sm_cross;
 

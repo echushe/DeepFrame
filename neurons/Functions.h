@@ -86,13 +86,22 @@ namespace neurons
 
     class HalfSquareError : public ErrorFunction
     {
+    private:
+        std::unique_ptr<Activation> m_act_func;
+
+        mutable Matrix m_act;
+
     public:
-        HalfSquareError() {}
+        HalfSquareError(const std::unique_ptr<Activation> & act_func);
+
+        HalfSquareError(Activation * act_func);
 
         virtual std::unique_ptr<ErrorFunction> clone();
 
         virtual double operator () (Matrix & diff, const Matrix & target, const Matrix & input);
         virtual double operator () (Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input);
+
+        Matrix & get_activation() const;
     };
 
 
