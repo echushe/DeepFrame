@@ -16,6 +16,7 @@
 > - *Multi-threading*
 > - *Basic Building Block of RNN (RNN_unit)*
 > - *One Dimensional GMM EM Algorithm*
+> - *Linear Regression Algorithm*
 - **dataset** is a module with a general dataset interface for neural network training.
 > Supports of following dataset are included in this module
 > - **MNIST** for feedforward neural networks

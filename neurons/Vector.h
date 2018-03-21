@@ -36,6 +36,7 @@ namespace neurons
     class Vector
     {
         friend class Matrix;
+        friend class Linear_Regression;
     private:
         // long long (64bit integer) as amount of dimensions
         lint m_dim;

@@ -9,6 +9,7 @@
 #include "RNN_unit.h"
 #include "Mnist.h"
 #include "Review.h"
+#include "LinearRegression.h"
 #include <iostream>
 #include <vector>
 #include <list>
@@ -1029,8 +1030,75 @@ void test_review_dataset()
     }
 }
 
+
+void test_linear_regression_A()
+{
+    std::cout << "Start linear regression test ... \n";
+    neurons::Vector x1{ 1, 0 };
+    neurons::Vector x2{ 0, 1 };
+    neurons::Vector x3{ 2, 0 };
+    neurons::Vector x4{ 0, 2 };
+    std::vector<neurons::Vector> X{ x1, x2, x3, x4 };
+    neurons::Vector Y{ 0.1, 0.1, 0.2, 0.2 };
+
+    neurons::Linear_Regression LR{ X, Y };
+    LR.fit(10e-14);
+
+    neurons::Vector tx1{ 2, 2 };
+    neurons::Vector tx2{ 0.5, 0.5 };
+    neurons::Vector tx3{ 3, 0 };
+    std::vector<neurons::Vector> tX{ tx1, tx2, tx3 };
+    neurons::Vector tY = LR.predict(tX);
+
+    std::cout << tY << "\n";
+    std::cout << LR.coef_and_intercept() << "\n";
+}
+
+void test_linear_regression_B()
+{
+    std::cout << "Start linear regression test ... \n";
+
+    for (lint k = 0; k < 100; ++k)
+    {
+        std::cout << "================================================\n";
+        lint x_dims = 1 + rand() % 500;
+        lint samples = 2 + rand() % 500;
+        std::cout << "Dimensions of x: " << x_dims << "\n";
+        std::cout << "Number of samples: " << samples << "\n";
+        std::cout << "--------------------------------------\n";
+        std::vector<neurons::Vector> X;
+
+        for (lint i = 0; i < samples; ++i)
+        {
+            neurons::Vector x(x_dims);
+
+            for (lint j = 0; j < x_dims; ++j)
+            {
+                x[j] = (static_cast<double>(rand() % 1000)) / 1000;
+            }
+
+            X.push_back(x);
+        }
+
+        neurons::Vector Y(samples);
+        for (lint i = 0; i < samples; ++i)
+        {
+            Y[i] = (static_cast<double>(rand() % 1000)) / 1000;
+        }
+
+        for (lint i = 1; i < 10; ++i)
+        {
+            neurons::Linear_Regression LR{ X, Y };
+            LR.fit(10e-5 / pow(10, i));
+            std::cout << LR.coef_and_intercept() << "\n";
+        }
+    }
+}
+
+
 void test_of_basic_operations()
 {
+    /*
     vector_cases();
 
     test_matrix_constructor();
@@ -1061,6 +1129,10 @@ void test_of_basic_operations()
     test_rnn_unit();
 
     test_review_dataset();
+    */
+
+    test_linear_regression_A();
+    test_linear_regression_B();
 }
 
 

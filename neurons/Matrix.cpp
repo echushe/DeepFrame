@@ -757,6 +757,19 @@ neurons::Matrix neurons::Matrix::reduce_mean(lint dim) const
     return this->fuse(dim) / static_cast<double>(dim_size);
 }
 
+double neurons::Matrix::euclidean_norm() const
+{
+    // Calculate the norm
+    double norm = 0;
+    lint size = this->m_shape.m_size;
+    for (lint i = 0; i < size; ++i)
+    {
+        norm += this->m_data[i] * this->m_data[i];
+    }
+
+    return norm;
+}
+
 
 neurons::Shape neurons::Matrix::shape() const
 {

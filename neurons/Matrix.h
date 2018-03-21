@@ -39,6 +39,7 @@ namespace neurons
         friend class Pooling_2d;
         friend class MaxPooling_2d;
         friend class EM_1d;
+        friend class Linear_Regression;
     private:
         // Shape of this matrix
         Shape m_shape;
@@ -210,6 +211,10 @@ namespace neurons
         // For example, a matrix of shape [4, 6, 5, 7], if we get its reduce_mean with argument dim = 1,
         // it will be turned into a mean of 6 matrices of shape [4, 5, 7]
         Matrix reduce_mean(lint dim) const;
+
+
+        double euclidean_norm() const;
+
 
     public:
         // Get shape of the matrix

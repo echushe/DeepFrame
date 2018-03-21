@@ -114,6 +114,7 @@
     <ClInclude Include="CNN_layer.h" />
     <ClInclude Include="Convolution.h" />
     <ClInclude Include="Coordinate.h" />
+    <ClInclude Include="LinearRegression.h" />
     <ClInclude Include="MixtureModel.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Functions.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="CNN_layer.cpp" />
     <ClCompile Include="Convolution.cpp" />
     <ClCompile Include="Coordinate.cpp" />
+    <ClCompile Include="LinearRegression.cpp" />
     <ClCompile Include="MixtureModel.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Matrix.cpp" />
