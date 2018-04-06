@@ -1,12 +1,12 @@
 #pragma once
-#include "Matrix.h"
+#include "TMatrix.h"
 
 namespace neurons
 {
     class Conv_1d
     {
     private:
-        mutable Matrix m_diff_to_w;
+        mutable TMatrix<> m_diff_to_w;
 
         Shape m_input_sh;
         Shape m_weights_sh;
@@ -27,9 +27,9 @@ namespace neurons
         // 10 is number of filters.
         // Shape of the result will be: [4, 24, 10], in which 4 is batch size, 24 is
         // output size, and 10 is depth (identical as number of filters)
-        Matrix operator () (const Matrix & input, const Matrix & weights, const Matrix & bias);
+        TMatrix<> operator () (const TMatrix<> & input, const TMatrix<> & weights, const TMatrix<> & bias);
 
-        Matrix & get_diff_to_weights() const;
+        TMatrix<> & get_diff_to_weights() const;
     };
 
     class Conv_2d
@@ -47,8 +47,8 @@ namespace neurons
         lint m_r_zero_p;
         lint m_c_zero_p;
 
-        mutable Matrix m_diff_to_w;
-        mutable Matrix m_diff_to_x;
+        mutable TMatrix<> m_diff_to_w;
+        mutable TMatrix<> m_diff_to_x;
 
 
     
@@ -66,16 +66,16 @@ namespace neurons
         // 10 is number of filters.
         // Shape of the result will be: [4, 24, 24, 10], in which 4 is batch size, [24, 24] is
         // output size, and 10 is depth (identical as number of filters)
-        Matrix operator () (const Matrix & input, const Matrix & weights, const Matrix & bias);
+        TMatrix<> operator () (const TMatrix<> & input, const TMatrix<> & weights, const TMatrix<> & bias);
 
-        Matrix & get_diff_to_weights() const;
+        TMatrix<> & get_diff_to_weights() const;
 
-        Matrix & get_diff_to_input() const;
+        TMatrix<> & get_diff_to_input() const;
 
         Shape get_output_shape() const;
 
     public:
-        Matrix zero_padding(const Matrix & input);
+        TMatrix<> zero_padding(const TMatrix<> & input);
     };
 
     class Conv_3d

@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnn", "dnn\dnn.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dataset", "dataset\dataset.vcxproj", "{C176F335-CC3F-48B9-A2FE-E23C6D273F45}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "misc", "misc\misc.vcxproj", "{456028EB-1F34-40B0-B478-63F2A5D4638C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,16 @@ Global
 		{C176F335-CC3F-48B9-A2FE-E23C6D273F45}.Release|x86.ActiveCfg = Release|Win32
 		{C176F335-CC3F-48B9-A2FE-E23C6D273F45}.Release|x86.Build.0 = Release|Win32
 		{C176F335-CC3F-48B9-A2FE-E23C6D273F45}.Release|x86.Deploy.0 = Release|Win32
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Debug|x64.ActiveCfg = Debug|x64
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Debug|x64.Build.0 = Debug|x64
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Debug|x86.ActiveCfg = Debug|Win32
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Debug|x86.Build.0 = Debug|Win32
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|x64.ActiveCfg = Release|x64
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|x64.Build.0 = Release|x64
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|x86.ActiveCfg = Release|Win32
+		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

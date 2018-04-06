@@ -1,5 +1,5 @@
 #pragma once
-#include "Matrix.h"
+#include "TMatrix.h"
 
 namespace neurons
 {
@@ -10,7 +10,7 @@ namespace neurons
         Shape m_kernel_sh;
         Shape m_output_sh;
 
-        mutable Matrix m_diff_y_to_x;
+        mutable TMatrix<> m_diff_y_to_x;
 
     public:
         Pooling_2d() {}
@@ -20,9 +20,9 @@ namespace neurons
 
         virtual std::unique_ptr<Pooling_2d> clone() = 0;
 
-        Matrix operator () (const Matrix & in);
+        TMatrix<> operator () (const TMatrix<> & in);
 
-        Matrix back_propagate(const Matrix & diff_E_to_output) const;
+        TMatrix<> back_propagate(const TMatrix<> & diff_E_to_output) const;
 
     private:
         virtual void pooling_func(const double *input_data, double *diff_data,
@@ -79,9 +79,9 @@ namespace neurons
         Pooling_layer_op();
         Pooling_layer_op(const Shape &input_sh, const Shape &kernel_sh);
 
-        std::vector<Matrix> forward_propagate(const std::vector<Matrix> &inputs);
+        std::vector<TMatrix<>> forward_propagate(const std::vector<TMatrix<>> &inputs);
 
-        virtual std::vector<Matrix> back_propagate(const std::vector<Matrix> & E_to_y_diffs);
+        virtual std::vector<TMatrix<>> back_propagate(const std::vector<TMatrix<>> & E_to_y_diffs);
 
         Shape output_shape() const;
     };

@@ -24,7 +24,7 @@ dataset::Review::Review(
 }
 
 void dataset::Review::read_word_vec_dic(
-    std::unordered_map<std::string, neurons::Matrix> &dic, const std::string & word_vec_file)
+    std::unordered_map<std::string, neurons::TMatrix<>> &dic, const std::string & word_vec_file)
 {
     std::fstream infile;
     infile.open(word_vec_file);
@@ -73,13 +73,13 @@ void dataset::Review::read_word_vec_dic(
         // Convert the vector of floats into a neurons::Vector
         neurons::Vector vec{ float_vals.begin(), float_vals.end() };
 
-        // Convert the neurons::vector into a neurons::Matrix, and
+        // Convert the neurons::vector into a neurons::TMatrix<>, and
         // insert it into the word-vec dictionary via the key
-        dic.insert(std::make_pair(key, neurons::Matrix{ vec, true }));
+        dic.insert(std::make_pair(key, neurons::TMatrix<>{ vec, true }));
 
         if (0 == index % 10000)
         {
-            std::cout << index << '\t' << key << "\n"; // " => " << neurons::Matrix{ vec, true } << "\n";
+            std::cout << index << '\t' << key << "\n"; // " => " << neurons::TMatrix<>{ vec, true } << "\n";
         }
         ++index;
     }
@@ -127,9 +127,9 @@ std::vector<std::string> dataset::Review::read_review(const std::string & review
 }
 
 
-neurons::Matrix dataset::Review::review_to_matrix(const std::vector<std::string>& review) const
+neurons::TMatrix<> dataset::Review::review_to_matrix(const std::vector<std::string>& review) const
 {
-    std::vector<neurons::Matrix> review_words_vec;
+    std::vector<neurons::TMatrix<>> review_words_vec;
 
     for (std::string word : review)
     {
@@ -138,7 +138,7 @@ neurons::Matrix dataset::Review::review_to_matrix(const std::vector<std::string>
 
         if (!this->m_word_vec_dic.count(word))
         {
-            review_words_vec.push_back(neurons::Matrix{ neurons::Shape{ 1, this->m_wordvec_len }, 0 });
+            review_words_vec.push_back(neurons::TMatrix<>{ neurons::Shape{ 1, this->m_wordvec_len }, 0 });
         }
         else
         {
@@ -146,7 +146,7 @@ neurons::Matrix dataset::Review::review_to_matrix(const std::vector<std::string>
         }
     }
 
-    neurons::Matrix review_mat{ review_words_vec };
+    neurons::TMatrix<> review_mat{ review_words_vec };
 
     review_mat.reshape(neurons::Shape{ static_cast<lint>(review_words_vec.size()), this->m_wordvec_len });
 
@@ -154,7 +154,7 @@ neurons::Matrix dataset::Review::review_to_matrix(const std::vector<std::string>
 }
 
 
-void dataset::Review::get_data_set(std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+void dataset::Review::get_data_set(std::vector<neurons::TMatrix<>>& inputs, std::vector<neurons::TMatrix<>>& labels, lint limit) const
 {
     std::default_random_engine label_rand{ 120 };
     std::uniform_int_distribution<int> label_distribution{ 0, 1 };
@@ -168,8 +168,8 @@ void dataset::Review::get_data_set(std::vector<neurons::Matrix>& inputs, std::ve
 
     for (size_t i = 0; i < all_samples; ++i)
     {
-        neurons::Matrix review_mat;
-        neurons::Matrix review_label{ neurons::Shape{ 2 }, 0 };
+        neurons::TMatrix<> review_mat;
+        neurons::TMatrix<> review_label{ neurons::Shape{ 2 }, 0 };
 
         if (pos_index == this->m_pos_reviews.size() && neg_index < this->m_neg_reviews.size())
         {
@@ -225,7 +225,7 @@ void dataset::Review::get_data_set(std::vector<neurons::Matrix>& inputs, std::ve
 
 
 void dataset::Review::get_training_set(
-    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+    std::vector<neurons::TMatrix<>>& inputs, std::vector<neurons::TMatrix<>>& labels, lint limit) const
 {
     size_t all_samples = this->m_inputs.size();
     size_t train_end = static_cast<size_t>(all_samples * (1 - this->m_test_rate));
@@ -250,7 +250,7 @@ void dataset::Review::get_training_set(
 
 
 void dataset::Review::get_test_set(
-    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+    std::vector<neurons::TMatrix<>>& inputs, std::vector<neurons::TMatrix<>>& labels, lint limit) const
 {
     size_t all_samples = this->m_inputs.size();
     size_t train_end = static_cast<size_t>(all_samples * (1 - this->m_test_rate));

@@ -95,9 +95,9 @@ void NN::print_test_label(std::ostream & os) const
 
 void NN::train()
 {
-    std::vector<std::vector<neurons::Matrix>> inputs;
-    std::vector<std::vector<neurons::Matrix>> targets;
-    std::vector<std::vector<neurons::Matrix>> preds;
+    std::vector<std::vector<neurons::TMatrix<>>> inputs;
+    std::vector<std::vector<neurons::TMatrix<>>> targets;
+    std::vector<std::vector<neurons::TMatrix<>>> preds;
 
     lint start_time = neurons::now_in_seconds();
 
@@ -139,9 +139,9 @@ void NN::train()
 
 void NN::test()
 {
-    std::vector<std::vector<neurons::Matrix>> inputs;
-    std::vector<std::vector<neurons::Matrix>> targets;
-    std::vector<std::vector<neurons::Matrix>> preds;
+    std::vector<std::vector<neurons::TMatrix<>>> inputs;
+    std::vector<std::vector<neurons::TMatrix<>>> targets;
+    std::vector<std::vector<neurons::TMatrix<>>> preds;
 
     double loss_sum = 0;
     double accuracy_sum = 0;
@@ -160,10 +160,10 @@ void NN::test()
 
 
 void NN::get_batch(
-    std::vector<std::vector<neurons::Matrix>> & data_batch,
-    std::vector<std::vector<neurons::Matrix>> & label_batch,
-    const std::vector<neurons::Matrix> & data,
-    const std::vector<neurons::Matrix> & label,
+    std::vector<std::vector<neurons::TMatrix<>>> & data_batch,
+    std::vector<std::vector<neurons::TMatrix<>>> & label_batch,
+    const std::vector<neurons::TMatrix<>> & data,
+    const std::vector<neurons::TMatrix<>> & label,
     std::default_random_engine & rand_generator,
     std::uniform_int_distribution<size_t> & distribution)
 {
@@ -178,8 +178,8 @@ void NN::get_batch(
         ++batch_size_of_each_thread;
     }
 
-    std::vector<neurons::Matrix> data_batch_of_each_thread;
-    std::vector<neurons::Matrix> label_batch_of_each_thread;
+    std::vector<neurons::TMatrix<>> data_batch_of_each_thread;
+    std::vector<neurons::TMatrix<>> label_batch_of_each_thread;
 
     for (lint i = 1; i <= this->m_batch_size; ++i)
     {
@@ -208,9 +208,9 @@ void NN::get_batch(
 
 
 double NN::train_step(
-    const std::vector<std::vector<neurons::Matrix>> & inputs,
-    const std::vector<std::vector<neurons::Matrix>> & targets,
-    std::vector<std::vector<neurons::Matrix>> & preds)
+    const std::vector<std::vector<neurons::TMatrix<>>> & inputs,
+    const std::vector<std::vector<neurons::TMatrix<>>> & targets,
+    std::vector<std::vector<neurons::TMatrix<>>> & preds)
 {
     preds.resize(inputs.size());
 
@@ -247,9 +247,9 @@ double NN::train_step(
 
 
 double NN::test_step(
-    const std::vector<std::vector<neurons::Matrix>> & inputs,
-    const std::vector<std::vector<neurons::Matrix>> & targets,
-    std::vector<std::vector<neurons::Matrix>> & preds)
+    const std::vector<std::vector<neurons::TMatrix<>>> & inputs,
+    const std::vector<std::vector<neurons::TMatrix<>>> & targets,
+    std::vector<std::vector<neurons::TMatrix<>>> & preds)
 {
     preds.resize(inputs.size());
 
@@ -284,7 +284,7 @@ double NN::test_step(
     return loss / this->m_batch_size;
 }
 
-double NN::get_accuracy(const neurons::Matrix & pred, const neurons::Matrix & target)
+double NN::get_accuracy(const neurons::TMatrix<> & pred, const neurons::TMatrix<> & target)
 {
     double acc = 0;
     neurons::Coordinate pred_argmax = pred.argmax();
@@ -302,8 +302,8 @@ double NN::get_accuracy(const neurons::Matrix & pred, const neurons::Matrix & ta
 }
 
 double NN::get_accuracy(
-    const std::vector<std::vector<neurons::Matrix>> & preds,
-    const std::vector<std::vector<neurons::Matrix>> & targets)
+    const std::vector<std::vector<neurons::TMatrix<>>> & preds,
+    const std::vector<std::vector<neurons::TMatrix<>>> & targets)
 {
     double sum = 0;
 

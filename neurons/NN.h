@@ -1,5 +1,5 @@
 #pragma once
-#include "Matrix.h"
+#include "TMatrix.h"
 #include "Functions.h"
 #include "NN_layer.h"
 #include "Dataset.h"
@@ -29,13 +29,13 @@ protected:
     lint m_secs_allowed;
 
     // The training set
-    std::vector<neurons::Matrix> m_train_set;
+    std::vector<neurons::TMatrix<>> m_train_set;
     // The training label
-    std::vector<neurons::Matrix> m_train_labels;
+    std::vector<neurons::TMatrix<>> m_train_labels;
     // The test set
-    std::vector<neurons::Matrix> m_test_set;
+    std::vector<neurons::TMatrix<>> m_test_set;
     // The test label
-    std::vector<neurons::Matrix> m_test_labels;
+    std::vector<neurons::TMatrix<>> m_test_labels;
 
     // The layers of neural network
     std::vector<std::shared_ptr<neurons::NN_layer>> m_layers;
@@ -77,38 +77,38 @@ public:
 private:
 
     void get_batch(
-        std::vector<std::vector<neurons::Matrix>> & data_batch,
-        std::vector<std::vector<neurons::Matrix>> & label_batch,
-        const std::vector<neurons::Matrix> & data,
-        const std::vector<neurons::Matrix> & label,
+        std::vector<std::vector<neurons::TMatrix<>>> & data_batch,
+        std::vector<std::vector<neurons::TMatrix<>>> & label_batch,
+        const std::vector<neurons::TMatrix<>> & data,
+        const std::vector<neurons::TMatrix<>> & label,
         std::default_random_engine & rand_generator,
         std::uniform_int_distribution<size_t> & distribution);
 
 
     double train_step(
-        const std::vector<std::vector<neurons::Matrix>> & inputs,
-        const std::vector<std::vector<neurons::Matrix>> & targets,
-        std::vector<std::vector<neurons::Matrix>> & preds);
+        const std::vector<std::vector<neurons::TMatrix<>>> & inputs,
+        const std::vector<std::vector<neurons::TMatrix<>>> & targets,
+        std::vector<std::vector<neurons::TMatrix<>>> & preds);
 
     double test_step(
-        const std::vector<std::vector<neurons::Matrix>> & inputs,
-        const std::vector<std::vector<neurons::Matrix>> & targets,
-        std::vector<std::vector<neurons::Matrix>> & preds);
+        const std::vector<std::vector<neurons::TMatrix<>>> & inputs,
+        const std::vector<std::vector<neurons::TMatrix<>>> & targets,
+        std::vector<std::vector<neurons::TMatrix<>>> & preds);
 
-    double get_accuracy(const neurons::Matrix & pred, const neurons::Matrix & target);
+    double get_accuracy(const neurons::TMatrix<> & pred, const neurons::TMatrix<> & target);
 
     double get_accuracy(
-        const std::vector<std::vector<neurons::Matrix>> & preds,
-        const std::vector<std::vector<neurons::Matrix>> & targets);
+        const std::vector<std::vector<neurons::TMatrix<>>> & preds,
+        const std::vector<std::vector<neurons::TMatrix<>>> & targets);
 
-    virtual std::vector<neurons::Matrix> test(
-        const std::vector<neurons::Matrix> & inputs,
-        const std::vector<neurons::Matrix> & targets,
+    virtual std::vector<neurons::TMatrix<>> test(
+        const std::vector<neurons::TMatrix<>> & inputs,
+        const std::vector<neurons::TMatrix<>> & targets,
         lint thread_id) = 0;
 
-    virtual std::vector<neurons::Matrix> optimise(
-        const std::vector<neurons::Matrix> & inputs,
-        const std::vector<neurons::Matrix> & targets,
+    virtual std::vector<neurons::TMatrix<>> optimise(
+        const std::vector<neurons::TMatrix<>> & inputs,
+        const std::vector<neurons::TMatrix<>> & targets,
         lint thread_id) = 0;
 };
 

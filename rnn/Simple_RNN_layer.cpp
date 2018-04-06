@@ -136,39 +136,39 @@ void neurons::Simple_RNN_layer_op::forget_all()
     this->m_rnn.forget_all();
 }
 
-neurons::Matrix neurons::Simple_RNN_layer_op::forward_propagate(const Matrix & input)
+neurons::TMatrix<> neurons::Simple_RNN_layer_op::forward_propagate(const TMatrix<> & input)
 {
     this->m_samples = 1;
     return this->m_rnn.forward_propagate(input);
 }
 
-neurons::Matrix neurons::Simple_RNN_layer_op::forward_propagate(const Matrix & input, const Matrix & target)
+neurons::TMatrix<> neurons::Simple_RNN_layer_op::forward_propagate(const TMatrix<> & input, const TMatrix<> & target)
 {
     this->m_samples = 1;
     double loss;
 
-    Matrix pred = this->m_rnn.forward_propagate(loss, input, target);
+    TMatrix<> pred = this->m_rnn.forward_propagate(loss, input, target);
 
     this->m_loss += loss;
     return pred;
 }
 
-neurons::Matrix neurons::Simple_RNN_layer_op::back_propagate(double l_rate, const Matrix & E_to_y_diff)
+neurons::TMatrix<> neurons::Simple_RNN_layer_op::back_propagate(double l_rate, const TMatrix<> & E_to_y_diff)
 {
     return this->m_rnn.back_propagate_through_time(l_rate, E_to_y_diff, 1)[0];
 }
 
-neurons::Matrix neurons::Simple_RNN_layer_op::back_propagate(double l_rate)
+neurons::TMatrix<> neurons::Simple_RNN_layer_op::back_propagate(double l_rate)
 {
     return this->m_rnn.back_propagate_through_time(l_rate, 1)[0];
 }
 
-std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propagate(const std::vector<Matrix>& inputs)
+std::vector<neurons::TMatrix<>> neurons::Simple_RNN_layer_op::batch_forward_propagate(const std::vector<TMatrix<>>& inputs)
 {
     size_t size = inputs.size();
     this->m_samples = size;
 
-    std::vector<neurons::Matrix> preds{ size };
+    std::vector<neurons::TMatrix<>> preds{ size };
 
     for (size_t i = 0; i < size; ++i)
     {
@@ -179,14 +179,14 @@ std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propaga
 }
 
 
-std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propagate(
-    const std::vector<Matrix>& inputs, const std::vector<Matrix>& targets)
+std::vector<neurons::TMatrix<>> neurons::Simple_RNN_layer_op::batch_forward_propagate(
+    const std::vector<TMatrix<>>& inputs, const std::vector<TMatrix<>>& targets)
 {
     double loss;
     size_t size = inputs.size();
     this->m_samples = size;
 
-    std::vector<neurons::Matrix> preds{ size };
+    std::vector<neurons::TMatrix<>> preds{ size };
 
     for (size_t i = 0; i < size; ++i)
     {
@@ -198,13 +198,13 @@ std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_forward_propaga
 }
 
 
-std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_back_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
+std::vector<neurons::TMatrix<>> neurons::Simple_RNN_layer_op::batch_back_propagate(double l_rate, const std::vector<TMatrix<>> &E_to_y_diffs)
 {
     return  this->m_rnn.back_propagate_through_time(l_rate, E_to_y_diffs.back());
 }
 
 
-std::vector<neurons::Matrix> neurons::Simple_RNN_layer_op::batch_back_propagate(double l_rate)
+std::vector<neurons::TMatrix<>> neurons::Simple_RNN_layer_op::batch_back_propagate(double l_rate)
 {
     return  this->m_rnn.back_propagate_through_time(l_rate);
 }

@@ -19,6 +19,9 @@ typedef long long lint;
 // Definition of namespace evec
 namespace neurons
 {
+    template <typename dtype>
+    class TMatrix;
+
     class Matrix;
 
     // Exception descriptions
@@ -36,6 +39,12 @@ namespace neurons
     class Vector
     {
         friend class Matrix;
+        friend class TMatrix<double>;
+        friend class TMatrix<float>;
+        friend class TMatrix<short>;
+        friend class TMatrix<int>;
+        friend class TMatrix<lint>;
+
         friend class Linear_Regression;
     private:
         // long long (64bit integer) as amount of dimensions

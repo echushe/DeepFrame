@@ -102,7 +102,7 @@ neurons::Shape neurons::RNN_unit::output_shape() const
 }
 
 
-neurons::Matrix neurons::RNN_unit::forward_propagate(const Matrix& input)
+neurons::TMatrix<> neurons::RNN_unit::forward_propagate(const TMatrix<>& input)
 {
     if (nullptr == this->m_act_func)
     {
@@ -111,12 +111,12 @@ neurons::Matrix neurons::RNN_unit::forward_propagate(const Matrix& input)
     }
     
     // z = old_y * w + x * w + b
-    neurons::Matrix product = this->m_old_y * this->m_u + input * this->m_w + this->m_b;
+    neurons::TMatrix<> product = this->m_old_y * this->m_u + input * this->m_w + this->m_b;
     // y = g(z)
-    Matrix new_y;
+    TMatrix<> new_y;
     // Differentiation of the activation function dy/dz
     // in which y is output of activation, z is x * w  + b
-    Matrix act_diff;
+    TMatrix<> act_diff;
     this->m_act_func->operator()(new_y, act_diff, product);
 
     if (this->m_cache_for_bptt.size() == this->m_bptt_len)
@@ -147,7 +147,7 @@ neurons::Matrix neurons::RNN_unit::forward_propagate(const Matrix& input)
 }
 
 
-neurons::Matrix neurons::RNN_unit::forward_propagate(double &loss, const Matrix &input, const Matrix &targets)
+neurons::TMatrix<> neurons::RNN_unit::forward_propagate(double &loss, const TMatrix<> &input, const TMatrix<> &targets)
 {
     if (nullptr == this->m_err_func)
     {
@@ -155,15 +155,15 @@ neurons::Matrix neurons::RNN_unit::forward_propagate(double &loss, const Matrix 
             std::string("neurons::RNN_layer::forward_propagate: error function is expected, but it does not exist."));
     }
 
-    neurons::Matrix output;
+    neurons::TMatrix<> output;
 
     // z = old_y * u + x * w + b
-    neurons::Matrix product = this->m_old_y * this->m_u + input * this->m_w + this->m_b;
+    neurons::TMatrix<> product = this->m_old_y * this->m_u + input * this->m_w + this->m_b;
     // y = g(z) and E = error(y, t)
-    Matrix new_y;
+    TMatrix<> new_y;
     // Differentiation of the activation function dy/dz
     // in which y is output of activation, z is x * w  + b
-    Matrix act_diff;
+    TMatrix<> act_diff;
     loss = this->m_err_func->operator()(new_y, act_diff, targets, product);
 
     if (this->m_cache_for_bptt.size() == this->m_bptt_len)
@@ -178,27 +178,27 @@ neurons::Matrix neurons::RNN_unit::forward_propagate(double &loss, const Matrix 
 }
 
 
-std::vector<neurons::Matrix> neurons::RNN_unit::back_propagate_through_time(
-    double l_rate, const Matrix &E_to_y_diff, lint len)
+std::vector<neurons::TMatrix<>> neurons::RNN_unit::back_propagate_through_time(
+    double l_rate, const TMatrix<> &E_to_y_diff, lint len)
 {
     if (0 == len)
     {
         len = this->m_bptt_len;
     }
 
-    Matrix u_gradient_sum{ this->m_u.shape(), 0 };
-    Matrix w_gradient_sum{ this->m_w.shape(), 0 };
-    Matrix b_gradient_sum{ this->m_b.shape(), 0 };
+    TMatrix<> u_gradient_sum{ this->m_u.shape(), 0 };
+    TMatrix<> w_gradient_sum{ this->m_w.shape(), 0 };
+    TMatrix<> b_gradient_sum{ this->m_b.shape(), 0 };
 
-    std::vector<Matrix> E_to_x_diffs;
-    Matrix E_to_old_y_diff = E_to_y_diff;
+    std::vector<TMatrix<>> E_to_x_diffs;
+    TMatrix<> E_to_old_y_diff = E_to_y_diff;
 
     // Back propagation through time (BPTT)
     for (lint i = this->m_cache_for_bptt.size() - 1; i >=0; --i)
     {
         cache_item & it = this->m_cache_for_bptt[i];
 
-        neurons::Matrix diff_E_to_z = neurons::multiply(it.m_act_diff, neurons::transpose(E_to_old_y_diff));
+        neurons::TMatrix<> diff_E_to_z = neurons::multiply(it.m_act_diff, neurons::transpose(E_to_old_y_diff));
 
         // std::cout << E_to_old_y_diff;
 
@@ -210,22 +210,22 @@ std::vector<neurons::Matrix> neurons::RNN_unit::back_propagate_through_time(
         // Calculate the derivative dE/dx via the chain rule (back propagation).
         // E is the error from the last layer.
         // x is input of the current layer.
-        Matrix E_to_x_diff = this->m_w * neurons::transpose(diff_E_to_z);
+        TMatrix<> E_to_x_diff = this->m_w * neurons::transpose(diff_E_to_z);
 
         // Calculate dE/du and update the weights.
         // E is the error from the last layer.
         // u are weights of the current layer.
-        Matrix u_gradient = neurons::transpose(it.m_y_in) * diff_E_to_z;
+        TMatrix<> u_gradient = neurons::transpose(it.m_y_in) * diff_E_to_z;
 
         // Calculate dE/dw and update the weights.
         // E is the error from the last layer.
         // w are weights of the current layer.
-        Matrix w_gradient = neurons::transpose(it.m_x) * diff_E_to_z;
+        TMatrix<> w_gradient = neurons::transpose(it.m_x) * diff_E_to_z;
 
         // Calculate dE/db and update the bias.
         // E is the error from the last layer.
         // w are bias of the current layer.
-        Matrix b_gradient = diff_E_to_z;
+        TMatrix<> b_gradient = diff_E_to_z;
 
         u_gradient_sum += u_gradient;
         w_gradient_sum += w_gradient;
@@ -256,9 +256,9 @@ std::vector<neurons::Matrix> neurons::RNN_unit::back_propagate_through_time(
 }
 
 
-std::vector<neurons::Matrix> neurons::RNN_unit::back_propagate_through_time(double l_rate, lint len)
+std::vector<neurons::TMatrix<>> neurons::RNN_unit::back_propagate_through_time(double l_rate, lint len)
 {
-    Matrix E_to_y_diff{ this->m_b.shape(), 1 };  
+    TMatrix<> E_to_y_diff{ this->m_b.shape(), 1 };  
 
     return this->back_propagate_through_time(l_rate, E_to_y_diff, len);
 }

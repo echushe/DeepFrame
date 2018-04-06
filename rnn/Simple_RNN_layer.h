@@ -75,34 +75,34 @@ namespace neurons
         // Forward propagation
         //--------------------------------------------
 
-        virtual Matrix forward_propagate(const Matrix &input);
+        virtual TMatrix<> forward_propagate(const TMatrix<> &input);
 
-        virtual Matrix forward_propagate(const Matrix &input, const Matrix &target);
+        virtual TMatrix<> forward_propagate(const TMatrix<> &input, const TMatrix<> &target);
 
         //--------------------------------------------
         // Backward propagation
         //--------------------------------------------
 
-        virtual Matrix back_propagate(double l_rate, const Matrix & E_to_y_diff);
+        virtual TMatrix<> back_propagate(double l_rate, const TMatrix<> & E_to_y_diff);
 
-        virtual Matrix back_propagate(double l_rate);
+        virtual TMatrix<> back_propagate(double l_rate);
 
         //--------------------------------------------
         // Forward propagation via batch learning
         //--------------------------------------------
 
-        virtual std::vector<Matrix> batch_forward_propagate(const std::vector<Matrix> & inputs);
+        virtual std::vector<TMatrix<>> batch_forward_propagate(const std::vector<TMatrix<>> & inputs);
 
-        virtual std::vector<Matrix> batch_forward_propagate(
-            const std::vector<Matrix> & inputs, const std::vector<Matrix> & targets);
+        virtual std::vector<TMatrix<>> batch_forward_propagate(
+            const std::vector<TMatrix<>> & inputs, const std::vector<TMatrix<>> & targets);
 
         //--------------------------------------------
         // Backward propagation via batch learning
         //--------------------------------------------
 
-        virtual std::vector<Matrix> batch_back_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
+        virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate, const std::vector<TMatrix<>> & E_to_y_diffs);
 
-        virtual std::vector<Matrix> batch_back_propagate(double l_rate);
+        virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate);
 
         virtual Shape output_shape() const;
 

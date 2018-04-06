@@ -15,15 +15,15 @@ namespace neurons
     {
     private:
         // The weights which will multiply with context layer (old output layer)
-        Matrix m_u;
+        TMatrix<> m_u;
 
         // The weights which will multiply with input
-        Matrix m_w;
+        TMatrix<> m_w;
 
-        Matrix m_b;
+        TMatrix<> m_b;
 
         // The previous output data (input)
-        Matrix m_old_y;
+        TMatrix<> m_old_y;
 
         // The pointer of activation function (logist, softmax, etc)
         std::unique_ptr<Activation> m_act_func;
@@ -67,13 +67,13 @@ namespace neurons
         // other functions
         //---------------------------
 
-        Matrix forward_propagate(const Matrix & input);
+        TMatrix<> forward_propagate(const TMatrix<> & input);
 
-        Matrix forward_propagate(double & loss, const Matrix & input, const Matrix & targets);
+        TMatrix<> forward_propagate(double & loss, const TMatrix<> & input, const TMatrix<> & targets);
 
-        std::vector<Matrix> back_propagate_through_time(double l_rate, const Matrix & E_to_y_diff, lint len = 0);
+        std::vector<TMatrix<>> back_propagate_through_time(double l_rate, const TMatrix<> & E_to_y_diff, lint len = 0);
 
-        std::vector<Matrix> back_propagate_through_time(double l_rate, lint len = 0);
+        std::vector<TMatrix<>> back_propagate_through_time(double l_rate, lint len = 0);
 
         void forget_all();
     
@@ -89,11 +89,11 @@ namespace neurons
 
         struct cache_item
         {
-            Matrix m_y_in;
-            Matrix m_x;
-            Matrix m_act_diff;
+            TMatrix<> m_y_in;
+            TMatrix<> m_x;
+            TMatrix<> m_act_diff;
 
-            cache_item(const Matrix & y_in, const Matrix & x, const Matrix & act_diff)
+            cache_item(const TMatrix<> & y_in, const TMatrix<> & x, const TMatrix<> & act_diff)
                 :
                 m_y_in { y_in },
                 m_x { x },

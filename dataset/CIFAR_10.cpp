@@ -33,8 +33,8 @@ std::unique_ptr<char[]> dataset::CIFAR_10::read_cifar_file(lint & file_len, cons
 }
 
 void dataset::CIFAR_10::cifar_binary_to_dataset(
-    std::vector<neurons::Matrix>& images,
-    std::vector<neurons::Matrix>& labels,
+    std::vector<neurons::TMatrix<>>& images,
+    std::vector<neurons::TMatrix<>>& labels,
     const std::unique_ptr<char[]>& binary,
     lint binary_len, lint limit) const
 {
@@ -55,9 +55,9 @@ void dataset::CIFAR_10::cifar_binary_to_dataset(
     uint8_t * image_pos = u_binary;
     for (lint i = 0; i < len; ++i)
     {
-        neurons::Matrix image{ neurons::Shape{ this->m_image_rows, this->m_image_cols, this->m_image_chls } };
+        neurons::TMatrix<> image{ neurons::Shape{ this->m_image_rows, this->m_image_cols, this->m_image_chls } };
 
-        neurons::Matrix label{ neurons::Shape{this->m_label_size}, 0 };
+        neurons::TMatrix<> label{ neurons::Shape{this->m_label_size}, 0 };
         neurons::Coordinate pixel_pos{ 0, 0, 0 };
 
         label[{*image_pos}] = 1;
@@ -87,7 +87,7 @@ dataset::CIFAR_10::CIFAR_10(const std::string & dir)
 {}
 
 void dataset::CIFAR_10::get_training_set(
-    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+    std::vector<neurons::TMatrix<>>& inputs, std::vector<neurons::TMatrix<>>& labels, lint limit) const
 {
     limit /= 5;
     lint file_len;
@@ -106,7 +106,7 @@ void dataset::CIFAR_10::get_training_set(
 }
 
 void dataset::CIFAR_10::get_test_set(
-    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+    std::vector<neurons::TMatrix<>>& inputs, std::vector<neurons::TMatrix<>>& labels, lint limit) const
 {
     lint file_len;
 

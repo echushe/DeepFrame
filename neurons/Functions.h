@@ -1,5 +1,5 @@
 #pragma once
-#include "Matrix.h"
+#include "TMatrix.h"
 
 namespace neurons
 {
@@ -12,7 +12,7 @@ namespace neurons
 
         virtual std::unique_ptr<Activation> clone() = 0;
 
-        virtual void operator () (Matrix & output, Matrix & diff, const Matrix & in) = 0;
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in) = 0;
     };
 
 
@@ -23,7 +23,7 @@ namespace neurons
 
         virtual std::unique_ptr<Activation> clone();
 
-        virtual void operator () (Matrix & output, Matrix & diff, const Matrix & in);
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
     };
 
 
@@ -34,7 +34,7 @@ namespace neurons
 
         virtual std::unique_ptr<Activation> clone();
 
-        virtual void operator () (Matrix & output, Matrix & diff, const Matrix & in);
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
     };
 
 
@@ -45,7 +45,7 @@ namespace neurons
 
         virtual std::unique_ptr<Activation> clone();
 
-        virtual void operator () (Matrix & output, Matrix & diff, const Matrix & in);
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
     };
 
 
@@ -56,7 +56,7 @@ namespace neurons
 
         virtual std::unique_ptr<Activation> clone();
 
-        virtual void operator () (Matrix & output, Matrix & diff, const Matrix & in);
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
     };
 
 
@@ -67,7 +67,7 @@ namespace neurons
 
         virtual std::unique_ptr<Activation> clone();
 
-        virtual void operator () (Matrix & output, Matrix & diff, const Matrix & in);
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
     };
 
 
@@ -78,8 +78,8 @@ namespace neurons
 
         virtual std::unique_ptr<ErrorFunction> clone() = 0;
 
-        virtual double operator () (Matrix & diff, const Matrix & target, const Matrix & input) = 0;
-        virtual double operator () (Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input) = 0;
+        virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input) = 0;
+        virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input) = 0;
 
     };
 
@@ -89,7 +89,7 @@ namespace neurons
     private:
         std::unique_ptr<Activation> m_act_func;
 
-        mutable Matrix m_act;
+        mutable TMatrix<> m_act;
 
     public:
         HalfSquareError(const std::unique_ptr<Activation> & act_func);
@@ -98,44 +98,44 @@ namespace neurons
 
         virtual std::unique_ptr<ErrorFunction> clone();
 
-        virtual double operator () (Matrix & diff, const Matrix & target, const Matrix & input);
-        virtual double operator () (Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input);
+        virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
+        virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
 
-        Matrix & get_activation() const;
+        TMatrix<> & get_activation() const;
     };
 
 
     class Sigmoid_CrossEntropy : public ErrorFunction
     {
     private:
-        mutable Matrix m_sigmoid;
+        mutable TMatrix<> m_sigmoid;
 
     public:
         Sigmoid_CrossEntropy() {}
 
         virtual std::unique_ptr<ErrorFunction> clone();
 
-        virtual double operator () (Matrix & diff, const Matrix & target, const Matrix & input);
-        virtual double operator () (Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input);
+        virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
+        virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
 
-        Matrix & get_sigmoid() const;
+        TMatrix<> & get_sigmoid() const;
     };
 
 
     class Softmax_CrossEntropy : public ErrorFunction
     {
     private:
-        mutable Matrix m_softmax;
+        mutable TMatrix<> m_softmax;
 
     public:
         Softmax_CrossEntropy() {}
 
         virtual std::unique_ptr<ErrorFunction> clone();
 
-        virtual double operator () (Matrix & diff, const Matrix & target, const Matrix & input);
-        virtual double operator () (Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input);
+        virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
+        virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
 
-        Matrix & get_SoftMax() const;
+        TMatrix<> & get_SoftMax() const;
     };
 
 

@@ -57,9 +57,9 @@ namespace neurons
     {
     private:
 
-        std::vector<Matrix> m_conv_to_x_diffs;
-        std::vector<Matrix> m_conv_to_w_diffs;
-        std::vector<Matrix> m_act_diffs;
+        std::vector<TMatrix<>> m_conv_to_x_diffs;
+        std::vector<TMatrix<>> m_conv_to_w_diffs;
+        std::vector<TMatrix<>> m_act_diffs;
 
         Conv_2d m_conv2d;
 
@@ -69,8 +69,8 @@ namespace neurons
 
         CNN_layer_op(
             const Conv_2d & conv2d,
-            const Matrix &w,
-            const Matrix &b,
+            const TMatrix<> &w,
+            const TMatrix<> &b,
             const std::unique_ptr<Activation> &act_func,
             const std::unique_ptr<ErrorFunction> &err_func);
 
@@ -86,18 +86,18 @@ namespace neurons
         // Forward propagation via batch learning
         //--------------------------------------------
 
-        virtual std::vector<Matrix> batch_forward_propagate(const std::vector<Matrix> & inputs);
+        virtual std::vector<TMatrix<>> batch_forward_propagate(const std::vector<TMatrix<>> & inputs);
 
-        virtual std::vector<Matrix> batch_forward_propagate(
-            const std::vector<Matrix> & inputs, const std::vector<Matrix> & targets);
+        virtual std::vector<TMatrix<>> batch_forward_propagate(
+            const std::vector<TMatrix<>> & inputs, const std::vector<TMatrix<>> & targets);
 
         //--------------------------------------------
         // Backward propagation via batch learning
         //--------------------------------------------
 
-        virtual std::vector<Matrix> batch_back_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs);
+        virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate, const std::vector<TMatrix<>> & E_to_y_diffs);
 
-        virtual std::vector<Matrix> batch_back_propagate(double l_rate);
+        virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate);
 
         virtual Shape output_shape() const;
     };

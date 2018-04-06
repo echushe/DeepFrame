@@ -94,8 +94,8 @@ neurons::CNN_layer_op::CNN_layer_op()
 
 neurons::CNN_layer_op::CNN_layer_op(
     const Conv_2d & conv2d,
-    const Matrix & w,
-    const Matrix & b,
+    const TMatrix<> & w,
+    const TMatrix<> & b,
     const std::unique_ptr<Activation>& act_func,
     const std::unique_ptr<ErrorFunction>& err_func)
     :
@@ -131,7 +131,7 @@ neurons::CNN_layer_op & neurons::CNN_layer_op::operator = (CNN_layer_op && other
     return *this;
 }
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(const std::vector<Matrix>& inputs)
+std::vector<neurons::TMatrix<>> neurons::CNN_layer_op::batch_forward_propagate(const std::vector<TMatrix<>>& inputs)
 {
     if (nullptr == this->m_act_func)
     {
@@ -141,7 +141,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(cons
 
     size_t samples = inputs.size();
 
-    std::vector<neurons::Matrix> outputs{ samples };
+    std::vector<neurons::TMatrix<>> outputs{ samples };
     this->m_act_diffs.resize(samples);
     this->m_conv_to_x_diffs.resize(samples);
     this->m_conv_to_w_diffs.resize(samples);
@@ -149,7 +149,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(cons
     for (size_t i = 0; i < samples; ++i)
     {
         // Convolutional multiplication of this sample
-        Matrix conv_product = this->m_conv2d(inputs[i], this->m_w, this->m_b);
+        TMatrix<> conv_product = this->m_conv2d(inputs[i], this->m_w, this->m_b);
 
         this->m_conv_to_x_diffs[i] = this->m_conv2d.get_diff_to_input();
         this->m_conv_to_w_diffs[i] = this->m_conv2d.get_diff_to_weights();
@@ -162,8 +162,8 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(cons
     return outputs;
 }
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(
-    const std::vector<Matrix>& inputs, const std::vector<Matrix>& targets)
+std::vector<neurons::TMatrix<>> neurons::CNN_layer_op::batch_forward_propagate(
+    const std::vector<TMatrix<>>& inputs, const std::vector<TMatrix<>>& targets)
 {
     if (nullptr == this->m_err_func)
     {
@@ -173,7 +173,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(
 
     size_t samples = inputs.size();
 
-    std::vector<neurons::Matrix> outputs{ samples };
+    std::vector<neurons::TMatrix<>> outputs{ samples };
     this->m_act_diffs.resize(samples);
     this->m_conv_to_x_diffs.resize(samples);
     this->m_conv_to_w_diffs.resize(samples);
@@ -181,7 +181,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(
     for (size_t i = 0; i < samples; ++i)
     {
         // Convolutional multiplication of this sample
-        Matrix conv_product = this->m_conv2d(inputs[i], this->m_w, this->m_b);
+        TMatrix<> conv_product = this->m_conv2d(inputs[i], this->m_w, this->m_b);
 
         this->m_conv_to_x_diffs[i] = this->m_conv2d.get_diff_to_input();
         this->m_conv_to_w_diffs[i] = this->m_conv2d.get_diff_to_weights();
@@ -194,10 +194,10 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_forward_propagate(
 }
 
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_back_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
+std::vector<neurons::TMatrix<>> neurons::CNN_layer_op::batch_back_propagate(double l_rate, const std::vector<TMatrix<>> &E_to_y_diffs)
 {
     size_t samples = E_to_y_diffs.size();
-    std::vector<Matrix> E_to_x_diffs{ samples };
+    std::vector<TMatrix<>> E_to_x_diffs{ samples };
 
     this->m_w_gradient = 0;
     this->m_b_gradient = 0;
@@ -206,7 +206,7 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_back_propagate(double 
     {
         // Multiply element by element
         // dE/dz = (dy/dz) * (dE/dy)
-        neurons::Matrix diff_E_to_z = neurons::multiply(this->m_act_diffs[i], E_to_y_diffs[i]);
+        neurons::TMatrix<> diff_E_to_z = neurons::multiply(this->m_act_diffs[i], E_to_y_diffs[i]);
 
         // dE/dx = (dz/dx) * (dE/dz) 
         E_to_x_diffs[i] = neurons::matrix_multiply(this->m_conv_to_x_diffs[i], diff_E_to_z.right_extend_shape(), 3, 4);
@@ -226,10 +226,10 @@ std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_back_propagate(double 
 }
 
 
-std::vector<neurons::Matrix> neurons::CNN_layer_op::batch_back_propagate(double l_rate)
+std::vector<neurons::TMatrix<>> neurons::CNN_layer_op::batch_back_propagate(double l_rate)
 {
     size_t samples = this->m_conv_to_x_diffs.size();
-    std::vector<Matrix> E_to_x_diffs{ samples };
+    std::vector<TMatrix<>> E_to_x_diffs{ samples };
 
     this->m_w_gradient = 0;
     this->m_b_gradient = 0;

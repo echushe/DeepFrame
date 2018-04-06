@@ -28,13 +28,13 @@ void neurons::Linear_Regression::fit(double accuracy)
     {
         // Linear multiplication which resembles Forward propagation
         // of neural network
-        Matrix y = transpose(this->m_train_x * transpose(this->m_w));
+        TMatrix<> y = transpose(this->m_train_x * transpose(this->m_w));
 
         // Calculate dE/dy
-        Matrix diff_E_to_y = 2 * (y - this->m_train_y);
+        TMatrix<> diff_E_to_y = 2 * (y - this->m_train_y);
         
         // Calculate dE/dw = (dE/dy) * (dy/dw)
-        Matrix gradient = diff_E_to_y * this->m_train_x;
+        TMatrix<> gradient = diff_E_to_y * this->m_train_x;
 
         if (gradient.euclidean_norm() < accuracy)
         {
@@ -52,8 +52,8 @@ void neurons::Linear_Regression::fit(double accuracy)
 
 neurons::Vector neurons::Linear_Regression::predict(const std::vector<Vector>& x)
 {
-    Matrix test_x = this->copy_input_into_mat(x);
-    Matrix y = transpose(test_x * transpose(this->m_w));
+    TMatrix<> test_x = this->copy_input_into_mat(x);
+    TMatrix<> y = transpose(test_x * transpose(this->m_w));
 
     return y;
 }
@@ -63,9 +63,9 @@ neurons::Vector neurons::Linear_Regression::coef_and_intercept() const
     return this->m_w;
 }
 
-neurons::Matrix neurons::Linear_Regression::copy_input_into_mat(const std::vector<Vector>& x)
+neurons::TMatrix<> neurons::Linear_Regression::copy_input_into_mat(const std::vector<Vector>& x)
 {
-    Matrix ret{ Shape{ static_cast<lint>(x.size()), x[0].dim() + 1 } };
+    TMatrix<> ret{ Shape{ static_cast<lint>(x.size()), x[0].dim() + 1 } };
     // Copy values of x to test x
     double * test_x_start = ret.m_data;
     lint columns = x[0].dim() + 1;

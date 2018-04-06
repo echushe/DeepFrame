@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vector.h"
-#include "Matrix.h"
+#include "TMatrix.h"
 #include "Functions.h"
 
 
@@ -10,9 +10,9 @@ namespace neurons
     class Linear_Regression
     {
     private:
-        Matrix m_train_x;
-        Matrix m_train_y;
-        Matrix m_w;
+        TMatrix<> m_train_x;
+        TMatrix<> m_train_y;
+        TMatrix<> m_w;
 
     public:
         Linear_Regression(const std::vector<Vector> & x, const Vector & y);
@@ -24,6 +24,6 @@ namespace neurons
         Vector coef_and_intercept() const;
 
     private:
-        Matrix copy_input_into_mat(const std::vector<Vector> & x);
+        TMatrix<> copy_input_into_mat(const std::vector<Vector> & x);
     };
 }

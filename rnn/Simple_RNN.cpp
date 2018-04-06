@@ -48,19 +48,19 @@ Simple_RNN::Simple_RNN(
 }
 
 
-std::vector<neurons::Matrix> Simple_RNN::test(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Simple_RNN::test(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds;
+    std::vector<neurons::TMatrix<>> preds;
     for (size_t i = 0; i < inputs.size(); ++i)
     {
         dynamic_cast<neurons::Simple_RNN_layer_op*>(this->m_layers[0]->operation_instances()[thread_id].get())->forget_all();
-        std::vector<neurons::Matrix> sequence = inputs[i].collapse(0);
+        std::vector<neurons::TMatrix<>> sequence = inputs[i].collapse(0);
 
-        neurons::Matrix pred;
-        std::vector<neurons::Matrix> s_hiddens;
+        neurons::TMatrix<> pred;
+        std::vector<neurons::TMatrix<>> s_hiddens;
 
         // Forward propagate
         for (size_t j = 0; j < sequence.size(); ++j)
@@ -79,19 +79,19 @@ std::vector<neurons::Matrix> Simple_RNN::test(
 }
 
 
-std::vector<neurons::Matrix> Simple_RNN::optimise(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Simple_RNN::optimise(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds;
+    std::vector<neurons::TMatrix<>> preds;
     for (size_t i = 0; i < inputs.size(); ++i)
     {
         dynamic_cast<neurons::Simple_RNN_layer_op*>(this->m_layers[0]->operation_instances()[thread_id].get())->forget_all();
-        std::vector<neurons::Matrix> sequence = inputs[i].collapse(0);
+        std::vector<neurons::TMatrix<>> sequence = inputs[i].collapse(0);
         
-        neurons::Matrix pred;
-        std::vector<neurons::Matrix> s_hiddens;
+        neurons::TMatrix<> pred;
+        std::vector<neurons::TMatrix<>> s_hiddens;
 
         // Forward propagate
         for (size_t j = 0; j < sequence.size(); ++j)
@@ -104,8 +104,8 @@ std::vector<neurons::Matrix> Simple_RNN::optimise(
         pred = this->m_layers[1]->operation_instances()[thread_id]->forward_propagate(s_hiddens.back(), targets[i]);
 
         // Backward propagate
-        std::vector<neurons::Matrix> E_to_x_diffs;
-        neurons::Matrix E_to_x_diff = this->m_layers[1]->operation_instances()[thread_id]->back_propagate(this->m_l_rate);
+        std::vector<neurons::TMatrix<>> E_to_x_diffs;
+        neurons::TMatrix<> E_to_x_diff = this->m_layers[1]->operation_instances()[thread_id]->back_propagate(this->m_l_rate);
         E_to_x_diffs.push_back(E_to_x_diff);
 
         this->m_layers[0]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate, E_to_x_diffs);

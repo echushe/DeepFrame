@@ -51,32 +51,32 @@ Multi_Layer_NN::Multi_Layer_NN(
 }
 
 
-std::vector<neurons::Matrix> Multi_Layer_NN::test(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Multi_Layer_NN::test(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> l_inputs = inputs;
+    std::vector<neurons::TMatrix<>> l_inputs = inputs;
     
     for (size_t i = 0; i < this->m_layers.size() - 1; ++i)
     {
         l_inputs = this->m_layers[i]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs);
     }
 
-    std::vector<neurons::Matrix> preds = 
+    std::vector<neurons::TMatrix<>> preds = 
         this->m_layers[this->m_layers.size() - 1]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs, targets);
     return preds;
 }
 
 
-std::vector<neurons::Matrix> Multi_Layer_NN::optimise(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Multi_Layer_NN::optimise(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
+    std::vector<neurons::TMatrix<>> preds = this->test(inputs, targets, thread_id);
 
-    std::vector<neurons::Matrix> E_to_x_diffs =
+    std::vector<neurons::TMatrix<>> E_to_x_diffs =
         this->m_layers[this->m_layers.size() - 1]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate);
 
     for (lint i = this->m_layers.size() - 2; i >= 0; --i)

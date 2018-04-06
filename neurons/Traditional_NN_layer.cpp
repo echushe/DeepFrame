@@ -58,8 +58,8 @@ neurons::Traditional_NN_layer & neurons::Traditional_NN_layer::operator = (Tradi
 
 double neurons::Traditional_NN_layer::commit_training()
 {
-    Matrix w_gradient_sum{ this->m_w.shape(), 0 };
-    Matrix b_gradient_sum{ this->m_b.shape(), 0 };
+    TMatrix<> w_gradient_sum{ this->m_w.shape(), 0 };
+    TMatrix<> b_gradient_sum{ this->m_b.shape(), 0 };
     double loss = 0;
 
     for (size_t i = 0; i < this->m_ops.size(); ++i)
@@ -97,8 +97,8 @@ double neurons::Traditional_NN_layer::commit_testing()
 }
 
 neurons::Traditional_NN_layer_op::Traditional_NN_layer_op(
-    const Matrix & w,
-    const Matrix & b,
+    const TMatrix<> & w,
+    const TMatrix<> & b,
     const std::unique_ptr<Activation> &act_func,
     const std::unique_ptr<ErrorFunction> &err_func)
     :
@@ -168,47 +168,47 @@ neurons::Traditional_NN_layer_op & neurons::Traditional_NN_layer_op::operator = 
     return *this;
 }
 
-neurons::Matrix neurons::Traditional_NN_layer_op::forward_propagate(const Matrix & input)
+neurons::TMatrix<> neurons::Traditional_NN_layer_op::forward_propagate(const TMatrix<> & input)
 {
-    std::vector<Matrix> inputs;
+    std::vector<TMatrix<>> inputs;
     inputs.push_back(input);
 
     return this->batch_forward_propagate(inputs)[0];
 }
 
-neurons::Matrix neurons::Traditional_NN_layer_op::forward_propagate(const Matrix & input, const Matrix & target)
+neurons::TMatrix<> neurons::Traditional_NN_layer_op::forward_propagate(const TMatrix<> & input, const TMatrix<> & target)
 {
-    std::vector<Matrix> inputs, targets;
+    std::vector<TMatrix<>> inputs, targets;
     inputs.push_back(input);
     targets.push_back(target);
 
     return this->batch_forward_propagate(inputs, targets)[0];
 }
 
-neurons::Matrix neurons::Traditional_NN_layer_op::back_propagate(double l_rate, const Matrix & E_to_y_diff)
+neurons::TMatrix<> neurons::Traditional_NN_layer_op::back_propagate(double l_rate, const TMatrix<> & E_to_y_diff)
 {
-    std::vector<Matrix> E_to_y_diffs;
+    std::vector<TMatrix<>> E_to_y_diffs;
     E_to_y_diffs.push_back(E_to_y_diff);
 
     return this->batch_back_propagate(l_rate, E_to_y_diffs)[0];
 }
 
-neurons::Matrix neurons::Traditional_NN_layer_op::back_propagate(double l_rate)
+neurons::TMatrix<> neurons::Traditional_NN_layer_op::back_propagate(double l_rate)
 {
     return this->batch_back_propagate(l_rate)[0];
 }
 
-neurons::Matrix& neurons::Traditional_NN_layer_op::get_weight_gradient() const
+neurons::TMatrix<>& neurons::Traditional_NN_layer_op::get_weight_gradient() const
 {
     return this->m_w_gradient;
 }
 
-neurons::Matrix& neurons::Traditional_NN_layer_op::get_bias_gradient() const
+neurons::TMatrix<>& neurons::Traditional_NN_layer_op::get_bias_gradient() const
 {
     return this->m_b_gradient;
 }
 
-void neurons::Traditional_NN_layer_op::update_w_and_b(const Matrix & w, const Matrix & b)
+void neurons::Traditional_NN_layer_op::update_w_and_b(const TMatrix<> & w, const TMatrix<> & b)
 {
     this->m_w = w;
     this->m_b = b;

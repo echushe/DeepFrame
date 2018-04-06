@@ -22,9 +22,9 @@ neurons::EM_1d::EM_1d(lint gaussians)
 
 
 std::vector<neurons::EM_Gaussian_1d> neurons::EM_1d::operator()(
-    std::vector<neurons::Matrix> &p_x_in_gaussians,
-    std::vector<neurons::Matrix> &p_gaussians_in_x,
-    const neurons::Matrix & input)
+    std::vector<neurons::TMatrix<>> &p_x_in_gaussians,
+    std::vector<neurons::TMatrix<>> &p_gaussians_in_x,
+    const neurons::TMatrix<> & input)
 {
     lint input_size = input.shape().size();
     double max = input.max();
@@ -36,8 +36,8 @@ std::vector<neurons::EM_Gaussian_1d> neurons::EM_1d::operator()(
 
     for (lint i = 0; i < this->m_gssns; ++i)
     {
-        p_gaussians_in_x.push_back(Matrix{ input.shape() });
-        p_x_in_gaussians.push_back(Matrix{ input.shape() });
+        p_gaussians_in_x.push_back(TMatrix<>{ input.shape() });
+        p_x_in_gaussians.push_back(TMatrix<>{ input.shape() });
     }
 
     // Step1

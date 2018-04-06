@@ -83,12 +83,12 @@ void Conv_Pooling_NN::print_layers(std::ostream & os) const
 }
 
 
-std::vector<neurons::Matrix> Conv_Pooling_NN::test(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Conv_Pooling_NN::test(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> l_inputs = inputs;
+    std::vector<neurons::TMatrix<>> l_inputs = inputs;
 
     // std::cout << "============================= forward propagation =============================\n";
     // std::cout << l_inputs[0];
@@ -114,23 +114,23 @@ std::vector<neurons::Matrix> Conv_Pooling_NN::test(
         l_inputs[i].reshape(neurons::Shape{ 1, l_inputs[i].shape().size() });
     }
 
-    std::vector<neurons::Matrix> preds =
+    std::vector<neurons::TMatrix<>> preds =
         this->m_layers[2]->operation_instances()[thread_id]->batch_forward_propagate(l_inputs, targets);
 
     return preds;
 }
 
 
-std::vector<neurons::Matrix> Conv_Pooling_NN::optimise(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Conv_Pooling_NN::optimise(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
+    std::vector<neurons::TMatrix<>> preds = this->test(inputs, targets, thread_id);
 
     // std::cout << "============================= back propagation =============================\n";
 
-    std::vector<neurons::Matrix> E_to_x_diffs =
+    std::vector<neurons::TMatrix<>> E_to_x_diffs =
         this->m_layers[2]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate);
 
     for (size_t i = 0; i < E_to_x_diffs.size(); ++i)

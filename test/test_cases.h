@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector.h"
-#include "Matrix.h"
+#include "TMatrix.h"
 #include "Functions.h"
 #include "Convolution.h"
 #include "Pooling.h"
@@ -246,31 +246,31 @@ void test_matrix_constructor()
 {
     std::cout << "=================== test_matrix_constructor ==================" << "\n";
 
-    neurons::Matrix mat1(neurons::Shape{ 6 }, 3);
+    neurons::TMatrix<> mat1(neurons::Shape{ 6 }, 3);
     std::cout << "mat1:\n" << mat1 << '\n';
 
-    neurons::Matrix mat2{ neurons::Shape{ 1, 6 }, 3 };
+    neurons::TMatrix<> mat2{ neurons::Shape{ 1, 6 }, 3 };
     std::cout << "mat2:\n" << mat2 << '\n';
 
-    neurons::Matrix mat3{ neurons::Shape{ 6, 1 }, 4.4 };
+    neurons::TMatrix<> mat3{ neurons::Shape{ 6, 1 }, 4.4 };
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    neurons::Matrix mat4{ neurons::Shape{ 6, 5, 4 }, -3 };
+    neurons::TMatrix<> mat4{ neurons::Shape{ 6, 5, 4 }, -3 };
     std::cout << "mat4:\n" << mat4 << '\n';
 
     try
     {
-        neurons::Matrix mat6{ neurons::Shape{ 3, 0, 9 }, -9 };
+        neurons::TMatrix<> mat6{ neurons::Shape{ 3, 0, 9 }, -9 };
     }
     catch (std::exception & e)
     {
         std::cout << e.what() << '\n';
     }
 
-    neurons::Matrix mat7(neurons::Vector{ 1, 3, 5, 7, 9, 11, 13 }, false);
+    neurons::TMatrix<> mat7(neurons::Vector{ 1, 3, 5, 7, 9, 11, 13 }, false);
     std::cout << "mat7:\n" << mat7 << '\n';
 
-    neurons::Matrix mat8(neurons::Vector{ 1, 3, 5, 7, 9, 11, 13 }, true);
+    neurons::TMatrix<> mat8(neurons::Vector{ 1, 3, 5, 7, 9, 11, 13 }, true);
     std::cout << "mat8:\n" << mat8 << '\n';
 
     for (int i = 0; i < 6; ++i)
@@ -284,31 +284,31 @@ void test_matrix_constructor()
         }
     }
 
-    neurons::Matrix mat9{ mat4 };
+    neurons::TMatrix<> mat9{ mat4 };
     std::cout << "mat9:\n" << mat9 << '\n';
 
-    neurons::Matrix mat10{ std::move(mat4) };
+    neurons::TMatrix<> mat10{ std::move(mat4) };
     std::cout << "mat10:\n" << mat10 << '\n';
     std::cout << "mat4:\n" << mat4 << '\n';
 
-    neurons::Matrix mat11{ neurons::Shape{ 9, 5 }, -1 };
+    neurons::TMatrix<> mat11{ neurons::Shape{ 9, 5 }, -1 };
     mat11 = mat10;
     std::cout << "mat11:\n" << mat11 << '\n';
 
-    neurons::Matrix mat12{ neurons::Shape{ 2, 5 }, -1 };
+    neurons::TMatrix<> mat12{ neurons::Shape{ 2, 5 }, -1 };
     mat12 = std::move(mat10);
     std::cout << "mat12:\n" << mat12 << '\n';
     std::cout << "mat10:\n" << mat10 << '\n';
 
-    neurons::Matrix mat13{ neurons::Shape{ 7, 8 }, -1 };
-    neurons::Matrix mat14{ neurons::Shape{ 7, 8 }, 3 };
-    neurons::Matrix mat15{ neurons::Shape{ 7, 8 }, 9 };
-    std::vector<neurons::Matrix> vec;
+    neurons::TMatrix<> mat13{ neurons::Shape{ 7, 8 }, -1 };
+    neurons::TMatrix<> mat14{ neurons::Shape{ 7, 8 }, 3 };
+    neurons::TMatrix<> mat15{ neurons::Shape{ 7, 8 }, 9 };
+    std::vector<neurons::TMatrix<>> vec;
     vec.push_back(mat13);
     vec.push_back(mat14);
     vec.push_back(mat15);
 
-    neurons::Matrix mat16{ vec };
+    neurons::TMatrix<> mat16{ vec };
     std::cout << "mat16:\n" << mat16 << '\n';
 }
 
@@ -316,7 +316,7 @@ void test_matrix_constructor()
 void test_matrix_indexing()
 {
     std::cout << "=================== test_matrix_indexing ==================" << "\n";
-    neurons::Matrix mat1{ neurons::Shape{ 6, 7 }, 8.88 };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 6, 7 }, 8.88 };
     std::cout << mat1 << '\n';
 
     for (int i = 0; i < 6; ++i)
@@ -343,8 +343,8 @@ void test_matrix_indexing()
 void test_matrix_self_cal()
 {
     std::cout << "=================== test_matrix_self_cal ==================" << "\n";
-    neurons::Matrix mat1{ neurons::Shape{ 6, 5, 5 }, 8 };
-    neurons::Matrix mat2{ neurons::Shape{ 6, 5, 5 }, 2 };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 6, 5, 5 }, 8 };
+    neurons::TMatrix<> mat2{ neurons::Shape{ 6, 5, 5 }, 2 };
     for (int i = 0; i < 6; ++i)
     {
         for (int j = 0; j < 5; ++j)
@@ -373,8 +373,8 @@ void test_matrix_mul()
 {
     std::cout << "=================== test_matrix_multiply ==================" << "\n";
 
-    neurons::Matrix mat1{ neurons::Shape{ 6, 5 } };
-    neurons::Matrix mat2{ neurons::Shape{ 5, 3 } };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 6, 5 } };
+    neurons::TMatrix<> mat2{ neurons::Shape{ 5, 3 } };
 
     for (int i = 0; i < 6; ++i)
     {
@@ -392,14 +392,14 @@ void test_matrix_mul()
         }
     }
 
-    neurons::Matrix mat3 = neurons::matrix_multiply(mat1, mat2);
+    neurons::TMatrix<> mat3 = neurons::matrix_multiply(mat1, mat2);
 
     std::cout << "mat3:\n" << mat3 << '\n';
 
     try
     {
-        neurons::Matrix mat4{ neurons::Shape{ 5 }, 7 };
-        neurons::Matrix mat5{ neurons::Shape{ 3 }, 4 };
+        neurons::TMatrix<> mat4{ neurons::Shape{ 5 }, 7 };
+        neurons::TMatrix<> mat5{ neurons::Shape{ 3 }, 4 };
         mat3 = neurons::matrix_multiply(mat4, mat5);
         std::cout << "mat3:\n" << mat3 << '\n';
     }
@@ -408,18 +408,18 @@ void test_matrix_mul()
         std::cout << ex.what() << '\n';
     }
 
-    neurons::Matrix mat6{ neurons::Shape{ 5, 1 }, 7 };
-    neurons::Matrix mat7{ neurons::Shape{ 1, 3 }, 4 };
+    neurons::TMatrix<> mat6{ neurons::Shape{ 5, 1 }, 7 };
+    neurons::TMatrix<> mat7{ neurons::Shape{ 1, 3 }, 4 };
     mat3 = neurons::matrix_multiply(mat6, mat7);
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    neurons::Matrix mat8{ neurons::Shape{ 1, 5 }, 7 };
-    neurons::Matrix mat9{ neurons::Shape{ 5, 1 }, 4 };
+    neurons::TMatrix<> mat8{ neurons::Shape{ 1, 5 }, 7 };
+    neurons::TMatrix<> mat9{ neurons::Shape{ 5, 1 }, 4 };
     mat3 = neurons::matrix_multiply(mat8, mat9);
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    neurons::Matrix mat10{ neurons::Shape{ 7, 2, 6 } };
-    neurons::Matrix mat11{ neurons::Shape{ 3, 4, 5 } };
+    neurons::TMatrix<> mat10{ neurons::Shape{ 7, 2, 6 } };
+    neurons::TMatrix<> mat11{ neurons::Shape{ 3, 4, 5 } };
 
     for (int i = 0; i < 7; ++i)
     {
@@ -448,8 +448,8 @@ void test_matrix_mul()
     std::cout << "mat11:\n" << mat11 << '\n';
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    neurons::Matrix mat12{ neurons::Shape{ 5, 4, 6, 3 }, 1 };
-    neurons::Matrix mat13{ neurons::Shape{ 2, 9, 2, 2, 7 }, 1 };
+    neurons::TMatrix<> mat12{ neurons::Shape{ 5, 4, 6, 3 }, 1 };
+    neurons::TMatrix<> mat13{ neurons::Shape{ 2, 9, 2, 2, 7 }, 1 };
     mat3 = neurons::matrix_multiply(mat12, mat13);
     std::cout << "mat12:\n" << mat12 << '\n';
     std::cout << "mat13:\n" << mat13 << '\n';
@@ -464,8 +464,8 @@ void test_multiply_and_dot_product()
 {
     std::cout << "=================== test_multiply_and_dot_product ==================" << "\n";
 
-    neurons::Matrix mat10{ neurons::Shape{ 4, 3 }, 3 };
-    neurons::Matrix mat11{ neurons::Shape{ 4, 3 }, 5 };
+    neurons::TMatrix<> mat10{ neurons::Shape{ 4, 3 }, 3 };
+    neurons::TMatrix<> mat11{ neurons::Shape{ 4, 3 }, 5 };
 
     for (int i = 0; i < 4; ++i)
     {
@@ -476,11 +476,11 @@ void test_multiply_and_dot_product()
         }
     }
 
-    neurons::Matrix mat3 = neurons::multiply(mat10, mat11);
+    neurons::TMatrix<> mat3 = neurons::multiply(mat10, mat11);
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    neurons::Matrix mat12{ neurons::Shape{ 4, 3 }, 3 };
-    neurons::Matrix mat13{ neurons::Shape{ 2, 3, 2, 1 }, 2 };
+    neurons::TMatrix<> mat12{ neurons::Shape{ 4, 3 }, 3 };
+    neurons::TMatrix<> mat13{ neurons::Shape{ 2, 3, 2, 1 }, 2 };
     double dot = neurons::dot_product(mat12, mat13);
     std::cout << "results of dot product:\n" << dot << '\n';
 
@@ -490,25 +490,25 @@ void test_matrix_dim_scale_up()
 {
     std::cout << "=================== test_matrix_dim_scale_up ==================" << "\n";
 
-    neurons::Matrix mat1{ neurons::Shape{ 5, 6 }, 1 };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 5, 6 }, 1 };
     neurons::Vector vec1{ 1, 2, 3, 4, 5, 6 };
     mat1.scale_one_dimension(1, vec1);
 
     std::cout << "mat1:\n" << mat1 << '\n';
 
-    neurons::Matrix mat2{ neurons::Shape{ 5, 6 }, 1 };
+    neurons::TMatrix<> mat2{ neurons::Shape{ 5, 6 }, 1 };
     neurons::Vector vec2{ 1, 2, 3, 4, 5 };
     mat2.scale_one_dimension(0, vec2);
 
     std::cout << "mat2:\n" << mat2 << '\n';
 
-    neurons::Matrix mat3{ neurons::Shape{ 4, 5, 6 }, 1 };
+    neurons::TMatrix<> mat3{ neurons::Shape{ 4, 5, 6 }, 1 };
     neurons::Vector vec3{ 5, 4, 3, 2, 1 };
     mat3.scale_one_dimension(1, vec3);
 
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    neurons::Matrix mat4{ neurons::Shape{ 4, 5, 6 }, 1 };
+    neurons::TMatrix<> mat4{ neurons::Shape{ 4, 5, 6 }, 1 };
     neurons::Vector vec4{ 7, 6, 5, 4, 3, 2 };
     mat4.scale_one_dimension(2, vec4);
 
@@ -519,8 +519,8 @@ void test_matrix_other_cal()
 {
     std::cout << "=================== test_matrix_other_cal ==================" << "\n";
 
-    neurons::Matrix mat1{ neurons::Shape{ 6, 5 } };
-    neurons::Matrix mat2{ neurons::Shape{ 6, 5 } };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 6, 5 } };
+    neurons::TMatrix<> mat2{ neurons::Shape{ 6, 5 } };
 
     for (int i = 0; i < 6; ++i)
     {
@@ -538,7 +538,7 @@ void test_matrix_other_cal()
         }
     }
 
-    neurons::Matrix mat3 = mat1 + mat2;
+    neurons::TMatrix<> mat3 = mat1 + mat2;
     std::cout << "mat1:\n" << mat1 << '\n';
     std::cout << "mat2:\n" << mat2 << '\n';
     std::cout << "mat3:\n" << mat3 << '\n';
@@ -559,7 +559,7 @@ void test_matrix_other_cal()
 void test_matrix_random_normal()
 {
     std::cout << "=================== test_matrix_random_normal ==================" << "\n";
-    neurons::Matrix mat1{ neurons::Shape{ 5, 4, 3 } };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 5, 4, 3 } };
     mat1.uniform_random(0, 1);
     std::cout << "mat1:\n" << mat1 << '\n';
     mat1.gaussian_random(0, 1);
@@ -572,10 +572,10 @@ void test_matrix_random_normal()
 void test_matrix_transpose()
 {
     std::cout << "=================== test_matrix_transpose ==================" << "\n";
-    neurons::Matrix mat1{ neurons::Shape{ 4, 3 } };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 4, 3 } };
     mat1.uniform_random(0, 1);
     std::cout << "mat1:\n" << mat1 << '\n';
-    neurons::Matrix mat2 = neurons::transpose(mat1);
+    neurons::TMatrix<> mat2 = neurons::transpose(mat1);
     std::cout << "mat2 is transpose of mat1:\n" << mat2 << '\n';
 }
 
@@ -583,7 +583,7 @@ void test_matrix_transpose()
 void test_matrix_collapse()
 {
     std::cout << "=================== test_matrix_collapse ==================" << "\n";
-    neurons::Matrix mat1{ neurons::Shape{ 5, 4, 3, 6 } };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 5, 4, 3, 6 } };
     lint index = 0;
     for (lint i = 0; i < 5; ++i)
     {
@@ -599,10 +599,10 @@ void test_matrix_collapse()
         }
     }
 
-    std::vector<neurons::Matrix> vec_1 = mat1.collapse(0);
-    std::vector<neurons::Matrix> vec_2 = mat1.collapse(1);
-    std::vector<neurons::Matrix> vec_3 = mat1.collapse(2);
-    std::vector<neurons::Matrix> vec_4 = mat1.collapse(3);
+    std::vector<neurons::TMatrix<>> vec_1 = mat1.collapse(0);
+    std::vector<neurons::TMatrix<>> vec_2 = mat1.collapse(1);
+    std::vector<neurons::TMatrix<>> vec_3 = mat1.collapse(2);
+    std::vector<neurons::TMatrix<>> vec_4 = mat1.collapse(3);
 
     for (size_t i = 0; i < vec_1.size(); ++i)
     {
@@ -632,7 +632,7 @@ void test_matrix_collapse()
 void test_matrix_fuse()
 {
     std::cout << "=================== test_matrix_fuse ==================" << "\n";
-    neurons::Matrix mat1{ neurons::Shape{ 5, 4, 3, 6 } };
+    neurons::TMatrix<> mat1{ neurons::Shape{ 5, 4, 3, 6 } };
     lint index = 0;
     for (lint i = 0; i < 5; ++i)
     {
@@ -648,10 +648,10 @@ void test_matrix_fuse()
         }
     }
 
-    neurons::Matrix f_1 = mat1.fuse(0);
-    neurons::Matrix f_2 = mat1.fuse(1);
-    neurons::Matrix f_3 = mat1.fuse(2);
-    neurons::Matrix f_4 = mat1.fuse(3);
+    neurons::TMatrix<> f_1 = mat1.fuse(0);
+    neurons::TMatrix<> f_2 = mat1.fuse(1);
+    neurons::TMatrix<> f_3 = mat1.fuse(2);
+    neurons::TMatrix<> f_4 = mat1.fuse(3);
 
     std::cout << "mat1:\n" << mat1 << '\n';
     std::cout << "fuse 1\n" << f_1 << '\n';
@@ -664,8 +664,8 @@ void test_matrix_fuse()
 void test_of_basic_neuron_operations()
 {
     std::cout << "=================== test_of_basic_neuron_operations ==================" << "\n";
-    std::vector<neurons::Matrix> images;
-    std::vector<neurons::Matrix> labels;
+    std::vector<neurons::TMatrix<>> images;
+    std::vector<neurons::TMatrix<>> labels;
 
     std::string dataset_dir = "D:/develop/my_neurons/dataset/mnist/";
 
@@ -690,7 +690,7 @@ void test_of_basic_neuron_operations()
     neurons::Sigmoid_CrossEntropy sig_cross;
     neurons::Softmax_CrossEntropy sm_cross;
 
-    neurons::Matrix weights{ neurons::Shape{ rows, cols, targets } };
+    neurons::TMatrix<> weights{ neurons::Shape{ rows, cols, targets } };
     weights.gaussian_random(0, 0.0001);
     std::cout << weights << '\n';
 
@@ -704,9 +704,9 @@ void test_of_basic_neuron_operations()
     {
         std::cout << "============== Information of image " << i << "================\n";
         std::cout << images[i] << std::endl;
-        neurons::Matrix product = neurons::matrix_multiply(images[i], weights, 2, 2);
+        neurons::TMatrix<> product = neurons::matrix_multiply(images[i], weights, 2, 2);
         std::cout << product << std::endl;
-        neurons::Matrix preds, diff;
+        neurons::TMatrix<> preds, diff;
 
         std::cout << "sigmoid and its differentiation:\n";
         sigmoid(preds, diff, product);
@@ -755,7 +755,7 @@ void test_conv_1d()
 {
     neurons::Conv_1d conv_1d{ neurons::Shape{2, 8, 3}, neurons::Shape{5, 3, 4} };
 
-    neurons::Matrix input{ neurons::Shape{2, 8, 3} };
+    neurons::TMatrix<> input{ neurons::Shape{2, 8, 3} };
 
     for (lint b = 0; b < 2; ++b)
     {
@@ -768,7 +768,7 @@ void test_conv_1d()
         }
     }
 
-    neurons::Matrix weights{ neurons::Shape{5, 3, 4} };
+    neurons::TMatrix<> weights{ neurons::Shape{5, 3, 4} };
     for (lint i = 0; i < 5; ++i)
     {
         for (lint j = 0; j < 3; ++j)
@@ -780,7 +780,7 @@ void test_conv_1d()
         }
     }
 
-    neurons::Matrix bias{ neurons::Shape{ 1, 4 } };
+    neurons::TMatrix<> bias{ neurons::Shape{ 1, 4 } };
 
     for (lint i = 0; i < 4; ++i)
     {
@@ -792,7 +792,7 @@ void test_conv_1d()
 
     std::cout << "Weights: " << '\n';
     std::cout << weights << '\n';
-    neurons::Matrix output = conv_1d(input, weights, bias);
+    neurons::TMatrix<> output = conv_1d(input, weights, bias);
 
     std::cout << "Output: " << '\n';
     std::cout << output << '\n';
@@ -806,7 +806,7 @@ void test_conv_2d()
 {
     neurons::Conv_2d conv_2d{ neurons::Shape{ 1, 4, 4, 3 }, neurons::Shape{ 3, 3, 3, 5 }, 1, 1, 2, 2 };
 
-    neurons::Matrix input{ neurons::Shape{ 1, 4, 4, 3 } };
+    neurons::TMatrix<> input{ neurons::Shape{ 1, 4, 4, 3 } };
 
     for (lint b = 0; b < 1; ++b)
     {
@@ -822,7 +822,7 @@ void test_conv_2d()
         }
     }
 
-    neurons::Matrix weights{ neurons::Shape{ 3, 3, 3, 5 } };
+    neurons::TMatrix<> weights{ neurons::Shape{ 3, 3, 3, 5 } };
     for (lint r = 0; r < 3; ++r)
     {
         for (lint c = 0; c < 3; ++c)
@@ -837,7 +837,7 @@ void test_conv_2d()
         }
     }
 
-    neurons::Matrix bias{ neurons::Shape{1, 5} };
+    neurons::TMatrix<> bias{ neurons::Shape{1, 5} };
 
     for (lint i = 0; i < 5; ++i)
     {
@@ -849,7 +849,7 @@ void test_conv_2d()
 
     std::cout << "Weights: " << '\n';
     std::cout << weights << '\n';
-    neurons::Matrix output = conv_2d(input, weights, bias);
+    neurons::TMatrix<> output = conv_2d(input, weights, bias);
 
     std::cout << "Output: " << '\n';
     std::cout << output << '\n';
@@ -878,11 +878,11 @@ void test_pooling_2d()
 
     neurons::MaxPooling_2d pool{ in_sh, k_sh };
     
-    neurons::Matrix input{ in_sh };
+    neurons::TMatrix<> input{ in_sh };
     input.uniform_random(0, 10);
 
-    neurons::Matrix output = pool(input);
-    neurons::Matrix diff;
+    neurons::TMatrix<> output = pool(input);
+    neurons::TMatrix<> diff;
 
 
     std::cout << "Input:\n";
@@ -898,11 +898,11 @@ void test_pooling_2d_special()
 
     neurons::MaxPooling_2d pool{ in_sh, k_sh };
 
-    neurons::Matrix input{ in_sh };
+    neurons::TMatrix<> input{ in_sh };
     input.uniform_random(0, 10);
 
-    neurons::Matrix output = pool(input);
-    neurons::Matrix diff;
+    neurons::TMatrix<> output = pool(input);
+    neurons::TMatrix<> diff;
 
 
     std::cout << "Input:\n";
@@ -912,10 +912,10 @@ void test_pooling_2d_special()
     //std::cout << "Diff output to input:\n";
     //std::cout << pool.get_diff() << '\n';
 
-    neurons::Matrix diff_E_to_y{ neurons::Shape{1, 3, 2, 3} };
+    neurons::TMatrix<> diff_E_to_y{ neurons::Shape{1, 3, 2, 3} };
     diff_E_to_y.gaussian_random(0, 2);
 
-    neurons::Matrix diff_E_to_x = pool.back_propagate(diff_E_to_y);
+    neurons::TMatrix<> diff_E_to_x = pool.back_propagate(diff_E_to_y);
 
     std::cout << "Diff E to output:\n";
     std::cout << diff_E_to_y << '\n';
@@ -926,11 +926,11 @@ void test_pooling_2d_special()
 
 void test_EM_1d_single()
 {
-    neurons::Matrix input{ neurons::Shape{1000} };
+    neurons::TMatrix<> input{ neurons::Shape{1000} };
     input.gaussian_random(15, 20);
 
-    std::vector<neurons::Matrix> p_gaussians_in_x;
-    std::vector<neurons::Matrix> p_x_in_gaussians;
+    std::vector<neurons::TMatrix<>> p_gaussians_in_x;
+    std::vector<neurons::TMatrix<>> p_x_in_gaussians;
 
     neurons::EM_1d em1d{ 1 };
     std::vector<neurons::EM_Gaussian_1d> gaussians = em1d(p_x_in_gaussians, p_gaussians_in_x, input);
@@ -952,9 +952,9 @@ void test_EM_1d_single()
 
 void test_EM_1d_mix()
 {
-    neurons::Matrix input_1{ neurons::Shape{ 500 } };
-    neurons::Matrix input_2{ neurons::Shape{ 500 } };
-    neurons::Matrix input_3{ neurons::Shape{ 1000 } };
+    neurons::TMatrix<> input_1{ neurons::Shape{ 500 } };
+    neurons::TMatrix<> input_2{ neurons::Shape{ 500 } };
+    neurons::TMatrix<> input_3{ neurons::Shape{ 1000 } };
 
     std::vector<double> mix;
     input_1.gaussian_random(-15, 8);
@@ -982,14 +982,14 @@ void test_EM_1d_mix()
 
     lint mix_size = mix.size();
     
-    neurons::Matrix mixed_input{ neurons::Shape{mix_size} };
+    neurons::TMatrix<> mixed_input{ neurons::Shape{mix_size} };
     for (lint i = 0; i < mix_size; ++i)
     {
         mixed_input[{i}] = mix[i];
     }
 
-    std::vector<neurons::Matrix> p_gaussians_in_x;
-    std::vector<neurons::Matrix> p_x_in_gaussians;
+    std::vector<neurons::TMatrix<>> p_gaussians_in_x;
+    std::vector<neurons::TMatrix<>> p_x_in_gaussians;
 
     neurons::EM_1d em1d{ 3 };
     std::vector<neurons::EM_Gaussian_1d> gaussians = em1d(p_x_in_gaussians, p_gaussians_in_x, mixed_input);
@@ -1019,8 +1019,8 @@ void test_review_dataset()
     dataset::Review review{ "D:/develop/my_neurons/dataset/rnn_data_set/glove.6B.50d.txt",
         "D:/develop/my_neurons/dataset/rnn_data_set/reviews", 0.2, 40 };
 
-    std::vector<neurons::Matrix> inputs;
-    std::vector<neurons::Matrix> labels;
+    std::vector<neurons::TMatrix<>> inputs;
+    std::vector<neurons::TMatrix<>> labels;
     review.get_training_set(inputs, labels, 5);
 
     for (size_t i = 0; i < inputs.size(); ++i)
@@ -1061,13 +1061,14 @@ void test_linear_regression_B()
     for (lint k = 0; k < 100; ++k)
     {
         std::cout << "================================================\n";
-        lint x_dims = 1 + rand() % 500;
-        lint samples = 2 + rand() % 500;
+        lint x_dims = 1 + rand() % 10;
+        lint samples = 2 + rand() % 10;
         std::cout << "Dimensions of x: " << x_dims << "\n";
         std::cout << "Number of samples: " << samples << "\n";
         std::cout << "--------------------------------------\n";
         std::vector<neurons::Vector> X;
 
+        std::cout << "X:\n";
         for (lint i = 0; i < samples; ++i)
         {
             neurons::Vector x(x_dims);
@@ -1078,13 +1079,18 @@ void test_linear_regression_B()
             }
 
             X.push_back(x);
+            std::cout << x << "\n";
         }
+
+        std::cout << "\n";
 
         neurons::Vector Y(samples);
         for (lint i = 0; i < samples; ++i)
         {
-            Y[i] = (static_cast<double>(rand() % 1000)) / 1000;
+            Y[i] = (static_cast<double>(rand() % 1000));
         }
+        std::cout << "Y:\n";
+        std::cout << Y << "\n\n";
 
         for (lint i = 1; i < 10; ++i)
         {
@@ -1098,7 +1104,6 @@ void test_linear_regression_B()
 
 void test_of_basic_operations()
 {
-    /*
     vector_cases();
 
     test_matrix_constructor();
@@ -1129,7 +1134,6 @@ void test_of_basic_operations()
     test_rnn_unit();
 
     test_review_dataset();
-    */
 
     test_linear_regression_A();
     test_linear_regression_B();

@@ -77,8 +77,8 @@ neurons::FCNN_layer_op::FCNN_layer_op()
 {}
 
 neurons::FCNN_layer_op::FCNN_layer_op(
-    const Matrix &w,
-    const Matrix &b,
+    const TMatrix<> &w,
+    const TMatrix<> &b,
     const std::unique_ptr<Activation> &act_func,
     const std::unique_ptr<ErrorFunction> &err_func)
     : Traditional_NN_layer_op(w, b, act_func, err_func)
@@ -104,7 +104,7 @@ neurons::FCNN_layer_op & neurons::FCNN_layer_op::operator = (FCNN_layer_op && ot
     return *this;
 }
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(const std::vector<Matrix> & inputs)
+std::vector<neurons::TMatrix<>> neurons::FCNN_layer_op::batch_forward_propagate(const std::vector<TMatrix<>> & inputs)
 {
     if (nullptr == this->m_act_func)
     {
@@ -114,13 +114,13 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(con
 
     size_t samples = inputs.size();
     this->m_x = inputs;
-    std::vector<neurons::Matrix> outputs{ samples };
+    std::vector<neurons::TMatrix<>> outputs{ samples };
     this->m_act_diffs.resize(samples);
 
     for (size_t i = 0; i < samples; ++i)
     {
         // z = x * w + b
-        neurons::Matrix product = this->m_x[i] * this->m_w + this->m_b;
+        neurons::TMatrix<> product = this->m_x[i] * this->m_w + this->m_b;
         // y = g(z)
         this->m_act_func->operator()(outputs[i], this->m_act_diffs[i], product);
     }
@@ -129,8 +129,8 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(con
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(
-    const std::vector<Matrix>& inputs, const std::vector<Matrix>& targets)
+std::vector<neurons::TMatrix<>> neurons::FCNN_layer_op::batch_forward_propagate(
+    const std::vector<TMatrix<>>& inputs, const std::vector<TMatrix<>>& targets)
 {
     if (nullptr == this->m_err_func)
     {
@@ -140,13 +140,13 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(
 
     size_t samples = inputs.size();
     this->m_x = inputs;
-    std::vector<neurons::Matrix> outputs{ samples };
+    std::vector<neurons::TMatrix<>> outputs{ samples };
     this->m_act_diffs.resize(samples);
 
     for (size_t i = 0; i < samples; ++i)
     {
         // z = x * w + b
-        neurons::Matrix product = this->m_x[i] * this->m_w + this->m_b;
+        neurons::TMatrix<> product = this->m_x[i] * this->m_w + this->m_b;
         // y = g(z) and E = error(y, t)
         this->m_loss += this->m_err_func->operator()(outputs[i], this->m_act_diffs[i], targets[i], product);
     }
@@ -155,10 +155,10 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_forward_propagate(
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_back_propagate(double l_rate, const std::vector<Matrix> &E_to_y_diffs)
+std::vector<neurons::TMatrix<>> neurons::FCNN_layer_op::batch_back_propagate(double l_rate, const std::vector<TMatrix<>> &E_to_y_diffs)
 {
     size_t samples = this->m_x.size();
-    std::vector<Matrix> E_to_x_diffs{ samples };
+    std::vector<TMatrix<>> E_to_x_diffs{ samples };
 
     this->m_w_gradient = 0;
     this->m_b_gradient = 0;
@@ -167,7 +167,7 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_back_propagate(double
     for (size_t i = 0; i < samples; ++i)
     {
         // Back propagate from y = g(z) to z
-        neurons::Matrix diff_E_to_z = neurons::multiply(this->m_act_diffs[i], neurons::transpose(E_to_y_diffs[i]));
+        neurons::TMatrix<> diff_E_to_z = neurons::multiply(this->m_act_diffs[i], neurons::transpose(E_to_y_diffs[i]));
 
         // Calculate the derivative dE/dx
         // E is the error from the last layer.
@@ -192,10 +192,10 @@ std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_back_propagate(double
 }
 
 
-std::vector<neurons::Matrix> neurons::FCNN_layer_op::batch_back_propagate(double l_rate)
+std::vector<neurons::TMatrix<>> neurons::FCNN_layer_op::batch_back_propagate(double l_rate)
 {
     size_t samples = this->m_x.size();
-    std::vector<Matrix> E_to_x_diffs{ samples };
+    std::vector<TMatrix<>> E_to_x_diffs{ samples };
 
     this->m_w_gradient = 0;
     this->m_b_gradient = 0;

@@ -8,10 +8,10 @@ std::unique_ptr<neurons::Activation> neurons::Linear::clone()
     return std::make_unique<neurons::Linear>();
 }
 
-void neurons::Linear::operator () (Matrix & output, Matrix & diff, const Matrix & in)
+void neurons::Linear::operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in)
 {
-    Matrix l_output{ in.m_shape };
-    Matrix l_diff{ in.m_shape };
+    TMatrix<> l_output{ in.m_shape };
+    TMatrix<> l_diff{ in.m_shape };
     lint size = in.m_shape.size();
     for (lint i = 0; i < size; ++i)
     {
@@ -29,10 +29,10 @@ std::unique_ptr<neurons::Activation> neurons::Sigmoid::clone()
     return std::make_unique<neurons::Sigmoid>();
 }
 
-void neurons::Sigmoid::operator () (Matrix & output, Matrix & diff, const Matrix & in)
+void neurons::Sigmoid::operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in)
 {
-    Matrix l_output{ in.m_shape };
-    Matrix l_diff{ in.m_shape };
+    TMatrix<> l_output{ in.m_shape };
+    TMatrix<> l_diff{ in.m_shape };
     lint size = in.m_shape.size();
     for (lint i = 0; i < size; ++i)
     {
@@ -51,10 +51,10 @@ std::unique_ptr<neurons::Activation> neurons::Tanh::clone()
     return std::make_unique<neurons::Tanh>();
 }
 
-void neurons::Tanh::operator () (Matrix & output, Matrix & diff, const Matrix & in)
+void neurons::Tanh::operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in)
 {
-    output = Matrix{ in.m_shape };
-    diff = Matrix{ in.m_shape };
+    output = TMatrix<>{ in.m_shape };
+    diff = TMatrix<>{ in.m_shape };
     lint size = in.m_shape.size();
     for (lint i = 0; i < size; ++i)
     {
@@ -71,10 +71,10 @@ std::unique_ptr<neurons::Activation> neurons::Relu::clone()
 }
 
 
-void neurons::Relu::operator () (Matrix & output, Matrix & diff, const Matrix & in)
+void neurons::Relu::operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in)
 {
-    output = Matrix{ in.m_shape };
-    diff = Matrix{ in.m_shape };
+    output = TMatrix<>{ in.m_shape };
+    diff = TMatrix<>{ in.m_shape };
     lint size = in.m_shape.size();
     for (lint i = 0; i < size; ++i)
     {
@@ -100,10 +100,10 @@ std::unique_ptr<neurons::Activation> neurons::Softmax::clone()
 }
 
 
-void neurons::Softmax::operator () (Matrix & output, Matrix & diff, const Matrix & in)
+void neurons::Softmax::operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in)
 {
-    output = Matrix{ in.m_shape };
-    diff = Matrix{ in.m_shape };
+    output = TMatrix<>{ in.m_shape };
+    diff = TMatrix<>{ in.m_shape };
     lint size = in.m_shape.size();
 
     double sum = 0;
@@ -135,7 +135,7 @@ std::unique_ptr<neurons::ErrorFunction> neurons::HalfSquareError::clone()
     return std::make_unique<neurons::HalfSquareError>(this->m_act_func->clone());
 }
 
-double neurons::HalfSquareError::operator()(Matrix & diff, const Matrix & target, const Matrix & input)
+double neurons::HalfSquareError::operator()(TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     if (target.shape().size() != input.shape().size())
     {
@@ -145,7 +145,7 @@ double neurons::HalfSquareError::operator()(Matrix & diff, const Matrix & target
     // The activation function may be sigmoid, tanh, relu, etc
     this->m_act_func->operator()(this->m_act, diff, input);
 
-    Matrix l_diff{ target.m_shape };
+    TMatrix<> l_diff{ target.m_shape };
     lint size = target.m_shape.size();
 
     double sum = 0;
@@ -163,7 +163,7 @@ double neurons::HalfSquareError::operator()(Matrix & diff, const Matrix & target
     return sum;
 }
 
-double neurons::HalfSquareError::operator()(Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input)
+double neurons::HalfSquareError::operator()(TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     double loss = this->operator()(diff, target, input);
     pred = this->get_activation();
@@ -171,7 +171,7 @@ double neurons::HalfSquareError::operator()(Matrix & pred, Matrix & diff, const 
     return loss;
 }
 
-neurons::Matrix & neurons::HalfSquareError::get_activation() const
+neurons::TMatrix<> & neurons::HalfSquareError::get_activation() const
 {
     return this->m_act;
 }
@@ -182,19 +182,19 @@ std::unique_ptr<neurons::ErrorFunction> neurons::Sigmoid_CrossEntropy::clone()
     return std::make_unique<neurons::Sigmoid_CrossEntropy>();
 }
 
-double neurons::Sigmoid_CrossEntropy::operator()(Matrix & diff, const Matrix & target, const Matrix & input)
+double neurons::Sigmoid_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     if (target.shape().size() != input.shape().size())
     {
         throw std::invalid_argument(std::string("ErrorFunction: target and pred should be of the same size."));
     }
 
-    diff = Matrix{ target.m_shape };
+    diff = TMatrix<>{ target.m_shape };
 
 
     if (this->m_sigmoid.m_shape.size() != target.m_shape.size())
     {
-        this->m_sigmoid = Matrix{ target.m_shape };
+        this->m_sigmoid = TMatrix<>{ target.m_shape };
     }
     else if (this->m_sigmoid.m_shape != target.m_shape)
     {
@@ -219,7 +219,7 @@ double neurons::Sigmoid_CrossEntropy::operator()(Matrix & diff, const Matrix & t
     return sum;
 }
 
-double neurons::Sigmoid_CrossEntropy::operator()(Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input)
+double neurons::Sigmoid_CrossEntropy::operator()(TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     double loss = this->operator()(diff, target, input);
     pred = this->get_sigmoid();
@@ -228,7 +228,7 @@ double neurons::Sigmoid_CrossEntropy::operator()(Matrix & pred, Matrix & diff, c
 }
 
 
-neurons::Matrix & neurons::Sigmoid_CrossEntropy::get_sigmoid() const
+neurons::TMatrix<> & neurons::Sigmoid_CrossEntropy::get_sigmoid() const
 {
     return this->m_sigmoid;
 }
@@ -240,18 +240,18 @@ std::unique_ptr<neurons::ErrorFunction> neurons::Softmax_CrossEntropy::clone()
 }
 
 
-double neurons::Softmax_CrossEntropy::operator()(Matrix & diff, const Matrix & target, const Matrix & input)
+double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     if (target.shape().size() != input.shape().size())
     {
         throw std::invalid_argument(std::string("ErrorFunction: target and pred should be of the same size."));
     }
 
-    diff = Matrix{ target.m_shape };
+    diff = TMatrix<>{ target.m_shape };
 
     if (this->m_softmax.m_shape.size() != target.m_shape.size())
     {
-        this->m_softmax = Matrix{ target.m_shape };
+        this->m_softmax = TMatrix<>{ target.m_shape };
     }
     else if (this->m_softmax.m_shape != target.m_shape)
     {
@@ -280,7 +280,7 @@ double neurons::Softmax_CrossEntropy::operator()(Matrix & diff, const Matrix & t
     return centropy_sum;
 }
 
-double neurons::Softmax_CrossEntropy::operator()(Matrix & pred, Matrix & diff, const Matrix & target, const Matrix & input)
+double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     double loss = this->operator()(diff, target, input);
     pred = this->get_SoftMax();
@@ -288,7 +288,7 @@ double neurons::Softmax_CrossEntropy::operator()(Matrix & pred, Matrix & diff, c
     return loss;
 }
 
-neurons::Matrix & neurons::Softmax_CrossEntropy::get_SoftMax() const
+neurons::TMatrix<> & neurons::Softmax_CrossEntropy::get_SoftMax() const
 {
     return this->m_softmax;
 }

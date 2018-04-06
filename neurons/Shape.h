@@ -13,6 +13,9 @@ namespace neurons
 {
     class Matrix;
 
+    template <typename dtype>
+    class TMatrix;
+
     /*
     class Shape represents shape of a matrix.
     For example, [ 4, 5, 6, 8 ] is shape of a four dimensional matrix, sizes of its
@@ -22,6 +25,13 @@ namespace neurons
     {
         friend class Coordinate;
         friend class Matrix;
+
+        friend class TMatrix<double>;
+        friend class TMatrix<float>;
+        friend class TMatrix<short>;
+        friend class TMatrix<int>;
+        friend class TMatrix<lint>;
+
     private:
         // How many dimensions this shape has
         lint m_dim;

@@ -41,25 +41,25 @@ void Simple_NN::print_layers(std::ostream & os) const
 }
 
 
-std::vector<neurons::Matrix> Simple_NN::test(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Simple_NN::test(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds =
+    std::vector<neurons::TMatrix<>> preds =
         this->m_layers[0]->operation_instances()[thread_id]->batch_forward_propagate(inputs, targets);
     return preds;
 }
 
 
-std::vector<neurons::Matrix> Simple_NN::optimise(
-    const std::vector<neurons::Matrix>& inputs,
-    const std::vector<neurons::Matrix>& targets,
+std::vector<neurons::TMatrix<>> Simple_NN::optimise(
+    const std::vector<neurons::TMatrix<>>& inputs,
+    const std::vector<neurons::TMatrix<>>& targets,
     lint thread_id)
 {
-    std::vector<neurons::Matrix> preds = this->test(inputs, targets, thread_id);
+    std::vector<neurons::TMatrix<>> preds = this->test(inputs, targets, thread_id);
 
-    std::vector<neurons::Matrix> E_to_x_diffs =
+    std::vector<neurons::TMatrix<>> E_to_x_diffs =
         this->m_layers[0]->operation_instances()[thread_id]->batch_back_propagate(this->m_l_rate);
 
     return preds;

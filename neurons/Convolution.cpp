@@ -11,7 +11,7 @@ neurons::Conv_1d::Conv_1d(const Shape & input_shape, const Shape & weights_shape
 
     lint out_rows = (this->m_input_sh[1] - this->m_weights_sh[0]) / this->m_stride + 1;
 
-    this->m_diff_to_w = Matrix{ Shape{
+    this->m_diff_to_w = TMatrix<>{ Shape{
         this->m_input_sh[0],
         this->m_weights_sh[0],
         this->m_weights_sh[1],
@@ -26,7 +26,7 @@ neurons::Conv_1d::Conv_1d()
 neurons::Conv_1d::~Conv_1d()
 {}
 
-neurons::Matrix neurons::Conv_1d::operator()(const Matrix & input, const Matrix & weights, const Matrix & bias)
+neurons::TMatrix<> neurons::Conv_1d::operator()(const TMatrix<> & input, const TMatrix<> & weights, const TMatrix<> & bias)
 {
     if (this->m_input_sh.dim() < 3 || this->m_weights_sh.dim() < 3 || bias.m_shape.dim() < 2)
     {
@@ -61,7 +61,7 @@ neurons::Matrix neurons::Conv_1d::operator()(const Matrix & input, const Matrix 
     lint chls = this->m_input_sh[in_dim - 1];
     lint out_rows = (in_rows - w_rows) + 1;
     
-    Matrix out{ in_batch_sh + Shape{ out_rows } + w_batch_sh };
+    TMatrix<> out{ in_batch_sh + Shape{ out_rows } + w_batch_sh };
     lint out_size = out_rows * w_batch_size;
 
     double *in_start = input.m_data;
@@ -166,7 +166,7 @@ neurons::Matrix neurons::Conv_1d::operator()(const Matrix & input, const Matrix 
     return out;
 }
 
-neurons::Matrix & neurons::Conv_1d::get_diff_to_weights() const
+neurons::TMatrix<> & neurons::Conv_1d::get_diff_to_weights() const
 {
     return this->m_diff_to_w;
 }
@@ -210,7 +210,7 @@ neurons::Conv_2d::Conv_2d(
 
     this->m_output_sh = Shape{ in_batch_size, out_rows, out_cols, this->m_weights_sh[this->m_weights_sh.dim() - 1] };
 
-    this->m_diff_to_w = Matrix{ Shape{
+    this->m_diff_to_w = TMatrix<>{ Shape{
         this->m_input_sh[0],
         this->m_weights_sh[0],
         this->m_weights_sh[1],
@@ -219,7 +219,7 @@ neurons::Conv_2d::Conv_2d(
         out_cols,
     }, 0 };
 
-    this->m_diff_to_x = Matrix{ Shape{
+    this->m_diff_to_x = TMatrix<>{ Shape{
         this->m_input_sh[0],
         this->m_input_sh[1],
         this->m_input_sh[2],
@@ -236,7 +236,7 @@ neurons::Conv_2d::Conv_2d()
 neurons::Conv_2d::~Conv_2d()
 {}
 
-neurons::Matrix neurons::Conv_2d::operator()(const Matrix & input, const Matrix & weights, const Matrix & bias)
+neurons::TMatrix<> neurons::Conv_2d::operator()(const TMatrix<> & input, const TMatrix<> & weights, const TMatrix<> & bias)
 {
     if (this->m_input_sh != this->m_input_sh || this->m_weights_sh != this->m_weights_sh || bias.m_shape.dim() < 2)
     {
@@ -244,7 +244,7 @@ neurons::Matrix neurons::Conv_2d::operator()(const Matrix & input, const Matrix 
             std::string("neurons::Conv_1d: Shape of inputs and weights should be compatible with the this convolution."));
     }
 
-    Matrix ex_input = zero_padding(input);
+    TMatrix<> ex_input = zero_padding(input);
 
     lint in_dim = this->m_ex_in_sh.dim();
     lint w_dim = this->m_ex_in_sh.dim();
@@ -279,7 +279,7 @@ neurons::Matrix neurons::Conv_2d::operator()(const Matrix & input, const Matrix 
     lint out_rows = (in_rows - w_rows) / this->m_r_stride + 1;
     lint out_cols = (in_cols - w_cols) / this->m_c_stride + 1;
 
-    Matrix out{ in_batch_sh + Shape{ out_rows, out_cols } + w_batch_sh };
+    TMatrix<> out{ in_batch_sh + Shape{ out_rows, out_cols } + w_batch_sh };
     lint out_size = out_rows * out_cols * w_batch_size;
 
     lint in_cols_chls = in_cols * chls;
@@ -594,13 +594,13 @@ neurons::Matrix neurons::Conv_2d::operator()(const Matrix & input, const Matrix 
 }
 
 
-neurons::Matrix & neurons::Conv_2d::get_diff_to_weights() const
+neurons::TMatrix<> & neurons::Conv_2d::get_diff_to_weights() const
 {
     return this->m_diff_to_w;
 }
 
 
-neurons::Matrix & neurons::Conv_2d::get_diff_to_input() const
+neurons::TMatrix<> & neurons::Conv_2d::get_diff_to_input() const
 {
     return this->m_diff_to_x;
 }
@@ -612,7 +612,7 @@ neurons::Shape neurons::Conv_2d::get_output_shape() const
 }
 
 
-neurons::Matrix neurons::Conv_2d::zero_padding(const Matrix & input)
+neurons::TMatrix<> neurons::Conv_2d::zero_padding(const TMatrix<> & input)
 {
     if (this->m_r_zero_p < 0)
     {
@@ -632,7 +632,7 @@ neurons::Matrix neurons::Conv_2d::zero_padding(const Matrix & input)
     lint ex_in_rows = in_rows + 2 * m_r_zero_p;
     lint ex_in_cols = in_cols + 2 * m_c_zero_p;
 
-    Matrix ex_input{
+    TMatrix<> ex_input{
         Shape{ in_batch_size, ex_in_rows, ex_in_cols } +
         this->m_input_sh.sub_shape(3, this->m_input_sh.dim() - 1) };
 

@@ -31,9 +31,9 @@ namespace dataset
         */
         inline std::unique_ptr<char[]> read_mnist_file(const std::string & path, uint32_t key) const;
 
-        void read_mnist_image_file(std::vector<neurons::Matrix> & images, const std::string& path, lint limit = 0) const;
+        void read_mnist_image_file(std::vector<neurons::TMatrix<>> & images, const std::string& path, lint limit = 0) const;
 
-        void read_mnist_label_file(std::vector<neurons::Matrix> & labels, const std::string& path, lint limit = 0) const;
+        void read_mnist_label_file(std::vector<neurons::TMatrix<>> & labels, const std::string& path, lint limit = 0) const;
 
     public:
 
@@ -44,9 +44,9 @@ namespace dataset
             const std::string & test_label);
 
         virtual void get_training_set(
-            std::vector<neurons::Matrix> & inputs, std::vector<neurons::Matrix> & labels, lint limit = 0) const;
+            std::vector<neurons::TMatrix<>> & inputs, std::vector<neurons::TMatrix<>> & labels, lint limit = 0) const;
 
         virtual void get_test_set(
-            std::vector<neurons::Matrix> & inputs, std::vector<neurons::Matrix> & labels, lint limit = 0) const;
+            std::vector<neurons::TMatrix<>> & inputs, std::vector<neurons::TMatrix<>> & labels, lint limit = 0) const;
     };
 }

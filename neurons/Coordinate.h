@@ -12,6 +12,13 @@ namespace neurons
     class Coordinate
     {
         friend class Matrix;
+
+        friend class TMatrix<double>;
+        friend class TMatrix<float>;
+        friend class TMatrix<short>;
+        friend class TMatrix<int>;
+        friend class TMatrix<lint>;
+
     private:
         // Number of dimensions
         lint m_dim;

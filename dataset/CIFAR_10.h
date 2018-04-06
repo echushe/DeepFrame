@@ -21,8 +21,8 @@ namespace dataset
         std::unique_ptr<char[]> read_cifar_file(lint & file_len, const std::string & path) const;
 
         void cifar_binary_to_dataset(
-            std::vector<neurons::Matrix> & images,
-            std::vector<neurons::Matrix> & labels,
+            std::vector<neurons::TMatrix<>> & images,
+            std::vector<neurons::TMatrix<>> & labels,
             const std::unique_ptr<char[]> & binary,
             lint binary_len, lint limit = 0) const;
 
@@ -31,10 +31,10 @@ namespace dataset
 
     public:
         virtual void get_training_set(
-            std::vector<neurons::Matrix> & inputs, std::vector<neurons::Matrix> & labels, lint limit = 0) const;
+            std::vector<neurons::TMatrix<>> & inputs, std::vector<neurons::TMatrix<>> & labels, lint limit = 0) const;
 
         virtual void get_test_set(
-            std::vector<neurons::Matrix> & inputs, std::vector<neurons::Matrix> & labels, lint limit = 0) const;
+            std::vector<neurons::TMatrix<>> & inputs, std::vector<neurons::TMatrix<>> & labels, lint limit = 0) const;
     };
 }
 

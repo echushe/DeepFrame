@@ -80,7 +80,7 @@ inline std::unique_ptr<char[]> dataset::Mnist::read_mnist_file(const std::string
 }
 
 
-void dataset::Mnist::read_mnist_image_file(std::vector<neurons::Matrix> & images, const std::string& path, lint limit) const
+void dataset::Mnist::read_mnist_image_file(std::vector<neurons::TMatrix<>> & images, const std::string& path, lint limit) const
 {
     auto buffer = this->read_mnist_file(path, 0x803);
 
@@ -102,7 +102,7 @@ void dataset::Mnist::read_mnist_image_file(std::vector<neurons::Matrix> & images
 
         for (lint i = 0; i < count; ++i)
         {
-            neurons::Matrix new_image{ neurons::Shape{ rows, columns, 1 } };
+            neurons::TMatrix<> new_image{ neurons::Shape{ rows, columns, 1 } };
             neurons::Coordinate pos{ 0, 0, 0 };
             for (lint j = 0; j < rows; ++j)
             {
@@ -120,7 +120,7 @@ void dataset::Mnist::read_mnist_image_file(std::vector<neurons::Matrix> & images
 }
 
 
-void dataset::Mnist::read_mnist_label_file(std::vector<neurons::Matrix> & labels, const std::string& path, lint limit) const
+void dataset::Mnist::read_mnist_label_file(std::vector<neurons::TMatrix<>> & labels, const std::string& path, lint limit) const
 {
     auto buffer = read_mnist_file(path, 0x801);
 
@@ -150,7 +150,7 @@ void dataset::Mnist::read_mnist_label_file(std::vector<neurons::Matrix> & labels
 
         for (lint i = 0; i < count; ++i)
         {
-            neurons::Matrix label{ neurons::Shape{ max_val + 1 } };
+            neurons::TMatrix<> label{ neurons::Shape{ max_val + 1 } };
             uint8_t label_val = *(label_buffer + i);
 
             for (uint8_t j = 0; j <= max_val; ++j)
@@ -185,7 +185,7 @@ dataset::Mnist::Mnist(
 
 
 void dataset::Mnist::get_training_set(
-    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+    std::vector<neurons::TMatrix<>>& inputs, std::vector<neurons::TMatrix<>>& labels, lint limit) const
 {
     this->read_mnist_image_file(inputs, this->m_train_file, limit);
     this->read_mnist_label_file(labels, this->m_train_label, limit);
@@ -193,7 +193,7 @@ void dataset::Mnist::get_training_set(
 
 
 void dataset::Mnist::get_test_set(
-    std::vector<neurons::Matrix>& inputs, std::vector<neurons::Matrix>& labels, lint limit) const
+    std::vector<neurons::TMatrix<>>& inputs, std::vector<neurons::TMatrix<>>& labels, lint limit) const
 {
     this->read_mnist_image_file(inputs, this->m_test_file, limit);
     this->read_mnist_label_file(labels, this->m_test_label, limit);

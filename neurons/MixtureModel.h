@@ -1,5 +1,5 @@
 #pragma once
-#include "Matrix.h"
+#include "TMatrix.h"
 #include <iostream>
 
 namespace neurons
@@ -25,9 +25,9 @@ namespace neurons
 
     public:
         std::vector<EM_Gaussian_1d> operator ()(
-            std::vector<neurons::Matrix> &p_x_in_gaussians,
-            std::vector<neurons::Matrix> &p_gaussians_in_x,
-            const neurons::Matrix & input);
+            std::vector<neurons::TMatrix<>> &p_x_in_gaussians,
+            std::vector<neurons::TMatrix<>> &p_gaussians_in_x,
+            const neurons::TMatrix<> & input);
 
         ~EM_1d();
     };

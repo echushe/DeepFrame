@@ -1,5 +1,5 @@
 #pragma once
-#include "Matrix.h"
+#include "TMatrix.h"
 
 namespace neurons
 {
@@ -57,35 +57,35 @@ namespace neurons
         // Forward propagation
         //--------------------------------------------
 
-        virtual Matrix forward_propagate(const Matrix &input) = 0;
+        virtual TMatrix<> forward_propagate(const TMatrix<> &input) = 0;
 
-        virtual Matrix forward_propagate(const Matrix &input, const Matrix &target) = 0;
+        virtual TMatrix<> forward_propagate(const TMatrix<> &input, const TMatrix<> &target) = 0;
 
         //--------------------------------------------
         // Backward propagation
         //--------------------------------------------
 
-        virtual Matrix back_propagate(double l_rate, const Matrix & E_to_y_diff) = 0;
+        virtual TMatrix<> back_propagate(double l_rate, const TMatrix<> & E_to_y_diff) = 0;
 
-        virtual Matrix back_propagate(double l_rate) = 0;
+        virtual TMatrix<> back_propagate(double l_rate) = 0;
 
         
         //--------------------------------------------
         // Forward propagation via batch learning
         //--------------------------------------------
 
-        virtual std::vector<Matrix> batch_forward_propagate(const std::vector<Matrix> & inputs) = 0;
+        virtual std::vector<TMatrix<>> batch_forward_propagate(const std::vector<TMatrix<>> & inputs) = 0;
 
-        virtual std::vector<Matrix> batch_forward_propagate(
-            const std::vector<Matrix> & inputs, const std::vector<Matrix> & targets) = 0;
+        virtual std::vector<TMatrix<>> batch_forward_propagate(
+            const std::vector<TMatrix<>> & inputs, const std::vector<TMatrix<>> & targets) = 0;
 
         //--------------------------------------------
         // Backward propagation via batch learning
         //--------------------------------------------
 
-        virtual std::vector<Matrix> batch_back_propagate(double l_rate, const std::vector<Matrix> & E_to_y_diffs) = 0;
+        virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate, const std::vector<TMatrix<>> & E_to_y_diffs) = 0;
 
-        virtual std::vector<Matrix> batch_back_propagate(double l_rate) = 0;
+        virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate) = 0;
 
         virtual Shape output_shape() const = 0;
 

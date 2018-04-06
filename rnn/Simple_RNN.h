@@ -36,14 +36,14 @@ public:
 
 private:
 
-    virtual std::vector<neurons::Matrix> test(
-        const std::vector<neurons::Matrix> & inputs,
-        const std::vector<neurons::Matrix> & targets,
+    virtual std::vector<neurons::TMatrix<>> test(
+        const std::vector<neurons::TMatrix<>> & inputs,
+        const std::vector<neurons::TMatrix<>> & targets,
         lint thread_id);
 
-    virtual std::vector<neurons::Matrix> optimise(
-        const std::vector<neurons::Matrix> & inputs,
-        const std::vector<neurons::Matrix> & targets,
+    virtual std::vector<neurons::TMatrix<>> optimise(
+        const std::vector<neurons::TMatrix<>> & inputs,
+        const std::vector<neurons::TMatrix<>> & targets,
         lint thread_id);
 };
 

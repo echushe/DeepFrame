@@ -22,10 +22,10 @@ neurons::Pooling_2d::Pooling_2d(const Shape &input_sh, const Shape &kernel_sh)
         input_sh[2] / kernel_sh[2],
         input_sh[3] };
 
-    this->m_diff_y_to_x = Matrix{ this->m_input_sh };
+    this->m_diff_y_to_x = TMatrix<>{ this->m_input_sh };
 }
 
-neurons::Matrix neurons::Pooling_2d::operator()(const Matrix & in)
+neurons::TMatrix<> neurons::Pooling_2d::operator()(const TMatrix<> & in)
 {
     if (in.m_shape != this->m_input_sh)
     {
@@ -34,7 +34,7 @@ neurons::Matrix neurons::Pooling_2d::operator()(const Matrix & in)
         );
     }
 
-    Matrix output{ this->m_output_sh };
+    TMatrix<> output{ this->m_output_sh };
     m_diff_y_to_x = 0;
 
     lint batch_size = this->m_input_sh[0];
@@ -101,7 +101,7 @@ neurons::Matrix neurons::Pooling_2d::operator()(const Matrix & in)
     return output;
 }
 
-neurons::Matrix neurons::Pooling_2d::back_propagate(const Matrix & diff_E_to_output) const
+neurons::TMatrix<> neurons::Pooling_2d::back_propagate(const TMatrix<> & diff_E_to_output) const
 {
     if (diff_E_to_output.m_shape != this->m_output_sh)
     {
@@ -111,7 +111,7 @@ neurons::Matrix neurons::Pooling_2d::back_propagate(const Matrix & diff_E_to_out
     }
 
     // diff_E_to_input should be initialized with zero
-    Matrix diff_E_to_input{ this->m_input_sh, 0 };
+    TMatrix<> diff_E_to_input{ this->m_input_sh, 0 };
 
     lint batch_size = this->m_input_sh[0];
 
@@ -325,13 +325,13 @@ neurons::Pooling_layer_op::Pooling_layer_op(const Shape & input_sh, const Shape 
     : m_input_sh{ input_sh }, m_kernel_sh{ kernel_sh }
 {}
 
-std::vector<neurons::Matrix> neurons::Pooling_layer_op::forward_propagate(const std::vector<Matrix>& inputs)
+std::vector<neurons::TMatrix<>> neurons::Pooling_layer_op::forward_propagate(const std::vector<TMatrix<>>& inputs)
 {
     size_t samples = inputs.size();
     // this->m_pools.resize(samples);
     this->m_pools.clear();
 
-    std::vector<Matrix> output{ samples };
+    std::vector<TMatrix<>> output{ samples };
 
     for (size_t i = 0; i < samples; ++i)
     {
@@ -345,10 +345,10 @@ std::vector<neurons::Matrix> neurons::Pooling_layer_op::forward_propagate(const 
     return output;
 }
 
-std::vector<neurons::Matrix> neurons::Pooling_layer_op::back_propagate(const std::vector<Matrix>& E_to_y_diffs)
+std::vector<neurons::TMatrix<>> neurons::Pooling_layer_op::back_propagate(const std::vector<TMatrix<>>& E_to_y_diffs)
 {
     size_t samples = this->m_pools.size();
-    std::vector<Matrix> E_to_x_diffs{ samples };
+    std::vector<TMatrix<>> E_to_x_diffs{ samples };
 
     for (size_t i = 0; i < samples; ++i)
     {
