@@ -6,6 +6,8 @@ neurons::Linear_Regression::Linear_Regression(const std::vector<Vector> & x, con
     m_train_y{ y },
     m_w{ Shape{ 1, x[0].dim() + 1 }}
 {
+    this->m_train_y = transpose(this->m_train_y);
+
     // Copy values of x to training x
     this->m_train_x = this->copy_input_into_mat(x);
 
@@ -31,7 +33,7 @@ void neurons::Linear_Regression::fit(double accuracy)
         TMatrix<> y = transpose(this->m_train_x * transpose(this->m_w));
 
         // Calculate dE/dy
-        TMatrix<> diff_E_to_y = 2 * (y - this->m_train_y);
+        TMatrix<> diff_E_to_y = 2.0 * (y - this->m_train_y);
         
         // Calculate dE/dw = (dE/dy) * (dy/dw)
         TMatrix<> gradient = diff_E_to_y * this->m_train_x;
@@ -55,12 +57,12 @@ neurons::Vector neurons::Linear_Regression::predict(const std::vector<Vector>& x
     TMatrix<> test_x = this->copy_input_into_mat(x);
     TMatrix<> y = transpose(test_x * transpose(this->m_w));
 
-    return y;
+    return y.flaten();
 }
 
 neurons::Vector neurons::Linear_Regression::coef_and_intercept() const
 {
-    return this->m_w;
+    return this->m_w.flaten();
 }
 
 neurons::TMatrix<> neurons::Linear_Regression::copy_input_into_mat(const std::vector<Vector>& x)

@@ -18,22 +18,6 @@ namespace neurons
     template <typename dtype = double>
     class TMatrix
     {
-        // These friend classes are all functions who may operate on matrices
-        //friend class Linear;
-        //friend class Sigmoid;
-        //friend class Tanh;
-        //friend class Relu;
-        //friend class Softmax;
-        //friend class HalfSquareError;
-        //friend class Sigmoid_CrossEntropy;
-        //friend class Softmax_CrossEntropy;
-        //friend class Conv_1d;
-        //friend class Conv_2d;
-        //friend class Pooling_2d;
-        //friend class MaxPooling_2d;
-        //friend class EM_1d;
-        //friend class Linear_Regression;
-
     public:
         // Shape of this matrix
         Shape m_shape;
@@ -87,9 +71,6 @@ namespace neurons
 
         // Get an element of a certain position. This element can be updated
         dtype & operator [] (const Coordinate & pos);
-
-        // An implicite way to get a flatened matrix (vector)
-        operator Vector() const;
 
         // Get a flatened matrix (vector)
         Vector flaten() const;
@@ -213,35 +194,6 @@ namespace neurons
     public:
         // Get shape of the matrix
         Shape shape() const;
-
-    private:
-        // friend bool operator == (const TMatrix &left, const TMatrix &right);
-
-        // friend bool operator != (const TMatrix &left, const TMatrix &right);
-
-        // friend TMatrix operator + (const TMatrix &left, const TMatrix &right);
-
-        // friend TMatrix operator - (const TMatrix &left, const TMatrix &right);
-
-        // friend TMatrix matrix_multiply(const TMatrix & left, const TMatrix & right, lint l_dims_merge, lint r_dims_merge);
-
-        // friend TMatrix matrix_multiply(const TMatrix & left, const TMatrix & right);
-
-        // friend TMatrix multiply(const TMatrix & left, const TMatrix & right);
-
-        // friend dtype dot_product(const TMatrix & left, const TMatrix & right);
-
-        // friend TMatrix operator * (const TMatrix &left, const TMatrix &right);
-
-        // friend TMatrix operator * (dtype scalar, const TMatrix &right);
-
-        // friend TMatrix operator * (const TMatrix &left, dtype scalar);
-
-        // friend TMatrix operator / (const TMatrix &left, dtype scalar);
-
-        // friend TMatrix transpose(const TMatrix & in);
-
-        // friend std::ostream & operator << (std::ostream & os, const TMatrix & m);
 
     public:
         void print(std::ostream & os, lint dim_index, const dtype *start, size_t block_size) const;
@@ -574,7 +526,7 @@ namespace neurons
     template <typename dtype>
     TMatrix<dtype> operator * (dtype scalar, const TMatrix<dtype> &right)
     {
-        TMatrix mat{ right.m_shape };
+        TMatrix<dtype> mat{ right.m_shape };
 
         lint size = right.m_shape.size();
         for (lint i = 0; i < size; ++i)
@@ -1027,8 +979,9 @@ dtype & neurons::TMatrix<dtype>::operator [] (const Coordinate & pos)
     return this->m_data[index];
 }
 
+
 template <typename dtype>
-neurons::TMatrix<dtype>::operator neurons::Vector() const
+neurons::Vector neurons::TMatrix<dtype>::flaten() const
 {
     lint size = this->m_shape.m_size;
     Vector vec = Vector(size);
@@ -1038,12 +991,6 @@ neurons::TMatrix<dtype>::operator neurons::Vector() const
     }
 
     return vec;
-}
-
-template <typename dtype>
-neurons::Vector neurons::TMatrix<dtype>::flaten() const
-{
-    return *this;
 }
 
 template <typename dtype>

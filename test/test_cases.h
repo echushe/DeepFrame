@@ -546,13 +546,13 @@ void test_matrix_other_cal()
     mat3 = mat1 - mat2;
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    mat3 = mat3 * 3;
+    mat3 = mat3 * 3.0;
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    mat3 = 2 * mat3;
+    mat3 = 2.0 * mat3;
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    mat3 = mat3 / 2;
+    mat3 = mat3 / 2.0;
     std::cout << "mat3:\n" << mat3 << '\n';
 }
 
@@ -1104,6 +1104,7 @@ void test_linear_regression_B()
 
 void test_of_basic_operations()
 {
+    /*
     vector_cases();
 
     test_matrix_constructor();
@@ -1134,6 +1135,7 @@ void test_of_basic_operations()
     test_rnn_unit();
 
     test_review_dataset();
+    */
 
     test_linear_regression_A();
     test_linear_regression_B();

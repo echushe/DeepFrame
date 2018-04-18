@@ -5,6 +5,7 @@ Programmed by Chunnan Sheng
 *********************************************************************/
 #pragma once
 #include <list>
+#include <iostream>
 
 // All integers are 64bit wide here
 typedef long long lint;
@@ -88,6 +89,7 @@ namespace neurons
         friend bool operator == (const Shape &left, const Shape &right);
         friend bool operator != (const Shape &left, const Shape &right);
         friend Shape operator + (const Shape &left, const Shape &right);
+        friend std::ostream & operator << (std::ostream & os, const Shape & co);
     };
 
 
@@ -101,4 +103,6 @@ namespace neurons
 
     // This function returns the reversed shape without changing the original shape
     Shape reverse(const Shape & sh);
+
+    std::ostream & operator<<(std::ostream & os, const Shape & co);
 }

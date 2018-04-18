@@ -1,7 +1,6 @@
 #pragma once
 #include "Shape.h"
 #include <memory>
-#include <iostream>
 
 namespace neurons
 {

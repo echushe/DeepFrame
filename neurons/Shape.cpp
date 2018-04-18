@@ -241,3 +241,19 @@ neurons::Shape neurons::reverse(const Shape & sh)
     Shape to_reverse{ sh };
     return to_reverse.reverse();
 }
+
+std::ostream & neurons::operator<<(std::ostream & os, const Shape & sh)
+{
+    os << '[';
+    for (lint i = 0; i < sh.m_dim; ++i)
+    {
+        os << sh.m_data[i];
+        if (i < sh.m_dim - 1)
+        {
+            os << ", ";
+        }
+    }
+    os << ']';
+
+    return os;
+}
