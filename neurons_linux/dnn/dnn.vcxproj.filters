@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Multi_Layer_NN.cpp" />
+    <ClCompile Include="Simple_NN.cpp" />
+    <ClCompile Include="Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Multi_Layer_NN.h" />
+    <ClInclude Include="Simple_NN.h" />
+  </ItemGroup>
+</Project>
