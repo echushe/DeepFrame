@@ -32,5 +32,7 @@ neurons_linux/neurons/obj/
 neurons_linux/neurons/bin/
 neurons_linux/dnn/obj/
 neurons_linux/dnn/bin/
+neurons_linux/cnn/obj/
+neurons_linux/cnn/bin/
 
 neurons_linux/.vs/
