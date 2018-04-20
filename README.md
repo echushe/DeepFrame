@@ -6,7 +6,8 @@
 
 - **I am now trying my best to make the source code almost identical for both windows and linux.**
 - **C++ version should be at least C++ 14 here**
-- **You should re-specify locations of static libraries on the linux machine some modules may depend on before you build the linux version solution.** 
+- **Locations of compiled static libraries of *neurons* and *dataset* module may be different on different linux machines.**
+**You may have to update configurations of modules that may depend on *neurons* and *dataset* before you build the linux version solution.** 
 - **The linux version is not complete because it is still under construction.**
 
 ## The *neurons* module
