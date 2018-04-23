@@ -1,7 +1,6 @@
 # Deep_Learning_via_C_plus_plus
 > This repository includes homemade C++ source code of deep learning
-## This reporsitory includes 2 Visual Studio solutions:
-## neurons_windows & neurons_linux
+## This reporsitory includes 2 Visual Studio solutions: *neurons_windows* and *neurons_linux*
 
 - **I am now trying my best to make the source code almost identical for both windows and linux.**
 - **C++ version should be at least C++ 14 here**
