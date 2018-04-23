@@ -1,11 +1,11 @@
 # Deep_Learning_via_C_plus_plus
 > This repository includes homemade C++ source code of deep learning
 ## This reporsitory includes 2 Visual Studio solutions:
-## neurons_windows
-## neurons_linux
+## neurons_windows & neurons_linux
 
 - **I am now trying my best to make the source code almost identical for both windows and linux.**
 - **C++ version should be at least C++ 14 here**
+- **Both windows and linux solutions can be compiled via Visual Studio 2017 (the linux version needs a linux platform where g++ is installed).**
 - **Locations of compiled static libraries of *neurons* and *dataset* module may be different on different linux machines.**
 **You may have to update configurations of modules that may depend on *neurons* and *dataset* before you build the linux version solution.** 
 - **The linux version is not complete because it is still under construction.**
@@ -42,10 +42,10 @@
 ## The *dnn* module
 - **dnn** is a multi-layer fully connected neural network program that can be trained.
 
-## THe *cnn* module
+## The *cnn* module
 - **cnn** is a homemade multi-layer convolutional neural network program that can be trained.
 
-## THe *rnn* module
+## The *rnn* module
 - **rnn** has recently implemented a simple RNN module. LSTM is still under construction.
 
 ## The *test* module
