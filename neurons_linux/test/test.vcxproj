@@ -110,7 +110,7 @@
     <Link>
       <LibraryDependencies>%(LibraryDependencies)</LibraryDependencies>
       <SharedLibrarySearchPath>%(SharedLibrarySearchPath)</SharedLibrarySearchPath>
-      <AdditionalDependencies>/tmp_amd/adams/export/adams/4/z5100764/projects/neurons/bin/x64/Debug/libneurons.a;/tmp_amd/adams/export/adams/4/z5100764/projects/dataset/bin/x64/Debug/libdataset.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$HOME/projects/neurons/bin/x64/Debug/libneurons.a;$HOME/projects/dataset/bin/x64/Debug/libdataset.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,7 +121,7 @@
     <Link>
       <LibraryDependencies>%(LibraryDependencies)</LibraryDependencies>
       <SharedLibrarySearchPath>%(SharedLibrarySearchPath)</SharedLibrarySearchPath>
-      <AdditionalDependencies>/tmp_amd/adams/export/adams/4/z5100764/projects/neurons/bin/x64/Release/libneurons.a;/tmp_amd/adams/export/adams/4/z5100764/projects/dataset/bin/x64/Release/libdataset.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$HOME/projects/neurons/bin/x64/Release/libneurons.a;$HOME/projects/dataset/bin/x64/Release/libdataset.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">

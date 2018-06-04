@@ -32,8 +32,8 @@ inline std::unique_ptr<char[]> dataset::Mnist::read_mnist_file(const std::string
 
     if (!file)
     {
-        std::cout << "Error opening file" << std::endl;
-        return {};
+        std::cout << "Error opening file " << path << std::endl;
+        throw std::invalid_argument(std::string("Path or file not found"));
     }
 
     auto size = file.tellg();

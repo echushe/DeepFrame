@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dataset", "dataset\dataset.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "misc", "misc\misc.vcxproj", "{456028EB-1F34-40B0-B478-63F2A5D4638C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "facetrain", "facetrain\facetrain.vcxproj", "{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,16 @@ Global
 		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|x64.Build.0 = Release|x64
 		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|x86.ActiveCfg = Release|Win32
 		{456028EB-1F34-40B0-B478-63F2A5D4638C}.Release|x86.Build.0 = Release|Win32
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Debug|x64.ActiveCfg = Debug|x64
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Debug|x64.Build.0 = Debug|x64
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Debug|x86.ActiveCfg = Debug|Win32
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Debug|x86.Build.0 = Debug|Win32
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Release|Any CPU.ActiveCfg = Release|Win32
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Release|x64.ActiveCfg = Release|x64
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Release|x64.Build.0 = Release|x64
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Release|x86.ActiveCfg = Release|Win32
+		{2AE3FC1B-8420-42BA-9EC8-05E52A710B96}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

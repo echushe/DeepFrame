@@ -8,6 +8,7 @@
 #include "Dataset.h"
 #include "RNN_unit.h"
 #include "Mnist.h"
+#include "PGM.h"
 #include "Review.h"
 #include "LinearRegression.h"
 #include <iostream>
@@ -1102,6 +1103,50 @@ void test_linear_regression_B()
 }
 
 
+void test_of_PGM()
+{
+    std::cout << "=================== test_of_loading_PGM_dataset ==================" << "\n";
+    std::vector<neurons::TMatrix<>> images;
+    std::vector<neurons::TMatrix<>> labels;
+
+    std::string dataset_dir = "D:/develop/my_neurons/dataset/cmu_facial/faces/an2i/";
+    std::vector<std::string> train_files;
+    std::vector<std::string> test_files;
+
+    train_files.push_back(dataset_dir + "an2i_left_angry_open_4.pgm");
+    train_files.push_back(dataset_dir + "an2i_left_angry_sunglasses_4.pgm");
+    train_files.push_back(dataset_dir + "an2i_left_happy_open_4.pgm");
+
+    test_files.push_back(dataset_dir + "an2i_straight_angry_open_4.pgm");
+    test_files.push_back(dataset_dir + "an2i_straight_happy_open_4.pgm");
+
+    dataset::PGM pgm{train_files, test_files, 2};
+
+    std::vector<neurons::TMatrix<>> train_inputs;
+    std::vector<neurons::TMatrix<>> train_labels;
+    std::vector<neurons::TMatrix<>> test_inputs;
+    std::vector<neurons::TMatrix<>> test_labels;
+
+    pgm.get_test_set(test_inputs, test_labels, 0);
+    pgm.get_training_set(train_inputs, train_labels, 0);
+
+    for (size_t i = 0; i < train_inputs.size(); ++i)
+    {
+        train_inputs[i].reshape(neurons::Shape{ train_inputs[i].shape()[0], train_inputs[i].shape()[1] });
+        std::cout << train_inputs[i] << "\n";
+        std::cout << train_labels[i] << "\n";
+    }
+
+    for (size_t i = 0; i < test_inputs.size(); ++i)
+    {
+        test_inputs[i].reshape(neurons::Shape{ test_inputs[i].shape()[0], test_inputs[i].shape()[1] });
+        std::cout << test_inputs[i] << "\n";
+        std::cout << test_labels[i] << "\n";
+    }
+    // mnist.get_test_set(images, labels, 10);
+}
+
+
 void test_of_basic_operations()
 {
     /*
@@ -1127,18 +1172,20 @@ void test_of_basic_operations()
 
     test_pooling_2d();
     test_pooling_2d_special();
-
-    test_EM_1d_single();
-    
-    test_EM_1d_mix();
-
-    test_rnn_unit();
-
-    test_review_dataset();
     */
 
-    test_linear_regression_A();
-    test_linear_regression_B();
+    test_of_PGM();
+
+    // test_EM_1d_single();
+    
+    // test_EM_1d_mix();
+
+    // test_rnn_unit();
+
+    // test_review_dataset();
+
+    // test_linear_regression_A();
+    // test_linear_regression_B();
 }
 
 

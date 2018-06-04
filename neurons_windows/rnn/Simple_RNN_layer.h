@@ -39,6 +39,10 @@ namespace neurons
         Simple_RNN_layer & operator = (Simple_RNN_layer && other);
 
         virtual Shape output_shape() const;
+
+        virtual std::unique_ptr<char[]> to_binary_data(lint & data_size) const;
+
+        virtual std::string nn_type() const { return NN_layer::RNN; }
     };
 
     class Simple_RNN_layer_op : public NN_layer_op
@@ -97,7 +101,7 @@ namespace neurons
             const std::vector<TMatrix<>> & inputs, const std::vector<TMatrix<>> & targets);
 
         //--------------------------------------------
-        // Backward propagation via batch learning
+        // Back propagation via batch learning
         //--------------------------------------------
 
         virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate, const std::vector<TMatrix<>> & E_to_y_diffs);

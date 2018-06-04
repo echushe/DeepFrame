@@ -4,13 +4,16 @@ neurons::FCNN_layer::FCNN_layer()
 {}
 
 neurons::FCNN_layer::FCNN_layer(
+    double mmt_rate,
     lint input_size,
     lint output_size,
     lint threads,
     neurons::Activation *act_func,
     neurons::ErrorFunction *err_func)
     :
-    Traditional_NN_layer(neurons::Shape{ input_size, output_size }, neurons::Shape{ 1, output_size }, threads, act_func, err_func)
+    Traditional_NN_layer(
+        mmt_rate,
+        neurons::Shape{ input_size, output_size }, neurons::Shape{ 1, output_size }, threads, act_func, err_func)
 {
     double var = static_cast<double>(10) / this->m_w.shape()[0];
     this->m_w.gaussian_random(0, var);
@@ -19,6 +22,17 @@ neurons::FCNN_layer::FCNN_layer(
     for (lint i = 0; i < threads; ++i)
     {
         this->m_ops[i] = std::make_shared<FCNN_layer_op>( this->m_w, this->m_b, this->m_act_func, this->m_err_func );
+    }
+}
+
+neurons::FCNN_layer::FCNN_layer(double mmt_rate, lint threads, TMatrix<>& w, TMatrix<>& b, 
+    std::unique_ptr<Activation>& act_func, std::unique_ptr<ErrorFunction>& err_func)
+    :
+    Traditional_NN_layer(mmt_rate, threads, w, b, act_func, err_func)
+{
+    for (lint i = 0; i < threads; ++i)
+    {
+        this->m_ops[i] = std::make_shared<FCNN_layer_op>(this->m_w, this->m_b, this->m_act_func, this->m_err_func);
     }
 }
 

@@ -8,11 +8,23 @@ namespace neurons
     class Activation
     {
     public:
+        static const std::string LINEAR;
+        static const std::string SIGMOID;
+        static const std::string TANH;
+        static const std::string RELU;
+        static const std::string SOFTMAX;
+        static const std::string NULL_FUNC;
+
+        static std::unique_ptr<Activation> get_function_by_name(const std::string & func_name);
+
+    public:
         Activation() {}
 
         virtual std::unique_ptr<Activation> clone() = 0;
 
         virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in) = 0;
+
+        virtual std::string to_string() const = 0;
     };
 
 
@@ -24,6 +36,8 @@ namespace neurons
         virtual std::unique_ptr<Activation> clone();
 
         virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
     };
 
 
@@ -35,6 +49,8 @@ namespace neurons
         virtual std::unique_ptr<Activation> clone();
 
         virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
     };
 
 
@@ -46,6 +62,8 @@ namespace neurons
         virtual std::unique_ptr<Activation> clone();
 
         virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
     };
 
 
@@ -57,6 +75,8 @@ namespace neurons
         virtual std::unique_ptr<Activation> clone();
 
         virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
     };
 
 
@@ -68,11 +88,25 @@ namespace neurons
         virtual std::unique_ptr<Activation> clone();
 
         virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
     };
 
 
     class ErrorFunction
     {
+    protected:
+        std::unique_ptr<Activation> m_act_func;
+        mutable TMatrix<> m_act;
+
+    public:
+        static const std::string HALF_SQUARE_ERROR;
+        static const std::string SIGMOID_CROSS_ENTROPY;
+        static const std::string SOFTMAX_CROSS_ENTROPY;
+        static const std::string NULL_FUNC;
+
+        static std::unique_ptr<ErrorFunction> get_function_by_name(std::string & func_name);
+
     public:
         ErrorFunction() {}
 
@@ -81,15 +115,18 @@ namespace neurons
         virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input) = 0;
         virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input) = 0;
 
+        virtual std::string to_string() const = 0;
+
+        virtual TMatrix<> & get_activation() const = 0;
+
+        std::unique_ptr<Activation> get_act_func() const;
+
     };
 
 
     class HalfSquareError : public ErrorFunction
     {
     private:
-        std::unique_ptr<Activation> m_act_func;
-
-        mutable TMatrix<> m_act;
 
     public:
         HalfSquareError(const std::unique_ptr<Activation> & act_func);
@@ -101,41 +138,47 @@ namespace neurons
         virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
         virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
 
-        TMatrix<> & get_activation() const;
+        virtual TMatrix<> & get_activation() const;
+
+        virtual std::string to_string() const;
     };
 
 
     class Sigmoid_CrossEntropy : public ErrorFunction
     {
     private:
-        mutable TMatrix<> m_sigmoid;
+        // mutable TMatrix<> m_sigmoid;
 
     public:
-        Sigmoid_CrossEntropy() {}
+        Sigmoid_CrossEntropy();
 
         virtual std::unique_ptr<ErrorFunction> clone();
 
         virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
         virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
 
-        TMatrix<> & get_sigmoid() const;
+        virtual TMatrix<> & get_activation() const;
+
+        virtual std::string to_string() const;
     };
 
 
     class Softmax_CrossEntropy : public ErrorFunction
     {
     private:
-        mutable TMatrix<> m_softmax;
+        // mutable TMatrix<> m_softmax;
 
     public:
-        Softmax_CrossEntropy() {}
+        Softmax_CrossEntropy();
 
         virtual std::unique_ptr<ErrorFunction> clone();
 
         virtual double operator () (TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
         virtual double operator () (TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input);
 
-        TMatrix<> & get_SoftMax() const;
+        virtual TMatrix<> & get_activation() const;
+
+        virtual std::string to_string() const;
     };
 
 

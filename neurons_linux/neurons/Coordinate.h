@@ -1,7 +1,6 @@
 #pragma once
 #include "Shape.h"
 #include <memory>
-#include <iostream>
 
 namespace neurons
 {
@@ -11,8 +10,6 @@ namespace neurons
     */
     class Coordinate
     {
-        friend class Matrix;
-
         friend class TMatrix<double>;
         friend class TMatrix<float>;
         friend class TMatrix<short>;

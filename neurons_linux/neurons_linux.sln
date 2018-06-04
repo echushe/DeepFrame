@@ -13,6 +13,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnn", "dnn\dnn.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cnn", "cnn\cnn.vcxproj", "{ADA57237-7FB0-4CCF-AA0E-0C21F04AB86E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "facetrain", "facetrain\facetrain.vcxproj", "{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{56C77135-AFC6-4C27-BB06-54A941676A7A}"
+	ProjectSection(SolutionItems) = preProject
+		pack.sh = pack.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -83,6 +90,18 @@ Global
 		{ADA57237-7FB0-4CCF-AA0E-0C21F04AB86E}.Release|x64.Build.0 = Release|x64
 		{ADA57237-7FB0-4CCF-AA0E-0C21F04AB86E}.Release|x86.ActiveCfg = Release|x86
 		{ADA57237-7FB0-4CCF-AA0E-0C21F04AB86E}.Release|x86.Build.0 = Release|x86
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Debug|ARM.ActiveCfg = Debug|ARM
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Debug|ARM.Build.0 = Debug|ARM
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Debug|x64.ActiveCfg = Debug|x64
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Debug|x64.Build.0 = Debug|x64
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Debug|x86.ActiveCfg = Debug|x86
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Debug|x86.Build.0 = Debug|x86
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Release|ARM.ActiveCfg = Release|ARM
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Release|ARM.Build.0 = Release|ARM
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Release|x64.ActiveCfg = Release|x64
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Release|x64.Build.0 = Release|x64
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Release|x86.ActiveCfg = Release|x86
+		{B4879EB0-1C53-48AD-8CC0-8972D42CD8CD}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

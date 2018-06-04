@@ -76,6 +76,14 @@ namespace neurons
 
     public:
         TMatrix<> zero_padding(const TMatrix<> & input);
+
+        lint r_stride() const { return this->m_r_stride; }
+
+        lint c_stride() const { return this->m_c_stride; }
+        
+        lint r_zero_p() const { return this->m_r_zero_p; }
+        
+        lint c_zero_p() const { return this->m_c_zero_p; }
     };
 
     class Conv_3d

@@ -27,10 +27,10 @@ int main(int argc, const char * argv[])
     dataset::Review review{ "D:/develop/my_neurons/dataset/rnn_data_set/glove.6B.50d.txt",
         "D:/develop/my_neurons/dataset/rnn_data_set/reviews", 0.2, 40 };
 
-    Simple_RNN nn{ 0.001, batch_size, threads, 5000000, epoch_size, 7200, review };
+    Simple_RNN nn{ 0.001, 0, threads, "rnn.dat", review };
 
     // std::cout << nn;
-    nn.train();
+    nn.train_network(batch_size, epoch_size, 200, 10, 7200);
 
     std::cout << "=================== end of the program =================" << "\n";
 

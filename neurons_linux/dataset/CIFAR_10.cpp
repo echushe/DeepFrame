@@ -11,8 +11,8 @@ std::unique_ptr<char[]> dataset::CIFAR_10::read_cifar_file(lint & file_len, cons
 
     if (!file)
     {
-        std::cout << "Error opening file" << std::endl;
-        return {};
+        std::cout << "Error opening file " << path << std::endl;
+        throw std::invalid_argument(std::string("Path or file not found"));
     }
 
     file_len = file.tellg();

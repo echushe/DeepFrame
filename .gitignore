@@ -1,5 +1,3 @@
-dataset/rnn_data_set/
-
 neurons_windows/.vs/
 neurons_windows/Release/
 neurons_windows/Debug/
@@ -19,10 +17,19 @@ neurons_windows/rnn/x64/
 neurons_windows/dnn/Release/
 neurons_windows/dnn/Debug/
 neurons_windows/dnn/x64/
+neurons_windows/dataset/Release/
+neurons_windows/dataset/Debug/
 neurons_windows/dataset/x64/
 neurons_windows/misc/x64/
 neurons_windows/misc/Release/
 neurons_windows/misc/Debug/
+neurons_windows/hidtopgm/x64/
+neurons_windows/hidtopgm/Release/
+neurons_windows/hidtopgm/Debug/
+neurons_windows/facetrain/x64/
+neurons_windows/facetrain/Release/
+neurons_windows/facetrain/Debug/
+
 
 neurons_linux/test/obj/
 neurons_linux/test/bin/
@@ -34,5 +41,8 @@ neurons_linux/dnn/obj/
 neurons_linux/dnn/bin/
 neurons_linux/cnn/obj/
 neurons_linux/cnn/bin/
+neurons_linux/facetrain/obj/
+neurons_linux/facetrain/bin/
 
 neurons_linux/.vs/
+

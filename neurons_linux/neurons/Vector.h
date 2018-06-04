@@ -22,8 +22,6 @@ namespace neurons
     template <typename dtype>
     class TMatrix;
 
-    class Matrix;
-
     // Exception descriptions
     // const std::string zero_dim("Dimension of zero size is invalid for Vector!");
     const std::string out_range("Vector: Index out of range!");
@@ -38,7 +36,6 @@ namespace neurons
     // Definition of class Vector
     class Vector
     {
-        friend class Matrix;
         friend class TMatrix<double>;
         friend class TMatrix<float>;
         friend class TMatrix<short>;

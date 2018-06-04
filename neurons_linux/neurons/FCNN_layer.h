@@ -25,12 +25,17 @@ namespace neurons
 
         // This is the Constructor to create a functional FCNN layer
         FCNN_layer(
+            double mmt_rate,
             lint input_size,     // Size of input
             lint output_size,    // Size of output
             lint threads,        // Number of threads while training this layer
             neurons::Activation *act_func,    // Activation function of this layer
             neurons::ErrorFunction *err_func = nullptr   // Cost function or error function of this layer
         );
+
+        // This is the constructor to create a functional FCNN layer from weight, bias and functions directly 
+        FCNN_layer(double mmt_rate, lint threads, TMatrix<> & w, TMatrix<> & b,
+            std::unique_ptr<Activation> & act_func, std::unique_ptr<ErrorFunction> & err_func);
 
 
         FCNN_layer(const FCNN_layer & other);
@@ -42,6 +47,8 @@ namespace neurons
         FCNN_layer & operator = (FCNN_layer && other);
 
         virtual Shape output_shape() const;
+
+        virtual std::string nn_type() const { return NN_layer::FCNN; }
     };
 
     class FCNN_layer_op : public Traditional_NN_layer_op

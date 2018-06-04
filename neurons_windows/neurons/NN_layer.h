@@ -7,6 +7,12 @@ namespace neurons
 
     class NN_layer
     {
+    public:
+        static const std::string NN;
+        static const std::string FCNN;
+        static const std::string CNN;
+        static const std::string RNN;
+
     protected:
 
         mutable std::vector<std::shared_ptr<NN_layer_op>> m_ops;
@@ -31,6 +37,10 @@ namespace neurons
         virtual double commit_testing();
 
         virtual Shape output_shape() const = 0;
+
+        virtual std::unique_ptr<char[]> to_binary_data(lint & data_size) const = 0;
+
+        virtual std::string nn_type() const = 0;
     };
 
     class NN_layer_op
@@ -62,7 +72,7 @@ namespace neurons
         virtual TMatrix<> forward_propagate(const TMatrix<> &input, const TMatrix<> &target) = 0;
 
         //--------------------------------------------
-        // Backward propagation
+        // Back propagation
         //--------------------------------------------
 
         virtual TMatrix<> back_propagate(double l_rate, const TMatrix<> & E_to_y_diff) = 0;
@@ -80,7 +90,7 @@ namespace neurons
             const std::vector<TMatrix<>> & inputs, const std::vector<TMatrix<>> & targets) = 0;
 
         //--------------------------------------------
-        // Backward propagation via batch learning
+        // Back propagation via batch learning
         //--------------------------------------------
 
         virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate, const std::vector<TMatrix<>> & E_to_y_diffs) = 0;

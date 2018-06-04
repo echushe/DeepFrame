@@ -238,7 +238,7 @@ neurons::Conv_2d::~Conv_2d()
 
 neurons::TMatrix<> neurons::Conv_2d::operator()(const TMatrix<> & input, const TMatrix<> & weights, const TMatrix<> & bias)
 {
-    if (this->m_input_sh != this->m_input_sh || this->m_weights_sh != this->m_weights_sh || bias.m_shape.dim() < 2)
+    if (this->m_input_sh != input.shape() || this->m_weights_sh != weights.shape() || bias.m_shape.dim() < 2)
     {
         throw std::invalid_argument(
             std::string("neurons::Conv_1d: Shape of inputs and weights should be compatible with the this convolution."));

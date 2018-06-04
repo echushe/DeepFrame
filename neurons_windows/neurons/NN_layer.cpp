@@ -1,5 +1,10 @@
 #include "NN_layer.h"
 
+const std::string neurons::NN_layer::NN{ "NN" };
+const std::string neurons::NN_layer::FCNN{ "FCNN" };
+const std::string neurons::NN_layer::CNN{ "CNN" };
+const std::string neurons::NN_layer::RNN{ "RNN" };
+
 neurons::NN_layer::NN_layer()
 {}
 

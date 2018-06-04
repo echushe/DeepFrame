@@ -82,6 +82,11 @@ neurons::Shape neurons::Simple_RNN_layer::output_shape() const
     return Shape{ 1, this->m_output_size };
 }
 
+std::unique_ptr<char[]> neurons::Simple_RNN_layer::to_binary_data(lint & data_size) const
+{
+    return std::unique_ptr<char[]>();
+}
+
 /////////////////////////////////////////////////
 
 neurons::Simple_RNN_layer_op::Simple_RNN_layer_op()

@@ -1,9 +1,38 @@
 #include "CNN_layer.h"
 
+
+std::string neurons::CNN_layer::from_binary_data(
+    char * binary_data, lint & data_size, TMatrix<>& w, TMatrix<>& b, lint & stride, lint & padding,
+    std::unique_ptr<Activation>& act_func, std::unique_ptr<ErrorFunction>& err_func, char *& residual_data, lint & residual_len)
+{
+    char * position;
+    lint re_len;
+    std::string nn_type = neurons::Traditional_NN_layer::from_binary_data(binary_data, data_size, w, b, act_func, err_func, position, re_len);
+
+    if ("FCNN" == nn_type)
+    {
+        residual_data = position;
+        residual_len = re_len;
+    }
+    else
+    {
+        stride = *(reinterpret_cast<lint *>(position));
+        position += sizeof(lint);
+        padding = *(reinterpret_cast<lint *>(position));
+
+        residual_len = re_len - 2 * sizeof(lint);
+        residual_data = position;
+    }
+
+    return nn_type;
+
+}
+
 neurons::CNN_layer::CNN_layer()
 {}
 
 neurons::CNN_layer::CNN_layer(
+    double mmt_rate,
     lint rows,
     lint cols,
     lint chls,
@@ -16,13 +45,29 @@ neurons::CNN_layer::CNN_layer(
     neurons::Activation *act_func,
     neurons::ErrorFunction *err_func)
     :
-    Traditional_NN_layer(neurons::Shape{ filter_rows, filter_cols, chls, filters }, neurons::Shape{ 1, filters }, threads, act_func, err_func ),
+    Traditional_NN_layer(mmt_rate, neurons::Shape{ filter_rows, filter_cols, chls, filters }, neurons::Shape{ 1, filters }, threads, act_func, err_func ),
     m_conv2d{ neurons::Shape{ 1, rows, cols, chls }, neurons::Shape{ filter_rows, filter_cols, chls, filters }, stride, stride, padding, padding }
 {
     double var = static_cast<double>(100) / this->m_w.shape().size();
     this->m_w.gaussian_random(0, var);
     this->m_b.gaussian_random(0, var);
 
+    for (lint i = 0; i < threads; ++i)
+    {
+        this->m_ops[i] = std::make_shared<CNN_layer_op>(this->m_conv2d, this->m_w, this->m_b, this->m_act_func, this->m_err_func);
+    }
+}
+
+neurons::CNN_layer::CNN_layer(
+    double mmt_rate, lint rows, lint cols, lint chls, lint stride, lint padding, lint threads,
+    const TMatrix<>& w, const TMatrix<>& b, 
+    std::unique_ptr<Activation>& act_func, std::unique_ptr<ErrorFunction>& err_func)
+    :
+    Traditional_NN_layer(mmt_rate, threads, w, b, act_func, err_func),
+    m_conv2d{
+        neurons::Shape{ 1, rows, cols, chls },
+        neurons::Shape{ w.shape()[0], w.shape()[1], w.shape()[2], w.shape()[3] }, stride, stride, padding, padding }
+{
     for (lint i = 0; i < threads; ++i)
     {
         this->m_ops[i] = std::make_shared<CNN_layer_op>(this->m_conv2d, this->m_w, this->m_b, this->m_act_func, this->m_err_func);
@@ -86,6 +131,28 @@ neurons::CNN_layer & neurons::CNN_layer::operator = (CNN_layer && other)
 neurons::Shape neurons::CNN_layer::output_shape() const
 {
     return this->m_conv2d.get_output_shape();
+}
+
+std::unique_ptr<char[]> neurons::CNN_layer::to_binary_data(lint & data_size) const
+{
+    lint size;
+    std::unique_ptr<char[]> l_d = Traditional_NN_layer::to_binary_data(size);
+
+    char * layer_data = new char[size + 2 * sizeof(lint)];
+    memcpy(layer_data, l_d.get(), size);
+
+    char * position = layer_data + size;
+    *(reinterpret_cast<lint*>(position)) = this->m_conv2d.r_stride();
+    position += sizeof(lint);
+    *(reinterpret_cast<lint*>(position)) = this->m_conv2d.r_zero_p();
+
+    // Do not forget to increase the header size of this layer data
+    *(reinterpret_cast<lint*>(layer_data)) += 2 * sizeof(lint);
+    
+    data_size = size + 2 * sizeof(lint);
+
+    
+    return std::unique_ptr<char[]>(layer_data);
 }
 
 //////////////////////////////////////////////////

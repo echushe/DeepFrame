@@ -6,14 +6,13 @@ Programmed by Chunnan Sheng
 #pragma once
 #include <list>
 #include <iostream>
+#include <vector>
 
 // All integers are 64bit wide here
 typedef long long lint;
 
 namespace neurons
 {
-    class Matrix;
-
     template <typename dtype>
     class TMatrix;
 
@@ -25,7 +24,6 @@ namespace neurons
     class Shape
     {
         friend class Coordinate;
-        friend class Matrix;
 
         friend class TMatrix<double>;
         friend class TMatrix<float>;
@@ -44,6 +42,10 @@ namespace neurons
     public:
         // A shape can be intialized by a list of dimension sizes
         Shape(std::initializer_list<lint> list);
+        
+        // Create a shape from a vector array of dimension sizes
+        Shape(std::vector<lint> & list);
+
         // Copy constructor
         Shape(const Shape & other);
         // Move constructor

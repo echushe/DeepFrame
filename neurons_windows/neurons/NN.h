@@ -9,24 +9,16 @@
 class NN
 {
 private:
-    std::default_random_engine m_train_rand;
-    std::default_random_engine m_test_rand;
     std::uniform_int_distribution<size_t> m_train_distribution;
     std::uniform_int_distribution<size_t> m_test_distribution;
 
 protected:
-    // The learning rate
+
     double m_l_rate;
-
-    lint m_batch_size;
-
+    double m_mmt_rate;
     lint m_threads;
-    // Steps of the training
-    lint m_steps;
 
-    lint m_epoch_size;
-    // Training time allowed
-    lint m_secs_allowed;
+    std::string m_model_file;
 
     // The training set
     std::vector<neurons::TMatrix<>> m_train_set;
@@ -41,14 +33,7 @@ protected:
     std::vector<std::shared_ptr<neurons::NN_layer>> m_layers;
 
 public:
-    NN(
-        double l_rate,
-        lint batch_size,
-        lint threads,
-        lint steps,
-        lint epoch_size,
-        lint secs_allowed,
-        const dataset::Dataset &d_set);
+    NN(double l_rate, double mmt_rate, lint threads, const std::string & model_file, const dataset::Dataset &d_set);
 
     ~NN();
 
@@ -61,6 +46,10 @@ public:
 
     virtual void print_layers(std::ostream & os) const = 0;
 
+    virtual void save_layers_as_images() const = 0;
+
+    lint n_layers() const;
+
     void print_train_set(std::ostream & os) const;
 
     void print_train_label(std::ostream & os) const;
@@ -70,34 +59,57 @@ public:
     void print_test_label(std::ostream & os) const;
 
 public:
-    void train();
+    void train_network(
+        lint batch_size,
+        lint epoch_size,
+        lint epochs,
+        lint epochs_between_saves,
+        lint secs_allowed);
 
-    void test();
+    void test_network(lint batch_size, lint epoch_size);
+
+    std::vector<neurons::TMatrix<>> network_predict(lint batch_size, const std::vector<neurons::TMatrix<>> & inputs) const;
+
+    virtual bool load(const std::string & file_name) = 0;
+
+    virtual bool load_until(const std::string & file_name, lint layer_index) = 0;
+
+    virtual void initialize_model() = 0;
+
+    virtual void save(const std::string & file_name) const = 0;
 
 private:
 
     void get_batch(
+        lint batch_size,
         std::vector<std::vector<neurons::TMatrix<>>> & data_batch,
         std::vector<std::vector<neurons::TMatrix<>>> & label_batch,
         const std::vector<neurons::TMatrix<>> & data,
         const std::vector<neurons::TMatrix<>> & label,
-        std::default_random_engine & rand_generator,
         std::uniform_int_distribution<size_t> & distribution);
 
 
     double train_step(
+        lint batch_size,
         const std::vector<std::vector<neurons::TMatrix<>>> & inputs,
         const std::vector<std::vector<neurons::TMatrix<>>> & targets,
         std::vector<std::vector<neurons::TMatrix<>>> & preds);
 
     double test_step(
+        lint batch_size,
         const std::vector<std::vector<neurons::TMatrix<>>> & inputs,
         const std::vector<std::vector<neurons::TMatrix<>>> & targets,
         std::vector<std::vector<neurons::TMatrix<>>> & preds);
 
-    double get_accuracy(const neurons::TMatrix<> & pred, const neurons::TMatrix<> & target);
+    std::vector<std::vector<neurons::TMatrix<>>> predict_step(
+        lint batch_size,
+        const std::vector<std::vector<neurons::TMatrix<>>> & inputs) const;
 
     double get_accuracy(
+        const neurons::TMatrix<> & pred, const neurons::TMatrix<> & target);
+
+    double get_accuracy(
+        lint batch_size,
         const std::vector<std::vector<neurons::TMatrix<>>> & preds,
         const std::vector<std::vector<neurons::TMatrix<>>> & targets);
 
@@ -110,6 +122,11 @@ private:
         const std::vector<neurons::TMatrix<>> & inputs,
         const std::vector<neurons::TMatrix<>> & targets,
         lint thread_id) = 0;
+
+    virtual std::vector<neurons::TMatrix<>> predict(
+        const std::vector<neurons::TMatrix<>> & inputs,
+        lint thread_id) const = 0;
+
 };
 
 std::ostream & operator << (std::ostream & os, const NN & nn);

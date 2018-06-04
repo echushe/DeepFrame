@@ -10,8 +10,6 @@ namespace neurons
     */
     class Coordinate
     {
-        friend class Matrix;
-
         friend class TMatrix<double>;
         friend class TMatrix<float>;
         friend class TMatrix<short>;

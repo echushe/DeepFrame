@@ -101,6 +101,7 @@
     <ClInclude Include="RNN_unit.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="TMatrix.h" />
+    <ClInclude Include="TMatrix_Iterator.h" />
     <ClInclude Include="Traditional_NN_layer.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>

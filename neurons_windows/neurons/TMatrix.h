@@ -3,10 +3,23 @@
 #include "Shape.h"
 #include "Coordinate.h"
 #include "Exceptions.h"
+
+#include "TMatrix_Iterator.h"
 #include <iostream>
+#include <random>
+#include <fstream>
 
 namespace neurons
 {
+//#ifndef GLOBAL_RAND_ENGINE
+//    #define GLOBAL_RAND_ENGINE
+    class global
+    {
+    public:
+        static std::default_random_engine global_rand_engine;
+    };
+//#endif // GLOBAL_RAND_ENGINE
+    
     /*
     Almost all calculations of deep learning depend on matrices.
     A matrix can be of one dimension, two dimensions, three dimensions or even more dimensons.
@@ -30,6 +43,9 @@ namespace neurons
         // it is assigned by a usable matrix
         TMatrix();
 
+        // Create a matrix fronm binary data
+        TMatrix(char * binary, lint & data_size);
+
         // Create a matrix of a certain shape. But none of its elements are initialized
         TMatrix(const Shape & shape);
 
@@ -49,6 +65,12 @@ namespace neurons
         TMatrix(const Vector & vec, bool transpose = false);
 
         ~TMatrix();
+
+    public:
+        typedef TMatrix_Iterator<dtype> iterator;
+
+        iterator begin() const;
+        iterator end() const;
 
     public:
         // Copy assignment
@@ -191,13 +213,22 @@ namespace neurons
         dtype euclidean_norm() const;
 
 
+        std::unique_ptr<char[]> to_binary_data(lint & data_size) const;
+
+
     public:
         // Get shape of the matrix
         Shape shape() const;
 
-    public:
+        std::string to_string() const;
+
+        bool save_matrix_as_image(const std::string & file_name) const;
+
+    private:
         void print(std::ostream & os, lint dim_index, const dtype *start, size_t block_size) const;
+
     };
+
 
     // Overloading of a == b
     template <typename dtype>
@@ -668,7 +699,7 @@ namespace neurons
     template <typename dtype>
     TMatrix<dtype> scale_one_dimension(const TMatrix<dtype> & in, lint in_dim, const Vector & scales)
     {
-        TMatrix mat{ in };
+        TMatrix<> mat{ in };
         mat.scale_one_dimension(in_dim, scales);
         return mat;
     }
@@ -725,31 +756,13 @@ namespace neurons
     template <typename dtype>
     std::ostream & operator << (std::ostream & os, const TMatrix<dtype> & m)
     {
-        lint size = m.m_shape.size();
-        size_t block_size = 0;
-        for (lint i = 0; i < size; ++i)
-        {
-            std::ostringstream stream;
-            stream << m.m_data[i];
-            size_t len = stream.str().size();
-            if (len > block_size)
-            {
-                block_size = len;
-            }
-        }
-
-        block_size += 2;
-
-        m.print(os, 0, m.m_data, block_size);
-
-        return os;
+        return os << m.to_string();
     }
 }
 
 #include <algorithm>
 #include <stdexcept>
 #include <iterator>
-#include <random>
 #include <sstream>
 #include <cstring>
 #include <functional>
@@ -758,6 +771,45 @@ template <typename dtype>
 neurons::TMatrix<dtype>::TMatrix()
     : m_shape{}, m_data{ nullptr }
 {}
+
+template<typename dtype>
+neurons::TMatrix<dtype>::TMatrix(char * binary, lint & data_size)
+    : m_shape{}, m_data{ nullptr }
+{
+    data_size = 0;
+    lint * shape_data = reinterpret_cast<lint*>(binary);
+    
+    // Get number of dimensions of this shape
+    lint n_dim = shape_data[0];
+    data_size += sizeof(lint);
+    
+    // Get the list of dimension sizes
+    std::vector<lint> dims;
+    for (lint i = 0; i < n_dim; ++i)
+    {
+        dims.push_back(shape_data[i + 1]);
+    }
+    data_size += n_dim * sizeof(lint);
+
+    // Create the shape
+    this->m_shape = Shape{ dims };
+
+    // Intialize elements of this matrix
+    if (this->m_shape.m_size < 1)
+    {
+        this->m_data = nullptr;
+    }
+    else
+    {
+        lint size = this->m_shape.m_size;
+        this->m_data = new dtype[size];
+
+        // Copy binary data of all elements into this matrix
+        dtype * mat_data = reinterpret_cast<dtype *>(shape_data + n_dim + 1);
+        std::memcpy(this->m_data, mat_data, size * sizeof(dtype));
+        data_size += size * sizeof(dtype);
+    }
+}
 
 template <typename dtype>
 neurons::TMatrix<dtype>::TMatrix(const Shape & shape)
@@ -862,6 +914,20 @@ template <typename dtype>
 neurons::TMatrix<dtype>::~TMatrix()
 {
     delete[]this->m_data;
+}
+
+template<typename dtype>
+inline typename neurons::TMatrix<dtype>::iterator neurons::TMatrix<dtype>::begin() const
+{
+    iterator itr{ this->m_shape.m_size, this->m_data, 0 };
+    return itr;
+}
+
+template<typename dtype>
+inline typename neurons::TMatrix<dtype>::iterator neurons::TMatrix<dtype>::end() const
+{
+    iterator itr{ this->m_shape.m_size, this->m_data, this->m_shape.m_size };
+    return itr;
 }
 
 template <typename dtype>
@@ -1082,13 +1148,12 @@ neurons::TMatrix<dtype> & neurons::TMatrix<dtype>::operator /= (dtype scalar)
 template <typename dtype>
 neurons::TMatrix<dtype> & neurons::TMatrix<dtype>::gaussian_random(dtype mu, dtype sigma)
 {
-    std::default_random_engine generator;
-    std::normal_distribution<dtype> distribution(mu, sigma);
+    std::normal_distribution<dtype> distribution{ mu, sigma };
 
     lint size = m_shape.m_size;
     for (lint i = 0; i < size; ++i)
     {
-        this->m_data[i] = distribution(generator);
+        this->m_data[i] = distribution(global::global_rand_engine);
     }
 
     return *this;
@@ -1102,11 +1167,12 @@ neurons::TMatrix<dtype> & neurons::TMatrix<dtype>::uniform_random(dtype min, dty
         throw std::invalid_argument(std::string("TMatrix::uniform_random: min should be smaller than max"));
     }
 
+    std::uniform_real_distribution<dtype> distribution{ min, max };
+
     lint size = m_shape.m_size;
-    dtype range = max - min;
     for (lint i = 0; i < size; ++i)
     {
-        this->m_data[i] = min + (static_cast<dtype>(rand()) / RAND_MAX) * range;
+        this->m_data[i] = distribution(global::global_rand_engine);
     }
 
     return *this;
@@ -1551,6 +1617,32 @@ dtype neurons::TMatrix<dtype>::euclidean_norm() const
     return norm;
 }
 
+template<typename dtype>
+inline std::unique_ptr<char[]> neurons::TMatrix<dtype>::to_binary_data(lint & data_size) const
+{
+    lint binary_len =
+        (this->m_shape.m_dim + 1) * sizeof(lint) + this->m_shape.m_size * sizeof(dtype);
+
+
+    char * bi_data = new char[binary_len];
+    lint * shape_data = reinterpret_cast<lint *>(bi_data);
+
+    // Write shape information to binary data
+    shape_data[0] = this->m_shape.m_dim;
+    for (lint i = 0; i <= this->m_shape.m_dim; ++i)
+    {
+        shape_data[i + 1] = this->m_shape.m_data[i];
+    }
+
+    // Write elements of this matrix to binary data
+    dtype * mat_data = reinterpret_cast<dtype *>(shape_data + this->m_shape.m_dim + 1);
+    std::memcpy(mat_data, this->m_data, this->m_shape.m_size * sizeof(dtype));
+
+    data_size = binary_len;
+
+    return std::unique_ptr<char[]>(bi_data);
+}
+
 template <typename dtype>
 neurons::Shape neurons::TMatrix<dtype>::shape() const
 {
@@ -1619,6 +1711,81 @@ void neurons::TMatrix<dtype>::print(std::ostream & os, lint dim_index, const dty
         }
         os << "]\n";
     }
+}
+
+template<typename dtype>
+inline std::string neurons::TMatrix<dtype>::to_string() const
+{
+    lint size = this->m_shape.size();
+    size_t block_size = 0;
+    for (lint i = 0; i < size; ++i)
+    {
+        std::ostringstream stream;
+        stream << this->m_data[i];
+        size_t len = stream.str().size();
+        if (len > block_size)
+        {
+            block_size = len;
+        }
+    }
+
+    block_size += 2;
+
+    std::ostringstream o_stream;
+
+    this->print(o_stream, 0, this->m_data, block_size);
+
+    return o_stream.str();
+}
+
+template<typename dtype>
+inline bool neurons::TMatrix<dtype>::save_matrix_as_image(const std::string & file_name) const
+{
+    lint i, j, nr, nc, k, val;
+    std::ofstream out_file;
+
+    // Until now, only 2 dimensional matrices are allowed here
+    if (2 != this->m_shape.m_dim)
+    {
+        return false;
+    }
+
+    nr = this->m_shape[0];  nc = this->m_shape[1];
+
+    out_file.open(file_name, std::ios::out);
+    out_file << "P2\n";
+    out_file << nc << " " << nr << "\n";
+    out_file << "255\n";
+
+    k = 1;
+    for (i = 0; i < nr; i++)
+    {
+        for (j = 0; j < nc; j++)
+        {
+            val = round((*this)[{i, j}]);
+            if ((val < 0) || (val > 255))
+            {
+                std::cout << "IMG_WRITE: Found value out of range [0, 255]";
+                std::cout << "           Setting it to zero\n";
+                val = 0;
+            }
+
+            if (k % 20)
+            {
+                out_file << val << " ";
+            }
+            else
+            {
+                out_file << val << "\n";
+            }
+            k++;
+        }
+    }
+
+    out_file << "\n";
+    out_file.close();
+
+    return true;
 }
 
 

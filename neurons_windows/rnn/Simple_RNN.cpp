@@ -4,14 +4,12 @@
 
 Simple_RNN::Simple_RNN(
     double l_rate,
-    lint batch_size,
+    double mmt_rate,
     lint threads,
-    lint steps,
-    lint epoch_size,
-    lint secs_allowed,
+    const std::string & model_file,
     const dataset::Dataset &d_set)
     :
-    NN(l_rate, batch_size, threads, steps, epoch_size, secs_allowed, d_set)
+    NN(l_rate, mmt_rate, threads, model_file, d_set)
 {
     // Initialize all layers and
     // reshape all inputs and labels so that they are suitable for matrix multiplications
@@ -28,7 +26,7 @@ Simple_RNN::Simple_RNN(
 
     // Add an output layer
     this->m_layers.push_back(
-        std::make_shared<neurons::FCNN_layer>(50, output_size, this->m_threads, nullptr, new neurons::Sigmoid_CrossEntropy));
+        std::make_shared<neurons::FCNN_layer>(0, 50, output_size, this->m_threads, nullptr, new neurons::Sigmoid_CrossEntropy));
 
     // Reshape all the training set and labels
     for (size_t i = 0; i < this->m_train_set.size(); ++i)
@@ -120,5 +118,33 @@ std::vector<neurons::TMatrix<>> Simple_RNN::optimise(
 void Simple_RNN::print_layers(std::ostream & os) const
 {
     os << '\n';
+}
+
+void Simple_RNN::save_layers_as_images() const
+{
+}
+
+bool Simple_RNN::load(const std::string & file_name)
+{
+    return false;
+}
+
+bool Simple_RNN::load_until(const std::string & file_name, lint layer_index)
+{
+    return false;
+}
+
+void Simple_RNN::initialize_model()
+{
+}
+
+void Simple_RNN::save(const std::string & file_name) const
+{
+}
+
+std::vector<neurons::TMatrix<>> Simple_RNN::predict(
+    const std::vector<neurons::TMatrix<>>& inputs, lint thread_id) const
+{
+    return std::vector<neurons::TMatrix<>>();
 }
 

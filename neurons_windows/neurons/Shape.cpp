@@ -9,7 +9,34 @@ neurons::Shape::Shape()
 {}
 
 neurons::Shape::Shape(std::initializer_list<lint> list)
-    : m_dim(list.end() - list.begin()), m_size{ 1 }
+    : m_dim{ list.end() - list.begin() }, m_size{ 1 }
+{
+    if (this->m_dim < 1)
+    {
+        this->m_dim = 0;
+        this->m_size = 0;
+        this->m_data = nullptr;
+    }
+
+    this->m_data = new lint[this->m_dim];
+    lint *p = this->m_data;
+    for (auto itr = list.begin(); itr != list.end(); ++itr, ++p)
+    {
+        if (*itr <= 0)
+        {
+            throw std::invalid_argument(invalid_shape_val);
+        }
+        *p = *itr;
+    }
+
+    for (lint i = 0; i < this->m_dim; ++i)
+    {
+        this->m_size *= this->m_data[i];
+    }
+}
+
+neurons::Shape::Shape(std::vector<lint>& list)
+    : m_dim{ list.end() - list.begin() }, m_size{ 1 }
 {
     if (this->m_dim < 1)
     {

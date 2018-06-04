@@ -1,0 +1,19 @@
+* To run all basic cases:
+
+From this current directory, type:
+
+$ bash test_basics.sh
+
+* To run automated test:
+
+From this current directory, type:
+
+$ cd facetrain/tests
+
+$ bash test.sh -t epoch dnn
+
+$ bash test.sh -t epoch cnn
+
+$ bash test.sh -t momentum dnn
+
+$ bash test.sh -t momentum cnn

@@ -8,7 +8,7 @@
 #include "Dataset.h"
 #include "RNN_unit.h"
 #include "Mnist.h"
-// #include "Review.h"
+#include "PGM.h"
 #include "LinearRegression.h"
 #include <iostream>
 #include <vector>
@@ -546,13 +546,13 @@ void test_matrix_other_cal()
     mat3 = mat1 - mat2;
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    mat3 = mat3 * 3;
+    mat3 = mat3 * 3.0;
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    mat3 = 2 * mat3;
+    mat3 = 2.0 * mat3;
     std::cout << "mat3:\n" << mat3 << '\n';
 
-    mat3 = mat3 / 2;
+    mat3 = mat3 / 2.0;
     std::cout << "mat3:\n" << mat3 << '\n';
 }
 
@@ -667,7 +667,7 @@ void test_of_basic_neuron_operations()
     std::vector<neurons::TMatrix<>> images;
     std::vector<neurons::TMatrix<>> labels;
 
-    std::string dataset_dir = "/import/adams/4/z5100764/dataset/mnist/";
+    std::string dataset_dir = "D:/develop/my_neurons/dataset/mnist/";
 
     dataset::Mnist mnist{
         dataset_dir + "train-images-idx3-ubyte",
@@ -1013,25 +1013,6 @@ void test_rnn_unit()
     // neurons::RNN_unit rnn_unit;
 }
 
-/*
-void test_review_dataset()
-{
-    std::cout << "Hello world!\n";
-    dataset::Review review{ "D:/develop/my_neurons/dataset/rnn_data_set/glove.6B.50d.txt",
-        "D:/develop/my_neurons/dataset/rnn_data_set/reviews", 0.2, 40 };
-
-    std::vector<neurons::TMatrix<>> inputs;
-    std::vector<neurons::TMatrix<>> labels;
-    review.get_training_set(inputs, labels, 5);
-
-    for (size_t i = 0; i < inputs.size(); ++i)
-    {
-        std::cout << inputs[i] << '\n';
-        std::cout << labels[i] << '\n';
-    }
-}
-*/
-
 void test_linear_regression_A()
 {
     std::cout << "Start linear regression test ... \n";
@@ -1103,10 +1084,55 @@ void test_linear_regression_B()
 }
 
 
+void test_of_PGM()
+{
+    std::cout << "=================== test_of_loading_PGM_dataset ==================" << "\n";
+    std::vector<neurons::TMatrix<>> images;
+    std::vector<neurons::TMatrix<>> labels;
+
+    std::string dataset_dir = "../../../../cmu_facial/faces/an2i/";
+    std::vector<std::string> train_files;
+    std::vector<std::string> test_files;
+
+    train_files.push_back(dataset_dir + "an2i_left_angry_open_4.pgm");
+    train_files.push_back(dataset_dir + "an2i_left_angry_sunglasses_4.pgm");
+    train_files.push_back(dataset_dir + "an2i_left_happy_open_4.pgm");
+
+    test_files.push_back(dataset_dir + "an2i_straight_angry_open_4.pgm");
+    test_files.push_back(dataset_dir + "an2i_straight_happy_open_4.pgm");
+
+    dataset::PGM pgm{train_files, test_files, 2};
+
+    std::vector<neurons::TMatrix<>> train_inputs;
+    std::vector<neurons::TMatrix<>> train_labels;
+    std::vector<neurons::TMatrix<>> test_inputs;
+    std::vector<neurons::TMatrix<>> test_labels;
+
+    pgm.get_test_set(test_inputs, test_labels, 0);
+    pgm.get_training_set(train_inputs, train_labels, 0);
+
+    for (size_t i = 0; i < train_inputs.size(); ++i)
+    {
+        train_inputs[i].reshape(neurons::Shape{ train_inputs[i].shape()[0], train_inputs[i].shape()[1] });
+        std::cout << train_inputs[i] << "\n";
+        std::cout << train_labels[i] << "\n";
+    }
+
+    for (size_t i = 0; i < test_inputs.size(); ++i)
+    {
+        test_inputs[i].reshape(neurons::Shape{ test_inputs[i].shape()[0], test_inputs[i].shape()[1] });
+        std::cout << test_inputs[i] << "\n";
+        std::cout << test_labels[i] << "\n";
+    }
+    // mnist.get_test_set(images, labels, 10);
+}
+
+
 void test_of_basic_operations()
 {
-    vector_cases();
 
+    vector_cases();
+    /*
     test_matrix_constructor();
     test_matrix_indexing();
     test_matrix_self_cal();
@@ -1127,17 +1153,20 @@ void test_of_basic_operations()
 
     test_pooling_2d();
     test_pooling_2d_special();
+    */
 
-    test_EM_1d_single();
+    test_of_PGM();
+
+    // test_EM_1d_single();
     
-    test_EM_1d_mix();
+    // test_EM_1d_mix();
 
-    test_rnn_unit();
+    // test_rnn_unit();
 
     // test_review_dataset();
 
-    test_linear_regression_A();
-    test_linear_regression_B();
+    // test_linear_regression_A();
+    // test_linear_regression_B();
 }
 
 

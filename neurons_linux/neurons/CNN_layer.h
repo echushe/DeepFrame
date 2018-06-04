@@ -20,6 +20,13 @@ namespace neurons
         Conv_2d m_conv2d;
 
     public:
+        static std::string from_binary_data(
+            char * binary_data, lint & data_size, TMatrix<> & w, TMatrix<> & b,
+            lint & stride, lint & padding,
+            std::unique_ptr<Activation> & act_func, std::unique_ptr<ErrorFunction> & err_func,
+            char *& residual_data, lint & residual_len
+        );
+
         // Default constructor does almost nothing here.
         // However, default constructor is essential for containers like std::vector, std::list, std::map, etc.
         // Behaviors of operations on a CNN_layer that is created by default constructor would be undefined.
@@ -29,6 +36,7 @@ namespace neurons
 
         // This is the Constructor to create a functional CNN layer
         CNN_layer(
+            double mmt_rate,
             lint rows,  // Number of rows for one input sample
             lint cols,  // Number of columns for one input sample
             lint chls,  // Number of channels (depth) for one input sample
@@ -42,6 +50,12 @@ namespace neurons
             neurons::ErrorFunction *err_func = nullptr // Cost function or error function of this layer
         );
 
+        CNN_layer(
+            double mmt_rate,
+            lint rows, lint cols, lint chls, lint stride, lint padding, lint threads,
+            const TMatrix<> & w, const TMatrix<> & b,
+            std::unique_ptr<Activation> & act_func, std::unique_ptr<ErrorFunction> & err_func);
+
         CNN_layer(const CNN_layer & other);
 
         CNN_layer(CNN_layer && other);
@@ -51,6 +65,10 @@ namespace neurons
         CNN_layer & operator = (CNN_layer && other);
 
         Shape output_shape() const;
+
+        virtual std::string nn_type() const { return NN_layer::CNN; }
+
+        virtual std::unique_ptr<char[]> to_binary_data(lint & data_size) const;
     };
 
     class CNN_layer_op : public Traditional_NN_layer_op
@@ -92,7 +110,7 @@ namespace neurons
             const std::vector<TMatrix<>> & inputs, const std::vector<TMatrix<>> & targets);
 
         //--------------------------------------------
-        // Backward propagation via batch learning
+        // Back propagation via batch learning
         //--------------------------------------------
 
         virtual std::vector<TMatrix<>> batch_back_propagate(double l_rate, const std::vector<TMatrix<>> & E_to_y_diffs);

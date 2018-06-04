@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="Multi_Layer_NN.cpp" />
     <ClCompile Include="Simple_NN.cpp" />
-    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Multi_Layer_NN.h" />

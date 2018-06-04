@@ -3,6 +3,50 @@
 #include <iostream>
 #include <chrono>
 
+const std::string neurons::Activation::LINEAR{ "Linear" };
+const std::string neurons::Activation::SIGMOID{ "Sigmoid" };
+const std::string neurons::Activation::TANH{ "Tanh" };
+const std::string neurons::Activation::RELU{ "Relu" };
+const std::string neurons::Activation::SOFTMAX{ "Softmax" };
+const std::string neurons::Activation::NULL_FUNC{ "NULL" };
+
+const std::string neurons::ErrorFunction::HALF_SQUARE_ERROR{ "HalfSquareError" };
+const std::string neurons::ErrorFunction::SIGMOID_CROSS_ENTROPY{ "Sigmoid_CrossEntropy" };
+const std::string neurons::ErrorFunction::SOFTMAX_CROSS_ENTROPY{ "Softmax_CrossEntropy" };
+const std::string neurons::ErrorFunction::NULL_FUNC{ "NULL" };
+
+std::unique_ptr<neurons::Activation> neurons::Activation::get_function_by_name(const std::string & func_name)
+{
+    if (func_name == LINEAR)
+    {
+        return std::make_unique<Linear>();
+    }
+    else if (func_name == SIGMOID)
+    {
+        return std::make_unique<Sigmoid>();
+    }
+    else if (func_name == TANH)
+    {
+        return std::make_unique<Tanh>();
+    }
+    else if (func_name == RELU)
+    {
+        return std::make_unique<Relu>();
+    }
+    else if (func_name == SOFTMAX)
+    {
+        return std::make_unique<Softmax>();
+    }
+    else if (func_name == NULL_FUNC)
+    {
+        return nullptr;
+    }
+    else
+    {
+        return std::make_unique<Sigmoid>();
+    }
+}
+
 std::unique_ptr<neurons::Activation> neurons::Linear::clone()
 {
     return std::make_unique<neurons::Linear>();
@@ -21,6 +65,11 @@ void neurons::Linear::operator () (TMatrix<> & output, TMatrix<> & diff, const T
 
     output = std::move(l_output);
     diff = std::move(l_diff);
+}
+
+std::string neurons::Linear::to_string() const
+{
+    return std::string(Activation::LINEAR);
 }
 
 
@@ -45,6 +94,11 @@ void neurons::Sigmoid::operator () (TMatrix<> & output, TMatrix<> & diff, const 
     diff = std::move(l_diff);
 }
 
+std::string neurons::Sigmoid::to_string() const
+{
+    return std::string(Activation::SIGMOID);
+}
+
 
 std::unique_ptr<neurons::Activation> neurons::Tanh::clone()
 {
@@ -62,6 +116,11 @@ void neurons::Tanh::operator () (TMatrix<> & output, TMatrix<> & diff, const TMa
         output.m_data[i] = y;
         diff.m_data[i] = (1 + y) * (1 - y);
     }
+}
+
+std::string neurons::Tanh::to_string() const
+{
+    return std::string(Activation::TANH);
 }
 
 
@@ -93,6 +152,11 @@ void neurons::Relu::operator () (TMatrix<> & output, TMatrix<> & diff, const TMa
     }
 }
 
+std::string neurons::Relu::to_string() const
+{
+    return std::string(Activation::RELU);
+}
+
 
 std::unique_ptr<neurons::Activation> neurons::Softmax::clone()
 {
@@ -120,14 +184,55 @@ void neurons::Softmax::operator () (TMatrix<> & output, TMatrix<> & diff, const 
     }
 }
 
+std::string neurons::Softmax::to_string() const
+{
+    return std::string(Activation::SOFTMAX);
+}
+
+std::unique_ptr<neurons::ErrorFunction> neurons::ErrorFunction::get_function_by_name(std::string & func_name)
+{
+    std::istringstream buf(func_name);
+    std::istream_iterator<std::string> beg(buf), end;
+
+    std::vector<std::string> tokens(beg, end);
+
+    if (tokens[0] == SIGMOID_CROSS_ENTROPY)
+    {
+        return std::make_unique<Sigmoid_CrossEntropy>();
+    }
+    else if (tokens[0] == SOFTMAX_CROSS_ENTROPY)
+    {
+        return std::make_unique<Softmax_CrossEntropy>();
+    }
+    else if (tokens[0] == HALF_SQUARE_ERROR)
+    {
+        return std::make_unique<HalfSquareError>(Activation::get_function_by_name(tokens[1]));
+    }
+    else if (tokens[0] == NULL_FUNC)
+    {
+        return nullptr;
+    }
+    else
+    {
+        return std::make_unique<Softmax_CrossEntropy>();
+    }
+}
+
+std::unique_ptr<neurons::Activation> neurons::ErrorFunction::get_act_func() const
+{
+    return this->m_act_func->clone();
+}
+
 
 neurons::HalfSquareError::HalfSquareError(const std::unique_ptr<Activation> & act_func)
-    : m_act_func{ act_func->clone() }
-{}
+{
+    this->m_act_func = act_func->clone();
+}
 
 neurons::HalfSquareError::HalfSquareError(Activation * act_func)
-    : m_act_func{ act_func }
-{}
+{
+    this->m_act_func.reset(act_func);
+}
 
 
 std::unique_ptr<neurons::ErrorFunction> neurons::HalfSquareError::clone()
@@ -166,7 +271,7 @@ double neurons::HalfSquareError::operator()(TMatrix<> & diff, const TMatrix<> & 
 double neurons::HalfSquareError::operator()(TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     double loss = this->operator()(diff, target, input);
-    pred = this->get_activation();
+    pred = this->m_act;
 
     return loss;
 }
@@ -176,6 +281,16 @@ neurons::TMatrix<> & neurons::HalfSquareError::get_activation() const
     return this->m_act;
 }
 
+std::string neurons::HalfSquareError::to_string() const
+{
+    return std::string(ErrorFunction::HALF_SQUARE_ERROR + " " + this->m_act_func->to_string());
+}
+
+
+neurons::Sigmoid_CrossEntropy::Sigmoid_CrossEntropy()
+{
+    this->m_act_func.reset(new Sigmoid);
+}
 
 std::unique_ptr<neurons::ErrorFunction> neurons::Sigmoid_CrossEntropy::clone()
 {
@@ -192,13 +307,13 @@ double neurons::Sigmoid_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
     diff = TMatrix<>{ target.m_shape };
 
 
-    if (this->m_sigmoid.m_shape.size() != target.m_shape.size())
+    if (this->m_act.m_shape.size() != target.m_shape.size())
     {
-        this->m_sigmoid = TMatrix<>{ target.m_shape };
+        this->m_act = TMatrix<>{ target.m_shape };
     }
-    else if (this->m_sigmoid.m_shape != target.m_shape)
+    else if (this->m_act.m_shape != target.m_shape)
     {
-        this->m_sigmoid.reshape(target.m_shape);
+        this->m_act.reshape(target.m_shape);
     }
 
 
@@ -209,7 +324,7 @@ double neurons::Sigmoid_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
     {
         double y = 1.0 / (1.0 + exp(input.m_data[i] * (-1)));
         
-        this->m_sigmoid.m_data[i] = y;
+        this->m_act.m_data[i] = y;
         sum += target.m_data[i] * log(y);
         diff.m_data[i] = y - target.m_data[i];
     }
@@ -222,17 +337,27 @@ double neurons::Sigmoid_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
 double neurons::Sigmoid_CrossEntropy::operator()(TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     double loss = this->operator()(diff, target, input);
-    pred = this->get_sigmoid();
+    pred = this->m_act;
 
     return loss;
 }
 
 
-neurons::TMatrix<> & neurons::Sigmoid_CrossEntropy::get_sigmoid() const
+neurons::TMatrix<> & neurons::Sigmoid_CrossEntropy::get_activation() const
 {
-    return this->m_sigmoid;
+    return this->m_act;
 }
 
+std::string neurons::Sigmoid_CrossEntropy::to_string() const
+{
+    return std::string(ErrorFunction::SIGMOID_CROSS_ENTROPY);
+}
+
+
+neurons::Softmax_CrossEntropy::Softmax_CrossEntropy()
+{
+    this->m_act_func.reset(new Softmax);
+}
 
 std::unique_ptr<neurons::ErrorFunction> neurons::Softmax_CrossEntropy::clone()
 {
@@ -249,13 +374,13 @@ double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
 
     diff = TMatrix<>{ target.m_shape };
 
-    if (this->m_softmax.m_shape.size() != target.m_shape.size())
+    if (this->m_act.m_shape.size() != target.m_shape.size())
     {
-        this->m_softmax = TMatrix<>{ target.m_shape };
+        this->m_act = TMatrix<>{ target.m_shape };
     }
-    else if (this->m_softmax.m_shape != target.m_shape)
+    else if (this->m_act.m_shape != target.m_shape)
     {
-        this->m_softmax.reshape(target.m_shape);
+        this->m_act.reshape(target.m_shape);
     }
 
     lint size = target.m_shape.size();
@@ -263,16 +388,16 @@ double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
 
     for (lint i = 0; i < size; ++i)
     {
-        this->m_softmax.m_data[i] = exp(input.m_data[i]);
-        softmax_sum += this->m_softmax.m_data[i];
+        this->m_act.m_data[i] = exp(input.m_data[i]);
+        softmax_sum += this->m_act.m_data[i];
     }
 
     double centropy_sum = 0;
     for (lint i = 0; i < size; ++i)
     {
-        this->m_softmax.m_data[i] /= softmax_sum;
-        centropy_sum += target.m_data[i] * log(this->m_softmax.m_data[i]);
-        diff.m_data[i] = this->m_softmax.m_data[i] - target.m_data[i];
+        this->m_act.m_data[i] /= softmax_sum;
+        centropy_sum += target.m_data[i] * log(this->m_act.m_data[i]);
+        diff.m_data[i] = this->m_act.m_data[i] - target.m_data[i];
     }
 
     centropy_sum *= -1;
@@ -283,14 +408,19 @@ double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
 double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & pred, TMatrix<> & diff, const TMatrix<> & target, const TMatrix<> & input)
 {
     double loss = this->operator()(diff, target, input);
-    pred = this->get_SoftMax();
+    pred = this->m_act;
 
     return loss;
 }
 
-neurons::TMatrix<> & neurons::Softmax_CrossEntropy::get_SoftMax() const
+neurons::TMatrix<> & neurons::Softmax_CrossEntropy::get_activation() const
 {
-    return this->m_softmax;
+    return this->m_act;
+}
+
+std::string neurons::Softmax_CrossEntropy::to_string() const
+{
+    return std::string(ErrorFunction::SOFTMAX_CROSS_ENTROPY);
 }
 
 lint neurons::now_in_seconds()
@@ -315,3 +445,4 @@ double neurons::gaussian_function(double mu, double sigma, double x)
 
     return left * right;
 }
+

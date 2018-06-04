@@ -23,11 +23,9 @@ private:
 public:
     Conv_Pooling_NN(
         double l_rate,
-        lint batch_size,
+        double mmt_rate,
         lint threads,
-        lint steps,
-        lint epoch_size,
-        lint secs_allowed,
+        const std::string & model_file,
         const dataset::Dataset &d_set);
 
     Conv_Pooling_NN(const Conv_Pooling_NN & other) = delete;
@@ -38,6 +36,16 @@ public:
 public:
 
     virtual void print_layers(std::ostream & os) const;
+
+    virtual void save_layers_as_images() const;
+    
+    virtual bool load(const std::string & file_name);
+
+    virtual bool load_until(const std::string & file_name, lint layer_index);
+
+    virtual void initialize_model();
+
+    virtual void save(const std::string & file_name) const;
 
 private:
 
@@ -50,6 +58,10 @@ private:
         const std::vector<neurons::TMatrix<>> & inputs,
         const std::vector<neurons::TMatrix<>> & targets,
         lint thread_id);
+
+    virtual std::vector<neurons::TMatrix<>> predict(
+        const std::vector<neurons::TMatrix<>> & inputs,
+        lint thread_id) const;
 
 };
 

@@ -67,17 +67,21 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ProjectReference Include="..\neurons\neurons_linux.vcxproj">
-      <Project>{53ed4dc9-5ec3-4910-8b0c-3c3bd9d75c10}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="CIFAR_10.cpp" />
     <ClCompile Include="Mnist.cpp" />
+    <ClCompile Include="PGM.cpp" />
+    <ClCompile Include="pgmimage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CIFAR_10.h" />
     <ClInclude Include="Mnist.h" />
+    <ClInclude Include="PGM.h" />
+    <ClInclude Include="pgmimage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\neurons\neurons_linux.vcxproj">
+      <Project>{53ed4dc9-5ec3-4910-8b0c-3c3bd9d75c10}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>

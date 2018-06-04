@@ -24,6 +24,9 @@
     <ClInclude Include="CIFAR_10.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PGM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mnist.cpp">
@@ -32,13 +35,13 @@
     <ClCompile Include="Review.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Review_dir.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CIFAR_10.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PGM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
