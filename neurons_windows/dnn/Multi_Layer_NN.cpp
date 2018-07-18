@@ -256,16 +256,16 @@ void Multi_Layer_NN::initialize_model()
 {
     // Add layers to the network
     this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(
-        this->m_mmt_rate, m_input_size, 100, this->m_threads, new neurons::Tanh));
+        this->m_mmt_rate, m_input_size, 100, this->m_threads, new neurons::Sin));
 
     this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(
-        this->m_mmt_rate, 100, 100, this->m_threads, new neurons::Tanh));
+        this->m_mmt_rate, 100, 100, this->m_threads, new neurons::Sin));
 
     this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(
-        this->m_mmt_rate, 100, 100, this->m_threads, new neurons::Tanh));
+        this->m_mmt_rate, 100, 100, this->m_threads, new neurons::Sin));
 
     this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(
-        this->m_mmt_rate, 100, 100, this->m_threads, new neurons::Tanh));
+        this->m_mmt_rate, 100, 100, this->m_threads, new neurons::Sin));
 
     this->m_layers.push_back(std::make_shared<neurons::FCNN_layer>(
         this->m_mmt_rate, 100, m_output_size, this->m_threads, nullptr, new neurons::Softmax_CrossEntropy));
