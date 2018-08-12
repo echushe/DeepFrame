@@ -453,7 +453,7 @@ double neurons::Sigmoid_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
         double y = 1.0 / (1.0 + exp(input.m_data[i] * (-1)));
         
         this->m_act.m_data[i] = y;
-        sum += target.m_data[i] * log(y) + (1 - target.m_data[i]) * log(1 - y);
+        sum += target.m_data[i] * log(y);
         diff.m_data[i] = y - target.m_data[i];
     }
 
@@ -525,9 +525,7 @@ double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
     {
         this->m_act.m_data[i] /= softmax_sum;
 
-        centropy_sum +=
-            target.m_data[i] * log(this->m_act.m_data[i]) + 
-            (1 - target.m_data[i]) * log(1 - this->m_act.m_data[i]);
+        centropy_sum += target.m_data[i] * log(this->m_act.m_data[i]);
 
         diff.m_data[i] = this->m_act.m_data[i] - target.m_data[i];
     }

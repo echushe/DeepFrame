@@ -123,6 +123,7 @@
     <ClInclude Include="FCNN_layer.h" />
     <ClInclude Include="NN_layer.h" />
     <ClInclude Include="Pooling.h" />
+    <ClInclude Include="RES_NN_layer.h" />
     <ClInclude Include="RNN_unit.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Dataset.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="FCNN_layer.cpp" />
     <ClCompile Include="NN_layer.cpp" />
     <ClCompile Include="Pooling.cpp" />
+    <ClCompile Include="RES_NN_layer.cpp" />
     <ClCompile Include="RNN_unit.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="TMatrix.cpp" />

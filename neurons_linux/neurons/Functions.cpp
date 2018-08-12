@@ -7,6 +7,10 @@ const std::string neurons::Activation::LINEAR{ "Linear" };
 const std::string neurons::Activation::SIGMOID{ "Sigmoid" };
 const std::string neurons::Activation::TANH{ "Tanh" };
 const std::string neurons::Activation::RELU{ "Relu" };
+const std::string neurons::Activation::LEAKYRELU{ "LeakyRelu" };
+const std::string neurons::Activation::ARCTAN{ "Arctan" };
+const std::string neurons::Activation::SIN{ "Sin" };
+const std::string neurons::Activation::SOFTSIGN{ "Softsign" };
 const std::string neurons::Activation::SOFTMAX{ "Softmax" };
 const std::string neurons::Activation::NULL_FUNC{ "NULL" };
 
@@ -32,6 +36,22 @@ std::unique_ptr<neurons::Activation> neurons::Activation::get_function_by_name(c
     else if (func_name == RELU)
     {
         return std::make_unique<Relu>();
+    }
+    else if (func_name == LEAKYRELU)
+    {
+        return std::make_unique<LeakyRelu>();
+    }
+    else if (func_name == ARCTAN)
+    {
+        return std::make_unique<Arctan>();
+    }
+    else if (func_name == SIN)
+    {
+        return std::make_unique<Sin>();
+    }
+    else if (func_name == SOFTSIGN)
+    {
+        return std::make_unique<Softsign>();
     }
     else if (func_name == SOFTMAX)
     {
@@ -69,7 +89,7 @@ void neurons::Linear::operator () (TMatrix<> & output, TMatrix<> & diff, const T
 
 std::string neurons::Linear::to_string() const
 {
-    return std::string(Activation::LINEAR);
+    return Activation::LINEAR;
 }
 
 
@@ -96,7 +116,7 @@ void neurons::Sigmoid::operator () (TMatrix<> & output, TMatrix<> & diff, const 
 
 std::string neurons::Sigmoid::to_string() const
 {
-    return std::string(Activation::SIGMOID);
+    return Activation::SIGMOID;
 }
 
 
@@ -114,13 +134,13 @@ void neurons::Tanh::operator () (TMatrix<> & output, TMatrix<> & diff, const TMa
     {
         double y = tanh(in.m_data[i]);
         output.m_data[i] = y;
-        diff.m_data[i] = (1 + y) * (1 - y);
+        diff.m_data[i] = 1 - y * y;
     }
 }
 
 std::string neurons::Tanh::to_string() const
 {
-    return std::string(Activation::TANH);
+    return Activation::TANH;
 }
 
 
@@ -154,7 +174,115 @@ void neurons::Relu::operator () (TMatrix<> & output, TMatrix<> & diff, const TMa
 
 std::string neurons::Relu::to_string() const
 {
-    return std::string(Activation::RELU);
+    return Activation::RELU;
+}
+
+
+std::unique_ptr<neurons::Activation> neurons::LeakyRelu::clone()
+{
+    return std::make_unique<neurons::LeakyRelu>();
+}
+
+
+void neurons::LeakyRelu::operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in)
+{
+    output = TMatrix<>{ in.m_shape };
+    diff = TMatrix<>{ in.m_shape };
+    lint size = in.m_shape.size();
+    for (lint i = 0; i < size; ++i)
+    {
+        double x = in.m_data[i];
+
+        if (x >= 0)
+        {
+            output.m_data[i] = x;
+            diff.m_data[i] = 1;
+        }
+        else
+        {
+            output.m_data[i] = 0.01 * x;
+            diff.m_data[i] = 0.01;
+        }
+    }
+}
+
+std::string neurons::LeakyRelu::to_string() const
+{
+    return Activation::LEAKYRELU;
+}
+
+
+
+std::unique_ptr<neurons::Activation> neurons::Arctan::clone()
+{
+    return std::make_unique<neurons::Arctan>();
+}
+
+void neurons::Arctan::operator()(TMatrix<>& output, TMatrix<>& diff, const TMatrix<>& in)
+{
+    output = TMatrix<>{ in.m_shape };
+    diff = TMatrix<>{ in.m_shape };
+    lint size = in.m_shape.size();
+    for (lint i = 0; i < size; ++i)
+    {
+        output.m_data[i] = atan(in.m_data[i]);
+        diff.m_data[i] = 1 / (1 + in.m_data[i] * in.m_data[i]);
+    }
+}
+
+
+std::string neurons::Arctan::to_string() const
+{
+    return Activation::ARCTAN;
+}
+
+
+std::unique_ptr<neurons::Activation> neurons::Sin::clone()
+{
+    return std::make_unique<neurons::Sin>();
+}
+
+void neurons::Sin::operator()(TMatrix<>& output, TMatrix<>& diff, const TMatrix<>& in)
+{
+    output = TMatrix<>{ in.m_shape };
+    diff = TMatrix<>{ in.m_shape };
+    lint size = in.m_shape.size();
+    for (lint i = 0; i < size; ++i)
+    {
+        output.m_data[i] = sin(in.m_data[i]);
+        diff.m_data[i] = cos(in.m_data[i]);
+    }
+}
+
+
+std::string neurons::Sin::to_string() const
+{
+    return Activation::SIN;
+}
+
+
+std::unique_ptr<neurons::Activation> neurons::Softsign::clone()
+{
+    return std::make_unique<neurons::Softsign>();
+}
+
+void neurons::Softsign::operator()(TMatrix<>& output, TMatrix<>& diff, const TMatrix<>& in)
+{
+    output = TMatrix<>{ in.m_shape };
+    diff = TMatrix<>{ in.m_shape };
+    lint size = in.m_shape.size();
+    for (lint i = 0; i < size; ++i)
+    {
+        double d = 1 + fabs(in.m_data[i]);
+        output.m_data[i] = in.m_data[i] / d;
+        diff.m_data[i] = 1 / (d * d);
+    }
+}
+
+
+std::string neurons::Softsign::to_string() const
+{
+    return Activation::SOFTSIGN;
 }
 
 
@@ -186,7 +314,7 @@ void neurons::Softmax::operator () (TMatrix<> & output, TMatrix<> & diff, const 
 
 std::string neurons::Softmax::to_string() const
 {
-    return std::string(Activation::SOFTMAX);
+    return Activation::SOFTMAX;
 }
 
 std::unique_ptr<neurons::ErrorFunction> neurons::ErrorFunction::get_function_by_name(std::string & func_name)
@@ -350,7 +478,7 @@ neurons::TMatrix<> & neurons::Sigmoid_CrossEntropy::get_activation() const
 
 std::string neurons::Sigmoid_CrossEntropy::to_string() const
 {
-    return std::string(ErrorFunction::SIGMOID_CROSS_ENTROPY);
+    return ErrorFunction::SIGMOID_CROSS_ENTROPY;
 }
 
 
@@ -396,7 +524,9 @@ double neurons::Softmax_CrossEntropy::operator()(TMatrix<> & diff, const TMatrix
     for (lint i = 0; i < size; ++i)
     {
         this->m_act.m_data[i] /= softmax_sum;
+
         centropy_sum += target.m_data[i] * log(this->m_act.m_data[i]);
+
         diff.m_data[i] = this->m_act.m_data[i] - target.m_data[i];
     }
 
@@ -420,7 +550,7 @@ neurons::TMatrix<> & neurons::Softmax_CrossEntropy::get_activation() const
 
 std::string neurons::Softmax_CrossEntropy::to_string() const
 {
-    return std::string(ErrorFunction::SOFTMAX_CROSS_ENTROPY);
+    return ErrorFunction::SOFTMAX_CROSS_ENTROPY;
 }
 
 lint neurons::now_in_seconds()
@@ -445,4 +575,5 @@ double neurons::gaussian_function(double mu, double sigma, double x)
 
     return left * right;
 }
+
 

@@ -12,6 +12,10 @@ namespace neurons
         static const std::string SIGMOID;
         static const std::string TANH;
         static const std::string RELU;
+        static const std::string LEAKYRELU;
+        static const std::string ARCTAN;
+        static const std::string SIN;
+        static const std::string SOFTSIGN;
         static const std::string SOFTMAX;
         static const std::string NULL_FUNC;
 
@@ -71,6 +75,58 @@ namespace neurons
     {
     public:
         Relu() {}
+
+        virtual std::unique_ptr<Activation> clone();
+
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
+    };
+
+
+    class LeakyRelu : public Activation
+    {
+    public:
+        LeakyRelu() {}
+
+        virtual std::unique_ptr<Activation> clone();
+
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
+    };
+
+
+    class Arctan : public Activation
+    {
+    public:
+        Arctan() {}
+
+        virtual std::unique_ptr<Activation> clone();
+
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
+    };
+
+
+    class Sin : public Activation
+    {
+    public:
+        Sin() {}
+
+        virtual std::unique_ptr<Activation> clone();
+
+        virtual void operator () (TMatrix<> & output, TMatrix<> & diff, const TMatrix<> & in);
+
+        virtual std::string to_string() const;
+    };
+
+
+    class Softsign : public Activation
+    {
+    public:
+        Softsign() {}
 
         virtual std::unique_ptr<Activation> clone();
 

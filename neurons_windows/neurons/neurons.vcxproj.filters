@@ -66,6 +66,9 @@
     <ClInclude Include="TMatrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RES_NN_layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector.cpp">
@@ -114,6 +117,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TMatrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RES_NN_layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -46,3 +46,4 @@ neurons_linux/facetrain/bin/
 
 neurons_linux/.vs/
 
+neurons_windows/neurons/TMatrix-strassen.h
