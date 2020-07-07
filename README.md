@@ -1,4 +1,4 @@
-# Homo_Erectus_Deep_Framework
+# DeepFrame
 > This repository includes homemade C++ source code of deep learning
 ## This reporsitory includes 2 Visual Studio solutions: *neurons_windows* and *neurons_linux*
 
