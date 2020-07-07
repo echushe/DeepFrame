@@ -7,6 +7,9 @@
 - **We incorporate DeepFrame into ASpark framework**
 - **We optimize the code for distributed computation (working in progress, may be delayed)**
 - **We unify the source code for both windows and linux.**
+- **We add variational inference module for Bayesian Neural Networking (beta).**
+- **We add Gaussian Process regression module (beta).**
+- **We add subsample ordering module for regularizaion and subsample ordered training for stagewise neural net (beta), see https://github.com/isaac2math/solar for detail.**
 ------------
 ## About this version (v1.0)
 - **This reporsitory includes 2 Visual Studio solutions: *neurons_windows* and *neurons_linux*.**
