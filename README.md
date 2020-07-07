@@ -6,6 +6,7 @@
 - **We migrate the package to CUDA and OpenCL framework for GPU parallel computation.**
 - **We incorporate DeepFrame into ASpark framework**
 - **We optimize the code for distributed computation (working in progress, may be delayed)**
+- **We are trying to add Python portal (working in progress, highly likely to be delayed)**
 - **We unify the source code for both windows and linux. (containers like docker are recommended for Win10)**
 - **We add variational inference module and reversible jump MCMC module for training a sparse Bayesian Neural Network in ultrahigh dimensional spaces(beta).**
 - **We add Gaussian Process regression module (beta).**
