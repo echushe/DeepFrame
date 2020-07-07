@@ -7,7 +7,7 @@
 - **We incorporate DeepFrame into ASpark framework**
 - **We optimize the code for distributed computation (working in progress, may be delayed)**
 - **We unify the source code for both windows and linux.**
-- **We add variational inference module for Bayesian Neural Networking (beta).**
+- **We add variational inference module and reversible jump MCMC module for training a sparse Bayesian Neural Network in ultrahigh dimensional dapces(beta).**
 - **We add Gaussian Process regression module (beta).**
 - **We add subsample ordering module for regularizaion and subsample ordered training for stagewise neural net (beta), see https://github.com/isaac2math/solar for detail.**
 ------------
