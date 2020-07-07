@@ -1,6 +1,6 @@
 # DeepFrame
 > This repository includes homemade C++ source code of deep learning
-## This reporsitory is coowned and collaborated with Ning Xu (xuningandy@outlook.com)*
+## This reporsitory is coowned and collaborated with Ning Xu (xuningandy@outlook.com).
 ## This reporsitory includes 2 Visual Studio solutions: *neurons_windows* and *neurons_linux*
 
 - **We are working to migrate the package to CUDA and OpenCL framework for GPU parallel computation.**
