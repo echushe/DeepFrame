@@ -1,8 +1,10 @@
 # DeepFrame
 > This repository includes homemade C++ source code of deep learning
+## This reporsitory is coowned and collaborated with Ning Xu (xuningandy@outlook.com)*
 ## This reporsitory includes 2 Visual Studio solutions: *neurons_windows* and *neurons_linux*
 
-- **I am now trying my best to make the source code almost identical for both windows and linux.**
+- **We are working to migrate the package to CUDA and OpenCL framework for GPU parallel computation.**
+- **We are now trying my best to make the source code almost identical for both windows and linux.**
 - **C++ version should be at least C++ 14 here**
 - **Both windows and linux solutions can be compiled via Visual Studio 2017 (the linux version needs a linux platform where g++ is installed).**
 - **Locations of compiled static libraries of *neurons* and *dataset* module may be different on different linux machines.**
