@@ -4,7 +4,7 @@
 -----------
 ## Updates in next version (v1.1)
 - **We migrate the package to CUDA and OpenCL framework for GPU parallel computation.**
-- **We incorporate DeepFrame into Spark framework **
+- **We incorporate DeepFrame into Spark framework**
 - **We optimize the code for distributed computation (working in progress, may be delayed)**
 - **We unify the source code for both windows and linux.**
 ------------
