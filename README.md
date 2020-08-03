@@ -1,8 +1,10 @@
 # DeepFrame
 > A new deep learning framework. This repository only includes original C++ source code of deep learning
 ## This reporsitory is coowned and collaborated with Ning Xu (xuningandy@outlook.com).
+## Apology for the possible delay due to pandemics, we are working to our full extent.
 -----------
 ## Updates in next version (v1.1)
+- **To be submitted to Journal of Machine learning Research.**
 - **We migrate the package to CUDA and OpenCL framework for GPU parallel computation.**
 - **We incorporate DeepFrame into ASpark framework**
 - **We optimize the code for distributed computation (working in progress, may be delayed)**
